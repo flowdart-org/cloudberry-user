@@ -1,10 +1,11 @@
+import { StaticImageData } from 'next/image';
 import { create } from 'zustand';
 
 export interface Product {
   id: number;
   name: string;
   price: number;
-  image: any;
+  image: string | StaticImageData;
   category: string;
 }
 

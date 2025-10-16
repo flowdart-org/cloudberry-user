@@ -4,12 +4,12 @@ import trousersImg from "@/assets/category-trousers.jpg";
 import perfumesImg from "@/assets/category-perfumes.jpg";
 import tshirtsImg from "@/assets/category-tshirts.jpg";
 import formalImg from "@/assets/category-formal.jpg";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 interface Category {
   id: number;
   title: string;
-  image: any;
+  image: string | StaticImageData;
   badge?: string;
   badgeColor?: string;
 }
@@ -40,7 +40,7 @@ const CategoryGrid = () => {
           {categories.map((category) => (
             <div
               key={category.id}
-              className="group relative aspect-[3/4] overflow-hidden cursor-pointer transition-transform hover:scale-105"
+              className="group relative aspect-[3/4] overflow-hidden cursor-pointer transition-transform"
             >
               <Image
                 src={category.image}

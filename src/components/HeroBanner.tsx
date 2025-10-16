@@ -1,6 +1,7 @@
 import heroBanner from "@/assets/hero-banner.jpg";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 const HeroBanner = () => {
   return (
@@ -22,9 +23,11 @@ const HeroBanner = () => {
           <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
             UP TO 40% OFF*
           </h2>
+          <Link href={`/shop`}>
           <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
             Shop Now
           </Button>
+          </Link>
         </div>
       </div>
     </section>
