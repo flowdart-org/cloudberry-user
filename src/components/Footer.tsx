@@ -8,7 +8,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-muted/50 border-t border-border py-12">
+    <footer className="bg-muted/50 border-t border-border py-12 w-full">
       <div className="container px-4 md:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">

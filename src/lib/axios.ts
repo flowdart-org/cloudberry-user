@@ -1,32 +1,30 @@
-import axios from "axios";
-import { getAuthToken, setAuthToken } from "../store/authStore";
+import axios, { AxiosRequestConfig } from "axios";
+import { ENV } from "./env";
+import { ApiResponse } from "@/api/types";
 
-const api = axios.create({
-  baseURL: "/api",
-  headers: { "Content-Type": "application/json" },
+export const api = axios.create({
+  baseURL: ENV.API_BASE_URL,
+  withCredentials: true,
 });
 
-api.interceptors.request.use((config) => {
-  const token = getAuthToken();
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
+export async function request<T>(
+  method: "get" | "post" | "put" | "delete",
+  url: string,
+  data?: any,
+  config?: AxiosRequestConfig
+): Promise<ApiResponse<T>> {
+  try {
+    const response = await api.request<ApiResponse<T>>({
+      url,
+      method,
+      data,
+      ...config,
+    });
+    return response.data;
+  } catch (err: any) {
+    return {
+      message: err?.response?.data?.message || err.message,
+      success: false,
+    };
   }
-  return config;
-});
-
-api.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    const original = error.config;
-    if (error.response?.status === 401 && !original._retry) {
-      original._retry = true;
-      setAuthToken(null);
-      if (typeof window !== "undefined") {
-        window.location.href = "/login";
-      }
-    }
-    return Promise.reject(error);
-  }
-);
-
-export default api;
+}

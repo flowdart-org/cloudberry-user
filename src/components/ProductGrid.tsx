@@ -10,14 +10,14 @@ const categories = ["ALL", "TROUSERS", "SHORTS", "JEANS", "T-SHIRTS", "LUXE", "F
 
 const mockProducts: Product[] = [
   { id: 1, name: "100% Cotton Regular Fit Shirt", price: 1499, image: product1, category: "SHIRTS" },
-  { id: 2, name: "Regular Fit Stretch Relaxed Polo T-Shirt", price: 999, image: product2, category: "T-SHIRTS" },
-  { id: 3, name: "Regular Fit Stretch Relaxed Polo T-Shirt", price: 1299, image: product1, category: "SHIRTS" },
-  { id: 4, name: "Regular Fit Stretch Relaxed Polo T-Shirt", price: 899, image: product2, category: "T-SHIRTS" },
+  { id: 2, name: "Regular Fit Stretch Relaxed Polo", price: 999, image: product2, category: "T-SHIRTS" },
+  { id: 3, name: "Regular Fit Stretch Relaxed Polo", price: 1299, image: product1, category: "SHIRTS" },
+  { id: 4, name: "Regular Fit Stretch Relaxed Polo", price: 899, image: product2, category: "T-SHIRTS" },
   { id: 5, name: "Washed Baggy Jeans", price: 1799, image: product1, category: "JEANS" },
   { id: 6, name: "100% Cotton Regular Fit Shirt", price: 1499, image: product2, category: "SHIRTS" },
-  { id: 7, name: "Regular Fit Stretch Relaxed Polo T-Shirt", price: 999, image: product1, category: "T-SHIRTS" },
-  { id: 8, name: "Regular Fit Stretch Relaxed Polo T-Shirt", price: 1299, image: product2, category: "SHIRTS" },
-  { id: 9, name: "Regular Fit Stretch Relaxed Polo T-Shirt", price: 899, image: product1, category: "T-SHIRTS" },
+  { id: 7, name: "Regular Fit Stretch Relaxed Polo", price: 999, image: product1, category: "T-SHIRTS" },
+  { id: 8, name: "Regular Fit Stretch Relaxed Polo", price: 1299, image: product2, category: "SHIRTS" },
+  { id: 9, name: "Regular Fit Stretch Relaxed Polo", price: 899, image: product1, category: "T-SHIRTS" },
   { id: 10, name: "Washed Baggy Jeans", price: 1799, image: product2, category: "JEANS" },
 ];
 
@@ -32,7 +32,7 @@ const ProductGrid = () => {
         </h2>
         <div className="h-1 w-20 bg-primary mx-auto mb-8" />
 
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        {/* <div className="flex flex-wrap justify-center gap-2 mb-8">
           {categories.map((category) => (
             <Button
               key={category}
@@ -44,7 +44,7 @@ const ProductGrid = () => {
               {category}
             </Button>
           ))}
-        </div>
+        </div> */}
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 md:gap-2">
           {mockProducts.map((product) => (

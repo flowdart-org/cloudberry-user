@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const HeroBanner = () => {
   return (
-    <section className="relative w-full h-[300px] md:h-[400px] overflow-hidden bg-gradient-to-r from-secondary to-muted">
+    <section className="relative w-screen overflow-hidden h-[50vh] md:h-[600px]  bg-gradient-to-r from-secondary to-muted">
       <div className="absolute inset-0">
         <Image
           src={heroBanner}
@@ -17,14 +17,14 @@ const HeroBanner = () => {
       
       <div className="relative container h-full flex items-center justify-end px-4 md:px-8">
         <div className="text-right max-w-lg">
-          <p className="text-accent text-xl md:text-2xl font-semibold mb-2">
+          <p className="text-accent text-xl md:text-2xl font-semibold mb-2 text-white">
             Last chance!
           </p>
-          <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
+          <h2 className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6">
             UP TO 40% OFF*
           </h2>
           <Link href={`/shop`}>
-          <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground outline">
             Shop Now
           </Button>
           </Link>

@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -9,9 +10,10 @@ import { useStore, Product } from "@/store/useStore";
 import { cn } from "@/lib/utils";
 import product1 from "@/assets/product-1.jpg";
 import product2 from "@/assets/product-2.jpg";
+import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useParams } from 'next/navigation';
 import Image from "next/image";
+import { useToast } from "@/hooks/useToast";
 
 const mockProducts: Product[] = [
   { id: 1, name: "100% Cotton Regular Fit Shirt", price: 1499, image: product1, category: "SHIRTS" },
@@ -34,6 +36,7 @@ const sizes = ["28", "30", "32", "34", "36"];
 const ProductDetails = () => {
   const { id } = useParams();
   const { wishlist, toggleWishlist, addToCart } = useStore();
+  const { toast } = useToast();
   
   const product = mockProducts.find((p) => p.id === Number(id)) || mockProducts[4];
   const isWishlisted = wishlist.includes(product.id);
@@ -48,7 +51,30 @@ const ProductDetails = () => {
   const relatedProducts = mockProducts.filter((p) => p.id !== product.id).slice(0, 4);
 
   const handleAddToBag = () => {
-    addToCart(product.id);
+    if (!selectedSize) {
+      toast({
+        title: "Size Required",
+        description: "Please select a size before adding to bag",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    addToCart({
+      productId: product.id,
+      product: product,
+      quantity: quantity,
+      size: selectedSize,
+      color: colors[selectedColor].name,
+    });
+    
+    toast({
+      title: "Added to Bag",
+      description: `${product.name} has been added to your cart`,
+    });
+    
+    // Reset quantity after adding
+    setQuantity(1);
   };
 
   return (
@@ -56,7 +82,7 @@ const ProductDetails = () => {
       <Header />
       
       <main className="flex-1">
-        <div className=" px-4 md:px-8 py-6">
+        <div className="container px-4 md:px-8 py-6">
           {/* Breadcrumb */}
           <div className="text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-foreground">Home</Link>
@@ -98,7 +124,7 @@ const ProductDetails = () => {
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
-                {/* <Button
+                <Button
                   variant="ghost"
                   size="icon"
                   className="absolute top-4 right-4 bg-background/80 hover:bg-background"
@@ -110,11 +136,11 @@ const ProductDetails = () => {
                       isWishlisted ? "fill-accent text-accent" : "text-foreground"
                     )}
                   />
-                </Button> */}
+                </Button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute  top-1/2 -translate-y-1/2 "
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
                   onClick={() => setSelectedImage((prev) => (prev > 0 ? prev - 1 : images.length - 1))}
                 >
                   <ChevronLeft className="h-5 w-5" />
@@ -122,7 +148,7 @@ const ProductDetails = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-0 top-1/2 -translate-y-1/2"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
                   onClick={() => setSelectedImage((prev) => (prev < images.length - 1 ? prev + 1 : 0))}
                 >
                   <ChevronRight className="h-5 w-5" />
@@ -253,7 +279,7 @@ const ProductDetails = () => {
             <h2 className="text-2xl font-bold text-center mb-8 text-foreground">
               You might also like
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {relatedProducts.map((relatedProduct) => (
                 <ProductCard key={relatedProduct.id} product={relatedProduct} />
               ))}

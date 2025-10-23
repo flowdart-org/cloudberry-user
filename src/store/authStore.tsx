@@ -1,44 +1,45 @@
-import { create } from 'zustand'
-import { useEffect } from 'react'
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-
-type User = { id: string; phone: string }
-
-
-type AuthState = {
-    token: string | null
-    user: User | null
-    setToken: (t: string | null) => void
-    setUser: (u: User | null) => void
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
 }
 
-
-let externalToken: string | null = null
-
-
-export const getAuthToken = () => externalToken
-export const setAuthToken = (t: string | null) => { externalToken = t }
-
-
-export const useAuthStore = create<AuthState>((set) => ({
-    token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
-    user: null,
-    setToken: (t) => {
-        if (typeof window !== 'undefined') {
-            if (t) localStorage.setItem('token', t)
-            else localStorage.removeItem('token')
-        }
-        externalToken = t
-        set({ token: t })
-    },
-    setUser: (u) => set({ user: u }),
-}))
-
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-    useEffect(() => {
-        const t = localStorage.getItem('token')
-        externalToken = t
-    }, [])
-    return <>{children}</>
+interface AuthState {
+  isAuthenticated: boolean;
+  user: User | null;
+  login: (user: User) => void;
+  logout: () => void;
+  setUser: (user: Partial<User>) => void;
 }
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      isAuthenticated: true,
+      user: null,
+
+      login: (user) => set({ user, isAuthenticated: true }),
+
+      fetchUser: () => {
+        
+      },
+
+      logout: () => set({ user: null, isAuthenticated: false }),
+
+      setUser: (userUpdate) =>
+        set((state) => ({
+          user: state.user ? { ...state.user, ...userUpdate } : null,
+        })),
+    }),
+    {
+      name: "auth-storage", 
+      partialize: (state) => ({
+        isAuthenticated: state.isAuthenticated,
+      }),
+    }
+  )
+);
