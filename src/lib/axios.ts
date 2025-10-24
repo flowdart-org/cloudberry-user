@@ -20,6 +20,7 @@ export async function request<T>(
       data,
       ...config,
     });
+    console.log('me response, return data:',response.data)
     return response.data;
   } catch (err: any) {
     return {

@@ -1,45 +1,62 @@
+import { AUTH_SERVICES } from "@/api/auth/auth.service";
+import { USER_SERVICES } from "@/api/user/user.service";
+import { User } from "@/types/user.types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-}
-
 interface AuthState {
-  isAuthenticated: boolean;
-  user: User | null;
-  login: (user: User) => void;
-  logout: () => void;
-  setUser: (user: Partial<User>) => void;
+    isAuthenticated: boolean;
+    isLoading: boolean;
+    user: User | null;
+    login: () => void;
+    logout: () => void;
+    setUser: (user: Partial<User>) => void;
+    fetchUser: () => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      isAuthenticated: true,
-      user: null,
+    persist(
+        (set, get) => ({
+            isAuthenticated: false,
+            isLoading: true,
+            user: null,
 
-      login: (user) => set({ user, isAuthenticated: true }),
+            login: () => {
+                set({ isAuthenticated: true })
+                get().fetchUser()
+            },
 
-      fetchUser: () => {
-        
-      },
+            fetchUser: async () => {
+                if (get().isAuthenticated) {
+                    const { success, data: user } = await USER_SERVICES.me()
+                    if (success) {
+                        set({ user, isAuthenticated: true })
+                    }
+                } else {
+                    set({ user: null })
+                }
+                set({ isLoading: false })
+            },
 
-      logout: () => set({ user: null, isAuthenticated: false }),
+            logout: async () => {
+                set({ isLoading: true })
+                const { success } = await AUTH_SERVICES.logout()
+                if (success) {
+                    set({ user: null, isAuthenticated: false })
+                }
+                set({isLoading: false})
+            },
 
-      setUser: (userUpdate) =>
-        set((state) => ({
-          user: state.user ? { ...state.user, ...userUpdate } : null,
-        })),
-    }),
-    {
-      name: "auth-storage", 
-      partialize: (state) => ({
-        isAuthenticated: state.isAuthenticated,
-      }),
-    }
-  )
+            setUser: (userUpdate) =>
+                set((state) => ({
+                    user: state.user ? { ...state.user, ...userUpdate } : null,
+                })),
+        }),
+        {
+            name: "auth-storage",
+            partialize: (state) => ({
+                isAuthenticated: state.isAuthenticated,
+            }),
+        }
+    )
 );

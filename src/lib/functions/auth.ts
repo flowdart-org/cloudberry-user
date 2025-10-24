@@ -22,5 +22,32 @@ export const verifyOtp = async (phone: string, otp: string): Promise<ApiResponse
   }
 };
 
+export const resendOtp = async (phone: string): Promise<ApiResponse> => {
+  try {
+    const response = await AUTH_SERVICES.resendOtp({ phone });
+    return response;
+  } catch (error) {
+    return ErrorResponse(error)
+  }
+};
+
+export const logout = async (): Promise<ApiResponse> => {
+  try {
+    const response = await AUTH_SERVICES.logout();
+    return response;
+  } catch (error) {
+    return ErrorResponse(error)
+  }
+};
+
+export const refreshToken = async (): Promise<ApiResponse> => {
+  try {
+    const response = await AUTH_SERVICES.refreshToken();
+    return response;
+  } catch (error) {
+    return ErrorResponse(error)
+  }
+};
+
 
 
