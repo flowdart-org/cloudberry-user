@@ -1,9 +1,9 @@
 'use client'
-import Header from "@/components/Header";
-import HeroBanner from "@/components/HeroBanner";
-import CategoryGrid from "@/components/CategoryGrid";
-import ProductGrid from "@/components/ProductGrid";
-import Footer from "@/components/Footer";
+import Header from "@/components/common/Header";
+import HeroBanner from "@/components/common/HeroBanner";
+import CategoryGrid from "@/components/category/CategoryGrid";
+import ProductGrid from "@/components/product/ProductGrid";
+import Footer from "@/components/common/Footer";
 
 const Index = () => {
   return (

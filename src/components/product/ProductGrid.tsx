@@ -1,36 +1,34 @@
 'use client'
-import { useState } from "react";
+
 import ProductCard from "./ProductCard";
 import { Product } from "@/store/useStore";
-import { Button } from "@/components/ui/button";
 import product1 from "@/assets/product-1.jpg";
 import product2 from "@/assets/product-2.jpg";
 
 const categories = ["ALL", "TROUSERS", "SHORTS", "JEANS", "T-SHIRTS", "LUXE", "FORMAL WEAR"];
 
 const mockProducts: Product[] = [
-  { id: 1, name: "100% Cotton Regular Fit Shirt", price: 1499, image: product1, category: "SHIRTS" },
-  { id: 2, name: "Regular Fit Stretch Relaxed Polo", price: 999, image: product2, category: "T-SHIRTS" },
-  { id: 3, name: "Regular Fit Stretch Relaxed Polo", price: 1299, image: product1, category: "SHIRTS" },
-  { id: 4, name: "Regular Fit Stretch Relaxed Polo", price: 899, image: product2, category: "T-SHIRTS" },
+  { id: 1, name: "Regular Fit Shirt", price: 1499, image: product1, category: "SHIRTS" },
+  { id: 2, name: "Relaxed Polo", price: 999, image: product2, category: "T-SHIRTS" },
+  { id: 3, name: "Relaxed Polo", price: 1299, image: product1, category: "SHIRTS" },
+  { id: 4, name: "Relaxed Polo", price: 899, image: product2, category: "T-SHIRTS" },
   { id: 5, name: "Washed Baggy Jeans", price: 1799, image: product1, category: "JEANS" },
-  { id: 6, name: "100% Cotton Regular Fit Shirt", price: 1499, image: product2, category: "SHIRTS" },
-  { id: 7, name: "Regular Fit Stretch Relaxed Polo", price: 999, image: product1, category: "T-SHIRTS" },
-  { id: 8, name: "Regular Fit Stretch Relaxed Polo", price: 1299, image: product2, category: "SHIRTS" },
-  { id: 9, name: "Regular Fit Stretch Relaxed Polo", price: 899, image: product1, category: "T-SHIRTS" },
+  { id: 6, name: "Regular Fit Shirt", price: 1499, image: product2, category: "SHIRTS" },
+  { id: 7, name: "Relaxed Polo", price: 999, image: product1, category: "T-SHIRTS" },
+  { id: 8, name: "Relaxed Polo", price: 1299, image: product2, category: "SHIRTS" },
+  { id: 9, name: "Relaxed Polo", price: 899, image: product1, category: "T-SHIRTS" },
   { id: 10, name: "Washed Baggy Jeans", price: 1799, image: product2, category: "JEANS" },
 ];
 
 const ProductGrid = () => {
-  const [activeCategory, setActiveCategory] = useState("ALL");
 
   return (
     <section className="py-12 md:py-16 bg-muted/30">
       <div className="">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-2 text-foreground">
+        <h2 className="text-2xl md:text-3xl  text-center mb-2 text-foreground ">
           NEW AND POPULAR
         </h2>
-        <div className="h-1 w-20 bg-primary mx-auto mb-8" />
+        <div className="h-[3px] w-20 bg-primary mx-auto mb-8" />
 
         {/* <div className="flex flex-wrap justify-center gap-2 mb-8">
           {categories.map((category) => (

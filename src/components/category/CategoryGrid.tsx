@@ -97,7 +97,7 @@ const CategoryGrid = () => {
                 )}
 
                 <div className="absolute bottom-0 left-0 right-0 p-2">
-                  <h3 className="text-white font-bold text-sm md:text-base text-center group-hover:underline underline-offset-4">
+                  <h3 className="text-white font-bold text-sm md:text-base text-center group-hover:underline underline-offset-4 ">
                     {category.title}
                   </h3>
                 </div>

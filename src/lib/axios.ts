@@ -1,14 +1,14 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { ENV } from "./env";
 import { ApiResponse } from "@/api/types";
+import { APP_CONFIG } from "./app.config";
 
 export const api = axios.create({
-  baseURL: ENV.API_BASE_URL,
+  baseURL: APP_CONFIG.URLS.API_BASE,
   withCredentials: true,
 });
 
 export async function request<T>(
-  method: "get" | "post" | "put" | "delete",
+  method: "get" | "post" | "put" | "patch" | "delete",
   url: string,
   data?: any,
   config?: AxiosRequestConfig

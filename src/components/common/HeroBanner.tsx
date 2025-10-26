@@ -16,11 +16,11 @@ const HeroBanner = () => {
       </div>
       
       <div className="relative container h-full flex items-center justify-end px-4 md:px-8">
-        <div className="text-right max-w-lg">
-          <p className="text-accent text-xl md:text-2xl font-semibold mb-2 text-white">
+        <div className="text-right max-w-lg font-pirulen">
+          <p className="text-accent text-xl md:text-2xl font-extrabold mb-2 text-yellow-400 ">
             Last chance!
           </p>
-          <h2 className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6">
+          <h2 className="text-4xl md:text-6xl font-extralight text-primary-foreground mb-6">
             UP TO 40% OFF*
           </h2>
           <Link href={`/shop`}>

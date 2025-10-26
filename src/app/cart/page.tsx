@@ -1,7 +1,7 @@
 "use client"
 
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
 import { Button } from "@/components/ui/button";
 import { Truck, X } from "lucide-react";
 import { useStore } from "@/store/useStore";
@@ -27,7 +27,7 @@ const Cart = () => {
             <h2 className="text-2xl font-bold text-foreground">Your cart is empty</h2>
             <p className="text-muted-foreground">Add some products to get started!</p>
             <Link href="/shop">
-              <Button>Continue Shopping</Button>
+              <Button className="">Continue Shopping</Button>
             </Link>
           </div>
         </main>
@@ -42,7 +42,7 @@ const Cart = () => {
       
       <main className="flex-1 bg-background">
         <div className="container px-4 md:px-8 py-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">Shopping Cart</h1>
+          <h1 className="text-2xl md:text-3xl  text-foreground mb-6">Shopping Cart</h1>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}

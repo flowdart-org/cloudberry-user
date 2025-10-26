@@ -1,7 +1,7 @@
 "use client"
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ProductCard from "@/components/ProductCard";
+import Header from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
+import ProductCard from "@/components/product/ProductCard";
 import { Product } from "@/store/useStore";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";

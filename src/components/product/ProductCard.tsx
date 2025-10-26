@@ -21,7 +21,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {/* subtle gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
           {/* product name on image */}
-          <h3 className="absolute bottom-3 left-3 right-3 text-center text-white text-sm md:text-base font-medium line-clamp-2 drop-shadow-md">
+          <h3 className="absolute bottom-3 left-3 right-3 text-cente text-white text-sm md:text-base font-medium line-clamp-2 drop-shadow-md max-w-[200px]">
             {product.name}
           </h3>
         </div>
@@ -30,7 +30,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       {/* Price section */}
       <Link href={`/product/${product.id}`}>
         <div className="p-2 flex justify-center">
-          <p className="text-gray-900  text-base md:text-lg tracking-tight">
+          <p className="text-gray-900  text-base md:text-lg tracking-tight font-pirulen">
             ₹{product.price.toLocaleString()}
           </p>
         </div>

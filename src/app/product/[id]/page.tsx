@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ProductCard from "@/components/ProductCard";
+import Header from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
+import ProductCard from "@/components/product/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { useStore, Product } from "@/store/useStore";
@@ -16,11 +16,11 @@ import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
 
 const mockProducts: Product[] = [
-  { id: 1, name: "100% Cotton Regular Fit Shirt", price: 1499, image: product1, category: "SHIRTS" },
-  { id: 2, name: "Regular Fit Stretch Relaxed Polo T-Shirt", price: 899, image: product2, category: "T-SHIRTS" },
-  { id: 3, name: "Regular Fit Stretch Ribbed Polo T-Shirt", price: 899, image: product1, category: "T-SHIRTS" },
-  { id: 4, name: "Regular Fit Stretch Ribbed Polo T-Shirt", price: 899, image: product2, category: "T-SHIRTS" },
-  { id: 5, name: "Stretch Slim Fit Striped Trousers", price: 1299, image: product1, category: "TROUSERS" },
+  { id: 1, name: "Regular Fit Shirt", price: 1499, image: product1, category: "SHIRTS" },
+  { id: 2, name: "Relaxed Polo", price: 899, image: product2, category: "T-SHIRTS" },
+  { id: 3, name: "Ribbed Polo T-Shirt", price: 899, image: product1, category: "T-SHIRTS" },
+  { id: 4, name: "Ribbed Polo T-Shirt", price: 899, image: product2, category: "T-SHIRTS" },
+  { id: 5, name: "Stretch Slim Fit", price: 1299, image: product1, category: "TROUSERS" },
 ];
 
 const colors = [
@@ -37,10 +37,10 @@ const ProductDetails = () => {
   const { id } = useParams();
   const { wishlist, toggleWishlist, addToCart } = useStore();
   const { toast } = useToast();
-  
+
   const product = mockProducts.find((p) => p.id === Number(id)) || mockProducts[4];
   const isWishlisted = wishlist.includes(product.id);
-  
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
@@ -59,7 +59,7 @@ const ProductDetails = () => {
       });
       return;
     }
-    
+
     addToCart({
       productId: product.id,
       product: product,
@@ -67,12 +67,12 @@ const ProductDetails = () => {
       size: selectedSize,
       color: colors[selectedColor].name,
     });
-    
+
     toast({
       title: "Added to Bag",
       description: `${product.name} has been added to your cart`,
     });
-    
+
     // Reset quantity after adding
     setQuantity(1);
   };
@@ -80,7 +80,7 @@ const ProductDetails = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1">
         <div className="container px-4 md:px-8 py-6">
           {/* Breadcrumb */}
@@ -159,33 +159,23 @@ const ProductDetails = () => {
             {/* Product Info */}
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+                <h1 className="text-2xl md:text-3xl font-light text-foreground mb-2">
                   {product.name}
                 </h1>
-                <p className="text-3xl font-bold text-foreground">₹{product.price}</p>
-              </div>
+                <div className="flex items-baseline gap-3">
+                  <div className="flex text-2xl md:text-3xl font-light font-pirulen text-neutral-300">
+                    <p>₹</p>
+                  <p className=" line-through">
+                    {product.price}
+                  </p>
+                  </div>
 
-              {/* Color Selector */}
-              <div>
-                <label className="block text-sm font-semibold text-foreground mb-3">
-                  COLOR: <span className="font-normal">{colors[selectedColor].name}</span>
-                </label>
-                <div className="flex gap-2">
-                  {colors.map((color, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setSelectedColor(idx)}
-                      className={cn(
-                        "w-10 h-10 rounded-full border-2 transition-all",
-                        selectedColor === idx
-                          ? "border-foreground scale-110"
-                          : "border-border hover:border-muted-foreground"
-                      )}
-                      style={{ backgroundColor: color.hex }}
-                      aria-label={color.name}
-                    />
-                  ))}
+                  {/* Discounted Price */}
+                  <p className="text-3xl md:text-4xl font-pirulen font- text-accent">
+                    ₹{product.price}
+                  </p>
                 </div>
+
               </div>
 
               {/* Size Selector */}
@@ -199,7 +189,7 @@ const ProductDetails = () => {
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={cn(
-                        "w-12 h-12 rounded border-2 text-sm font-medium transition-all",
+                        "w-12 h-12 border-2 text-sm font-medium transition-all",
                         selectedSize === size
                           ? "border-foreground bg-foreground text-background"
                           : "border-border hover:border-foreground"
@@ -236,16 +226,16 @@ const ProductDetails = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-3 pt-4 ">
                 <Button
                   variant="outline"
-                  className="flex-1 h-12 font-semibold"
+                  className="flex-1 h-12 font-semibold font-pirulen"
                 >
                   TRY ON
                 </Button>
                 <Button
                   variant="default"
-                  className="flex-1 h-12 font-semibold"
+                  className="flex-1 h-12 font-semibold font-pirulen"
                   onClick={handleAddToBag}
                 >
                   ADD TO BAG
@@ -256,7 +246,7 @@ const ProductDetails = () => {
               <div className="pt-6 border-t border-border">
                 <h3 className="font-semibold text-foreground mb-2">Product Details</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Premium quality {product.category.toLowerCase()} designed for comfort and style. 
+                  Premium quality {product.category.toLowerCase()} designed for comfort and style.
                   Made with high-quality materials and expert craftsmanship. Perfect for any occasion.
                 </p>
               </div>
