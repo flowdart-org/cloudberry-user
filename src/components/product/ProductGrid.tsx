@@ -22,6 +22,7 @@ const mockProducts: Product[] = [
 
 const ProductGrid = () => {
 
+
   return (
     <section className="py-12 md:py-16 bg-muted/30">
       <div className="">

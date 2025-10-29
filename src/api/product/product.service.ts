@@ -1,29 +1,31 @@
 import { ApiResponse } from "../types";
-import { request } from "@/lib/axios";
+import { productApi, request } from "@/lib/axios";
 import { Product } from "@/types/product.types";
 import { CreateProductDTO, updateProductDTO } from "./product.dto";
 
 const BASE_URL = '/product';
 
+// export const PRODUCT_SERVICES = {
+ 
+//   getProduct: async (id: string): Promise<ApiResponse<Product>> => {
+//     return await request<Product>("get", `${BASE_URL}/${id}`);
+//   },
+
+//   getProducts: async (): Promise<ApiResponse<Product[]>> => {
+//     return await request<Product[]>("get", `${BASE_URL}`);
+//   },
+
+// };
+
 export const PRODUCT_SERVICES = {
-  addProduct: async (data: CreateProductDTO): Promise<ApiResponse<Product>> => {
-    return await request<Product>("post", `${BASE_URL}`, data);
-  },
 
   getProduct: async (id: string): Promise<ApiResponse<Product>> => {
-    return await request<Product>("get", `${BASE_URL}/${id}`);
+        const response: any = await productApi.productControllerFindOne(id);
+        return response.data;
   },
 
-  getProducts: async (): Promise<ApiResponse<Product[]>> => {
-    return await request<Product[]>("get", `${BASE_URL}`);
+  getProducts: async (data: any): Promise<ApiResponse<Product[]>> => {
+      const response: any = await productApi.productControllerFindAll();
+        return response.data;
   },
-
-  updateProducts: async (id: string, data: updateProductDTO ): Promise<ApiResponse<Product>> => {
-    return await request<Product>("patch", `${BASE_URL}/${id}`, data);
-  },
-
-  deleteProduct: async (id: string): Promise<ApiResponse<void>> => {
-    return await request<void>("delete", `${BASE_URL}/${id}`);
-  },
-
 };

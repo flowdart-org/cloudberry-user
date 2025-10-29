@@ -3,7 +3,7 @@
 import { resendOtp, sendOtp, verifyOtp } from "@/lib/functions/auth";
 import { useEffect, useState } from "react";
 import { OTPInputs } from "../ui/otp-inputs";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface AuthModalProps {
     isOpen: boolean;

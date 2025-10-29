@@ -1,7 +1,8 @@
 "use client"
-import { Product } from "@/store/useStore";
+// import { Product } from "@/store/useStore";
 import Link from "next/link";
 import Image from "next/image";
+import { Product } from "@/types/product.types";
 
 interface ProductCardProps {
   product: Product;

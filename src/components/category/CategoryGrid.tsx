@@ -15,6 +15,7 @@ import trousersImg from "@/assets/category-trousers.jpg";
 import perfumesImg from "@/assets/category-perfumes.jpg";
 import tshirtsImg from "@/assets/category-tshirts.jpg";
 import formalImg from "@/assets/category-formal.jpg";
+import Link from "next/link";
 
 interface Category {
   id: number;
@@ -80,6 +81,7 @@ const CategoryGrid = () => {
 
           {categories.map((category) => (
             <SwiperSlide key={category.id}>
+              <Link href={`/shop/${category.title.toLocaleLowerCase()}`} >
               <div className="group relative aspect-[3/4] overflow-hidden cursor-pointer transition-transform rounded-none">
                 <Image
                   src={category.image}
@@ -101,7 +103,8 @@ const CategoryGrid = () => {
                     {category.title}
                   </h3>
                 </div>
-              </div>
+                </div>
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>

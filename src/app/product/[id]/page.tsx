@@ -37,6 +37,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const { wishlist, toggleWishlist, addToCart } = useStore();
   const { toast } = useToast();
+  // const [open, setOpen] = useState(false)
 
   const product = mockProducts.find((p) => p.id === Number(id)) || mockProducts[4];
   const isWishlisted = wishlist.includes(product.id);
@@ -80,6 +81,11 @@ const ProductDetails = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+{/* 
+      <div className="flex justify-center items-center h-screen">
+        <Button onClick={() => setOpen(true)}>Open Try-On</Button>
+        <TryOnModal isOpen={open} setOpen={setOpen} image={images[0]} />
+      </div> */}
 
       <main className="flex-1">
         <div className="container px-4 md:px-8 py-6">
@@ -87,7 +93,7 @@ const ProductDetails = () => {
           <div className="text-sm text-muted-foreground mb-6">
             <Link href="/" className="hover:text-foreground">Home</Link>
             <span className="mx-2">/</span>
-            <Link href="/shop" className="hover:text-foreground">Shop</Link>
+            <Link href="/shop/all" className="hover:text-foreground">Shop</Link>
             <span className="mx-2">/</span>
             <span className="text-foreground">{product.name}</span>
           </div>
@@ -165,9 +171,9 @@ const ProductDetails = () => {
                 <div className="flex items-baseline gap-3">
                   <div className="flex text-2xl md:text-3xl font-light font-pirulen text-neutral-300">
                     <p>₹</p>
-                  <p className=" line-through">
-                    {product.price}
-                  </p>
+                    <p className=" line-through">
+                      {product.price}
+                    </p>
                   </div>
 
                   {/* Discounted Price */}
@@ -230,6 +236,7 @@ const ProductDetails = () => {
                 <Button
                   variant="outline"
                   className="flex-1 h-12 font-semibold font-pirulen"
+                  // onClick={() => setOpen(true)}
                 >
                   TRY ON
                 </Button>

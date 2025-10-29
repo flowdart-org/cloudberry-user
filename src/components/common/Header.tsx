@@ -8,7 +8,7 @@ import Link from "next/link";
 import { AppSidebar } from "./AppSidebar";
 import AuthModal from "../auth/AuthModal";
 import CategoryBar from "../category/CategoryBar";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore } from "@/store/useAuthStore";
 import { APP_CONFIG } from "@/lib/app.config";
 import Image from "next/image";
 
@@ -62,7 +62,7 @@ const Header = () => {
               alt="icon"
               className="w-10 h-10"
             />
-            <h1 className="md:text-2xl text-sm text-foreground font-pirulen font-black">
+            <h1 className="md:text-2xl text-sm text-foreground font-pirulen font-medium">
               {APP_CONFIG.NAME}
             </h1>
           </Link>

@@ -1,30 +1,28 @@
-
 import { ApiResponse } from "../types";
-import { request } from "@/lib/axios";
+import { categoryApi, request } from "@/lib/axios";
 import { CreateCategoryDTO, updateCategoryDTO } from "./category.dto";
 import { Category } from "@/types/category.types";
 
-const BASE_URL = '/category';
+// const BASE_URL = '/category';
+
+// export const CATEGORY_SERVICES = {
+//   getCategory: async (id: string): Promise<ApiResponse<Category>> => {
+//     return await request<Category>("get", `${BASE_URL}/${id}`);
+//   },
+
+//   getCategories: async (): Promise<ApiResponse<Category[]>> => {
+//     return await request<Category[]>("get", `${BASE_URL}`);
+//   },
+// };
 
 export const CATEGORY_SERVICES = {
-  addCategory: async (data: CreateCategoryDTO): Promise<ApiResponse<Category>> => {
-    return await request<Category>("post", `${BASE_URL}`, data);
-  },
-
   getCategory: async (id: string): Promise<ApiResponse<Category>> => {
-    return await request<Category>("get", `${BASE_URL}/${id}`);
+    const response: any = await categoryApi.categoryControllerFindOne(id);
+    return response.data;
   },
 
   getCategories: async (): Promise<ApiResponse<Category[]>> => {
-    return await request<Category[]>("get", `${BASE_URL}`);
+    const response: any = await categoryApi.categoryControllerFindAll();
+    return response.data;
   },
-
-  updateCategories: async (id: string, data: updateCategoryDTO ): Promise<ApiResponse<Category>> => {
-    return await request<Category>("patch", `${BASE_URL}/${id}`, data);
-  },
-
-  deleteCategory: async (id: string): Promise<ApiResponse<void>> => {
-    return await request<void>("delete", `${BASE_URL}/${id}`);
-  },
-
 };
