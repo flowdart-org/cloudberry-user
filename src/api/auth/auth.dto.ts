@@ -1,6 +1,6 @@
 
-export interface RequestOtpDTO { phone: string; }
-export interface ResendOtpDTO { phone: string; }
-export interface VerifyOtpDTO { phone: string; otp: string; }
+export interface RequestOtpDTO { identifier: string; }
+export interface ResendOtpDTO { identifier: string; }
+export interface VerifyOtpDTO { identifier: string; otp: string; }
 
 

@@ -1,6 +1,7 @@
 import { ApiResponse } from "./types";
 
 export const ErrorResponse = (error: unknown): ApiResponse => {
+  console.log(error, ' hsdaf')
     if (error instanceof Error) {
       console.error("Error sending OTP:", error.message);
       return {

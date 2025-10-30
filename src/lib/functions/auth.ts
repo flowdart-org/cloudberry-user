@@ -1,53 +1,52 @@
 import { AUTH_SERVICES } from "@/api/auth/auth.service";
 import { ApiResponse } from "@/api/types";
 import { ErrorResponse } from "@/api/utils";
+import { validateContact } from "../utils";
 
-export const sendOtp = async (phone: string): Promise<ApiResponse> => {
+export const sendOtp = async (input: string): Promise<ApiResponse> => {
   try {
-    console.log("Sending OTP to phone:", phone);
-    const response = await AUTH_SERVICES.requestOtp({ phone });
-    return response;
+    const { isValid, identifier } = validateContact(input);
+    if (isValid && identifier) {
+      return await AUTH_SERVICES.requestOtp({ identifier });
+    } else {
+      throw new Error("Invalid contact input");
+    }
   } catch (error) {
-    return ErrorResponse(error)
+    return ErrorResponse(error);
   }
 };
 
-export const verifyOtp = async (phone: string, otp: string): Promise<ApiResponse> => {
+export const verifyOtp = async (
+  input: string,
+  otp: string
+): Promise<ApiResponse> => {
   try {
-    console.log(`Verify OTP of ${phone}: ${otp}`);
-    const response = await AUTH_SERVICES.verifyOtp({ phone, otp });
-    return response;
+    if (otp.length !== 4) {
+      throw new Error("Please enter a valid 4-digit OTP.");
+    }
+    const { isValid, identifier } = validateContact(input);
+    if (isValid && identifier) {
+      return await AUTH_SERVICES.verifyOtp({ identifier, otp });
+    } else {
+      throw new Error("Invalid contact input");
+    }
   } catch (error) {
-    return ErrorResponse(error)
-  }
-};
-
-export const resendOtp = async (phone: string): Promise<ApiResponse> => {
-  try {
-    const response = await AUTH_SERVICES.resendOtp({ phone });
-    return response;
-  } catch (error) {
-    return ErrorResponse(error)
+    return ErrorResponse(error);
   }
 };
 
 export const logout = async (): Promise<ApiResponse> => {
   try {
-    const response = await AUTH_SERVICES.logout();
-    return response;
+    return await AUTH_SERVICES.logout();
   } catch (error) {
-    return ErrorResponse(error)
+    return ErrorResponse(error);
   }
 };
 
 export const refreshToken = async (): Promise<ApiResponse> => {
   try {
-    const response = await AUTH_SERVICES.refreshToken();
-    return response;
+    return await AUTH_SERVICES.refreshToken();
   } catch (error) {
-    return ErrorResponse(error)
+    return ErrorResponse(error);
   }
 };
-
-
-

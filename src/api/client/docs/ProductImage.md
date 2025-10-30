@@ -1,19 +1,19 @@
-# LoginRequestOTPDto
+# ProductImage
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**phone** | **string** | Phone number of the user | [default to undefined]
+**image** | [**ImageInput**](ImageInput.md) | Product image details (base64 or GCS URI) | [default to undefined]
 
 ## Example
 
 ```typescript
-import { LoginRequestOTPDto } from './api';
+import { ProductImage } from './api';
 
-const instance: LoginRequestOTPDto = {
-    phone,
+const instance: ProductImage = {
+    image,
 };
 ```
 

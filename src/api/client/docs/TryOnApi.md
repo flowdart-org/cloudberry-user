@@ -4,10 +4,10 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**tryOnControllerTryOn**](#tryoncontrollertryon) | **POST** /api/ai | |
+|[**tryOnControllerTryOn**](#tryoncontrollertryon) | **POST** /api/ai/try-on | |
 
 # **tryOnControllerTryOn**
-> tryOnControllerTryOn(body)
+> tryOnControllerTryOn(createTryOnDto)
 
 
 ### Example
@@ -15,16 +15,17 @@ All URIs are relative to *http://localhost*
 ```typescript
 import {
     TryOnApi,
-    Configuration
+    Configuration,
+    CreateTryOnDto
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new TryOnApi(configuration);
 
-let body: object; //
+let createTryOnDto: CreateTryOnDto; //
 
 const { status, data } = await apiInstance.tryOnControllerTryOn(
-    body
+    createTryOnDto
 );
 ```
 
@@ -32,7 +33,7 @@ const { status, data } = await apiInstance.tryOnControllerTryOn(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **body** | **object**|  | |
+| **createTryOnDto** | **CreateTryOnDto**|  | |
 
 
 ### Return type

@@ -8,8 +8,7 @@ All URIs are relative to *http://localhost*
 |[**authControllerLogout**](#authcontrollerlogout) | **POST** /api/auth/logout | Logout user removes token from cookies.|
 |[**authControllerRefreshToken**](#authcontrollerrefreshtoken) | **POST** /api/auth/refresh-token | Refresh access and refresh tokens.|
 |[**authControllerRequestOtp**](#authcontrollerrequestotp) | **POST** /api/auth/login/request-otp | Request OTP for user.|
-|[**authControllerResendOtp**](#authcontrollerresendotp) | **POST** /api/auth/login/resend-otp | Resend OTP to user|
-|[**authControllerVerifyOtp**](#authcontrollerverifyotp) | **POST** /api/auth/login/verify-otp | Verify the OTP of the user.|
+|[**authControllerVerifyOtp**](#authcontrollerverifyotp) | **POST** /api/auth/login | Verify the OTP of the user.|
 
 # **authControllerAdminLogin**
 > authControllerAdminLogin(adminLoginDto)
@@ -197,57 +196,6 @@ No authorization required
 |-------------|-------------|------------------|
 |**201** | OTP has successfully sent. |  -  |
 |**400** | Validation failed |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **authControllerResendOtp**
-> authControllerResendOtp(loginResendOTPDto)
-
-
-### Example
-
-```typescript
-import {
-    AuthApi,
-    Configuration,
-    LoginResendOTPDto
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new AuthApi(configuration);
-
-let loginResendOTPDto: LoginResendOTPDto; //
-
-const { status, data } = await apiInstance.authControllerResendOtp(
-    loginResendOTPDto
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **loginResendOTPDto** | **LoginResendOTPDto**|  | |
-
-
-### Return type
-
-void (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | OTP has been resent. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

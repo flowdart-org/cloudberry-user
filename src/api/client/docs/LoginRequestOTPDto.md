@@ -1,19 +1,19 @@
-# LoginResendOTPDto
+# LoginRequestOTPDto
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**phone** | **string** | Phone number of the user | [default to undefined]
+**identifier** | **string** | Email or phone number of the user | [default to undefined]
 
 ## Example
 
 ```typescript
-import { LoginResendOTPDto } from './api';
+import { LoginRequestOTPDto } from './api';
 
-const instance: LoginResendOTPDto = {
-    phone,
+const instance: LoginRequestOTPDto = {
+    identifier,
 };
 ```
 

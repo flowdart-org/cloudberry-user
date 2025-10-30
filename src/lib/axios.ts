@@ -1,17 +1,37 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { AuthApi, CategoryApi, Configuration, ProductApi, TryOnApi, UserApi } from "@/api";
+import {
+  AuthApi,
+  CategoryApi,
+  Configuration,
+  ProductApi,
+  TryOnApi,
+  UserApi,
+} from "@/api/client";
 import { APP_CONFIG } from "./app.config";
 import { ApiResponse } from "@/api/types";
+import { useAuthStore } from "@/store/useAuthStore";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+const baseURL = API_URL;
+
+export class ApiError extends Error {
+  constructor(public status: number, message: string) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
 
 export const api = axios.create({
-  baseURL: APP_CONFIG.URLS.API_BASE,
+  baseURL,
   withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-const basePath = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 export const config = new Configuration({
-  basePath,
+  basePath: baseURL,
   baseOptions: {
     withCredentials: true,
     headers: {
@@ -20,30 +40,78 @@ export const config = new Configuration({
   },
 });
 
+api.interceptors.request.use(
+  (config) => config,
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+let isRefreshing = false;
+let refreshSubscribers: (() => void)[] = [];
+
+const onTokenRefreshed = () => {
+  refreshSubscribers.forEach((callback) => callback());
+  refreshSubscribers = [];
+};
+
+const addRefreshSubscriber = (callback: () => void) => {
+  refreshSubscribers.push(callback);
+};
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          const isRefreshed = await useAuthStore.getState().refreshToken();
+          isRefreshing = false;
+
+          if (isRefreshed) {
+            onTokenRefreshed();
+            return api(originalRequest);
+          }
+        } else {
+          return new Promise((resolve) => {
+            addRefreshSubscriber(() => {
+              resolve(api(originalRequest));
+            });
+          });
+        }
+      } catch (refreshError) {
+        await useAuthStore.getState().logout();
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+
 export async function request<T>(
-  method: "get" | "post" | "put" | "patch" | "delete",
-  url: string,
-  data?: any,
-  config?: AxiosRequestConfig
+  callback: any,
+  ...props: any[]
 ): Promise<ApiResponse<T>> {
   try {
-    const response = await api.request<ApiResponse<T>>({
-      url,
-      method,
-      data,
-      ...config,
-    });
+    const response = await callback(...props);
     return response.data;
   } catch (err: any) {
     return {
       message: err?.response?.data?.message || err.message,
       success: false,
-    };
+    } as ApiResponse<T>;
   }
 }
 
-export const authApi = new AuthApi(config)
-export const categoryApi = new CategoryApi(config)
-export const productApi = new ProductApi(config)
-export const userApi = new UserApi(config)
-export const tryOnApi = new TryOnApi(config)
+
+export const authApi = new AuthApi(config, baseURL, api);
+export const categoryApi = new CategoryApi(config);
+export const productApi = new ProductApi(config);
+export const userApi = new UserApi(config, baseURL, api);
+export const tryOnApi = new TryOnApi(config);

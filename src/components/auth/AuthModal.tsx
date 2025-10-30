@@ -1,6 +1,6 @@
 "use client";
 
-import { resendOtp, sendOtp, verifyOtp } from "@/lib/functions/auth";
+import { sendOtp, verifyOtp } from "@/lib/functions/auth";
 import { useEffect, useState } from "react";
 import { OTPInputs } from "../ui/otp-inputs";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -11,7 +11,7 @@ interface AuthModalProps {
 }
 
 const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
-    const [phone, setPhone] = useState<string>("");
+    const [identifier, setIdentifier] = useState<string>("");
     const [otp, setOtp] = useState<string>("");
     const [showOTP, setShowOTP] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
@@ -34,22 +34,16 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         setResendTimer(30);
     };
 
-    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value.replace(/\D/g, "").slice(0, 10);
-        setPhone(value);
+    const handleIdentifierChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        // const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+        setIdentifier(value);
         setError("");
     };
 
     const handleSendOTP = async () => {
-        if (phone.length !== 10) {
-            setError("Please enter a valid 10-digit number.");
-            return;
-        }
-
         setLoading(true);
-        const indNum = "+91 " + phone;
-        const response = await sendOtp(indNum);
-
+        const response = await sendOtp(identifier);
         if (response.success) {
             setError("");
             startResendTimer();
@@ -62,13 +56,9 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     };
 
     const handleVerifyOTP = async () => {
-        if (otp.length !== 4) {
-            setError("Please enter a valid 4-digit OTP.");
-            return;
-        }
+        
         setLoading(true);
-        const indNum = "+91 " + phone;
-        const response = await verifyOtp(indNum, otp)
+        const response = await verifyOtp( identifier, otp)
 
         if (response.success) {
             await login()
@@ -80,23 +70,9 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         setLoading(false)
     };
 
-    const handleResendOTP = async () => {
-        if (resendTimer > 0) return;
-        setLoading(true);
-        const indNum = "+91 " + phone;
-        const response = await resendOtp(indNum);
-
-        if (response.success) {
-            setError("");
-            startResendTimer();
-        } else {
-            setError(response.message || "Failed to send OTP. Please try again.");
-        }
-        setLoading(false);
-    };
-
     const handleClose = () => {
-        setPhone('');
+        setIdentifier('');
+        setError('');
         setOtp('');
         setShowOTP(false);
         setLoading(false);
@@ -120,13 +96,13 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
                 {!showOTP && (
                     <div className="flex items-center border overflow-hidden focus-within:ring-1 ring-primary max-w-[300px] w-full rounded-md">
-                        <span className="px-3 text-gray-800 ml-2 border-r">+91</span>
+                        {/* <span className="px-3 text-gray-800 ml-2 border-r">+91</span> */}
                         <input
                             type="text"
-                            value={phone}
-                            onChange={handlePhoneChange}
-                            placeholder="Enter 10-digit number"
-                            className="flex-1 px-2 py-2 outline-none text-gray-900 bg-white "
+                            value={identifier}
+                            onChange={handleIdentifierChange}
+                            placeholder="Enter phone or email"
+                            className="flex-1 px-5 py-2 outline-none text-gray-900 bg-white "
                         />
                     </div>
                 )}
@@ -138,7 +114,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 {showOTP ? (
                     <div className="grid grid-cols-2 gap-2 max-w-[300px] w-full mt-6 font-pirulen">
                         <button
-                            onClick={handleResendOTP}
+                            onClick={handleSendOTP}
                             disabled={loading || resendTimer > 0}
                             className={`py-4 h-full border text-sm ${resendTimer > 0 && 'border-gray-300 text-gray-300'}`}
                         >

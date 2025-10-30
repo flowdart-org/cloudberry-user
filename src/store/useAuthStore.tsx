@@ -8,9 +8,10 @@ interface AuthState {
     isAuthenticated: boolean;
     isLoading: boolean;
     user: User | null;
-    login: () => void;
-    logout: () => void;
+    login: () => Promise<void>;
+    logout: () => Promise<void>;
     setUser: (user: Partial<User>) => void;
+    refreshToken: () => Promise<boolean>;
     fetchUser: () => Promise<void>
 }
 
@@ -21,14 +22,15 @@ export const useAuthStore = create<AuthState>()(
             isLoading: true,
             user: null,
 
-            login: () => {
+            login: async () => {
                 set({ isAuthenticated: true })
-                get().fetchUser()
+                await get().fetchUser()
             },
 
             fetchUser: async () => {
                 if (get().isAuthenticated) {
                     const { success, data: user } = await USER_SERVICES.me()
+                    console.log(success, user, 'fetchUser me')
                     if (success) {
                         set({ user, isAuthenticated: true })
                     }
@@ -44,13 +46,19 @@ export const useAuthStore = create<AuthState>()(
                 if (success) {
                     set({ user: null, isAuthenticated: false })
                 }
-                set({isLoading: false})
+                set({ isLoading: false })
             },
 
-            setUser: (userUpdate) =>
+            setUser: (userUpdate) => {
                 set((state) => ({
                     user: state.user ? { ...state.user, ...userUpdate } : null,
-                })),
+                }))
+            },
+
+            refreshToken: async () => {
+                console.log('refreshingg');
+                return false;
+            },
         }),
         {
             name: "auth-storage",

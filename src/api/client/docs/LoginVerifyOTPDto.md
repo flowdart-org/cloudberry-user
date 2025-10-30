@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**phone** | **string** | Phone number of the user | [default to undefined]
-**otp** | **number** | OTP | [default to undefined]
+**identifier** | **string** | Phone number of the user | [default to undefined]
+**otp** | **string** | OTP | [default to undefined]
 
 ## Example
 
@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 import { LoginVerifyOTPDto } from './api';
 
 const instance: LoginVerifyOTPDto = {
-    phone,
+    identifier,
     otp,
 };
 ```

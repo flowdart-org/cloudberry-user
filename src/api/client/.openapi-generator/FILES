@@ -1,5 +1,6 @@
 .gitignore
 .npmignore
+.openapi-generator-ignore
 api.ts
 base.ts
 common.ts
@@ -9,10 +10,13 @@ docs/AdminLoginDto.md
 docs/AuthApi.md
 docs/CategoryApi.md
 docs/CreateProductDto.md
+docs/CreateTryOnDto.md
+docs/ImageInput.md
 docs/LoginRequestOTPDto.md
-docs/LoginResendOTPDto.md
 docs/LoginVerifyOTPDto.md
+docs/PersonImage.md
 docs/ProductApi.md
+docs/ProductImage.md
 docs/TryOnApi.md
 docs/UpdateProductDto.md
 docs/UserApi.md
