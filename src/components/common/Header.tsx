@@ -12,7 +12,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { APP_CONFIG } from "@/lib/app.config";
 import Image from "next/image";
 
-const Header = () => {
+const Header = ({categories = false}: {categories?: boolean}) => {
   const { cart } = useStore();
   const { isAuthenticated } = useAuthStore()
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -105,15 +105,8 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Category Bar */}
-      <div
-        className={`sticky top-0 z-50 w-full bg-background border-b border-border overflow-hidden transition-all duration-500 ease-in-out ${showCategories
-          ? "max-h-20 opacity-100 translate-y-0"
-          : "max-h-0 opacity-0 -translate-y-full"
-          }`}
-      >
-        <CategoryBar />
-      </div>
+      
+        {categories && <CategoryBar showCategories={showCategories} />}
 
     </>
   );

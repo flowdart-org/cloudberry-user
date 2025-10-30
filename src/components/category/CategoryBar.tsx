@@ -19,7 +19,7 @@ const categories = [
   "CASUALS",
 ];
 
-const CategoryBar = () => {
+const CategoryBar = ({showCategories}: {showCategories: boolean}) => {
   const [activeCategory, setActiveCategory] = useState("ALL");
   const router = useRouter();
 
@@ -30,6 +30,12 @@ const CategoryBar = () => {
   };
 
   return (
+    <div
+        className={`sticky top-0 z-50 w-full bg-background border-b border-border overflow-hidden transition-all duration-500 ease-in-out ${showCategories
+          ? "max-h-20 opacity-100 translate-y-0"
+          : "max-h-0 opacity-0 -translate-y-full"
+          }`}
+      >
     <div
       className="flex gap-2 py-3 px-3 overflow-x-auto scrollbar-hide transition-all duration-500 ease-in-out md:justify-center w-screen"
     >
@@ -48,6 +54,7 @@ const CategoryBar = () => {
           </Button>
         </div>
       ))}
+    </div>
     </div>
   );
 };

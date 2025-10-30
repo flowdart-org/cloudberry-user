@@ -45,7 +45,7 @@ const Shop = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header categories />
 
       <div className="bg-foreground text-background py-2 text-center text-sm">
         Free shipping on order over ₹1000

@@ -8,7 +8,7 @@ import Footer from "@/components/common/Footer";
 const Index = () => {
   return (
     <div className="flex flex-col w-screen">
-      <Header />
+      <Header categories />
       <main className="flex-1">
         <HeroBanner />
         <CategoryGrid />

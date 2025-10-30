@@ -21,7 +21,7 @@ const Cart = () => {
   if (cart.length === 0) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
+        <Header categories />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center space-y-4">
             <h2 className="text-2xl font-bold text-foreground">Your cart is empty</h2>
@@ -38,7 +38,7 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header categories />
       
       <main className="flex-1 bg-background">
         <div className="container px-4 md:px-8 py-8">
