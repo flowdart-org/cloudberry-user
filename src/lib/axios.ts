@@ -71,12 +71,17 @@ api.interceptors.response.use(
         if (!isRefreshing) {
           isRefreshing = true;
           const isRefreshed = await useAuthStore.getState().refreshToken();
+
+          console.log(isRefreshed);
+          
+
           isRefreshing = false;
 
           if (isRefreshed) {
             onTokenRefreshed();
             return api(originalRequest);
           }
+          throw new Error('User is not Authenticated')
         } else {
           return new Promise((resolve) => {
             addRefreshSubscriber(() => {
@@ -93,7 +98,6 @@ api.interceptors.response.use(
   }
 );
 
-
 export async function request<T>(
   callback: any,
   ...props: any[]
@@ -109,9 +113,8 @@ export async function request<T>(
   }
 }
 
-
-export const authApi = new AuthApi(config, baseURL, api);
-export const categoryApi = new CategoryApi(config);
-export const productApi = new ProductApi(config);
+export const authApi = new AuthApi(config);
+export const categoryApi = new CategoryApi(config, baseURL, api);
+export const productApi = new ProductApi(config, baseURL, api);
 export const userApi = new UserApi(config, baseURL, api);
-export const tryOnApi = new TryOnApi(config);
+export const tryOnApi = new TryOnApi(config, baseURL, api);

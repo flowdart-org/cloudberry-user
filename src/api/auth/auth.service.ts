@@ -4,18 +4,18 @@ import { authApi, request } from "@/lib/axios";
 
 export const AUTH_SERVICES = {
   requestOtp: async (payload: RequestOtpDTO): Promise<ApiResponse<void>> => {
-    return await request(authApi.authControllerRequestOtp.bind(authApi), payload)
+    return request(authApi.authControllerRequestOtp.bind(authApi), payload)
   },
   
   verifyOtp: async (payload: VerifyOtpDTO): Promise<ApiResponse<void>> => {
-    return await request(authApi.authControllerVerifyOtp.bind(authApi), payload);
+    return request(authApi.authControllerVerifyOtp.bind(authApi), payload);
   },
 
   logout: async (): Promise<ApiResponse<void>> => {
-   return await request(authApi.authControllerLogout.bind(authApi))
+   return request(authApi.authControllerLogout.bind(authApi))
   },
 
   refreshToken: async (): Promise<ApiResponse<void>> => {
-    return await request(authApi.authControllerRefreshToken.bind(authApi));
+    return request(authApi.authControllerRefreshToken.bind(authApi));
   },
 };

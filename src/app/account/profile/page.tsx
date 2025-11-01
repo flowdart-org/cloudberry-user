@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ProfileTab() {
+    const {user} = useAuthStore()
     return (
         <div className="space-y-6">
             <div>
@@ -20,7 +22,7 @@ export default function ProfileTab() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <Label htmlFor="firstName">Name</Label>
-                            <Input id="firstName" defaultValue="John" className="bg-background" />
+                            <Input id="firstName" defaultValue="Enter your name" value={user?.name} className="bg-background" />
                         </div>
 
                         <div className="space-y-2">

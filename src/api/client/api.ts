@@ -23,6 +23,11 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
+export interface AdminControllerGetAdmin200Response {
+    'success': boolean;
+    'message': string;
+    'data'?: object;
+}
 export interface AdminLoginDto {
     /**
      * Admin email address
@@ -32,6 +37,12 @@ export interface AdminLoginDto {
      * Admin password
      */
     'password': string;
+}
+export interface CreateCategoryDto {
+    /**
+     * The name of the category
+     */
+    'name': string;
 }
 export interface CreateProductDto {
     /**
@@ -125,6 +136,11 @@ export interface CreateTryOnDto {
      */
     'outputOptions'?: object;
 }
+export interface HttpResponse {
+    'success': boolean;
+    'message': string;
+    'data'?: object;
+}
 export interface ImageInput {
     /**
      * Base64-encoded image data
@@ -163,6 +179,24 @@ export interface ProductImage {
      */
     'image': ImageInput;
 }
+export interface UpdateCategoryDto {
+    /**
+     * The name of the category
+     */
+    'name'?: string;
+    /**
+     * Status of the category
+     */
+    'status'?: UpdateCategoryDtoStatusEnum;
+}
+
+export const UpdateCategoryDtoStatusEnum = {
+    Active: 'active',
+    Inactive: 'inactive'
+} as const;
+
+export type UpdateCategoryDtoStatusEnum = typeof UpdateCategoryDtoStatusEnum[keyof typeof UpdateCategoryDtoStatusEnum];
+
 export interface UpdateProductDto {
     /**
      * Name of the product
@@ -238,66 +272,8 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminControllerFindAll: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/admin`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
         adminControllerGetAdmin: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/admin/me`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        adminControllerGetHello: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/admin/hello`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -334,32 +310,10 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async adminControllerFindAll(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminControllerFindAll(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminControllerFindAll']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async adminControllerGetAdmin(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async adminControllerGetAdmin(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminControllerGetAdmin200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.adminControllerGetAdmin(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.adminControllerGetAdmin']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async adminControllerGetHello(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.adminControllerGetHello(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.adminControllerGetHello']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -376,24 +330,8 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        adminControllerFindAll(options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.adminControllerFindAll(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        adminControllerGetAdmin(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        adminControllerGetAdmin(options?: RawAxiosRequestConfig): AxiosPromise<AdminControllerGetAdmin200Response> {
             return localVarFp.adminControllerGetAdmin(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        adminControllerGetHello(options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.adminControllerGetHello(options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -407,26 +345,8 @@ export class AdminApi extends BaseAPI {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public adminControllerFindAll(options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).adminControllerFindAll(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
     public adminControllerGetAdmin(options?: RawAxiosRequestConfig) {
         return AdminApiFp(this.configuration).adminControllerGetAdmin(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public adminControllerGetHello(options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).adminControllerGetHello(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -804,13 +724,13 @@ export const CategoryApiAxiosParamCreator = function (configuration?: Configurat
     return {
         /**
          * 
-         * @param {object} body 
+         * @param {CreateCategoryDto} createCategoryDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        categoryControllerCreate: async (body: object, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'body' is not null or undefined
-            assertParamExists('categoryControllerCreate', 'body', body)
+        categoryControllerCreate: async (createCategoryDto: CreateCategoryDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createCategoryDto' is not null or undefined
+            assertParamExists('categoryControllerCreate', 'createCategoryDto', createCategoryDto)
             const localVarPath = `/api/category`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -830,7 +750,7 @@ export const CategoryApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createCategoryDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -902,48 +822,15 @@ export const CategoryApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @param {string} id 
+         * @param {UpdateCategoryDto} updateCategoryDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        categoryControllerRemove: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('categoryControllerRemove', 'id', id)
-            const localVarPath = `/api/category/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id 
-         * @param {object} body 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        categoryControllerUpdate: async (id: string, body: object, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        categoryControllerUpdate: async (id: string, updateCategoryDto: UpdateCategoryDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('categoryControllerUpdate', 'id', id)
-            // verify required parameter 'body' is not null or undefined
-            assertParamExists('categoryControllerUpdate', 'body', body)
+            // verify required parameter 'updateCategoryDto' is not null or undefined
+            assertParamExists('categoryControllerUpdate', 'updateCategoryDto', updateCategoryDto)
             const localVarPath = `/api/category/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -964,7 +851,7 @@ export const CategoryApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updateCategoryDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -982,12 +869,12 @@ export const CategoryApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {object} body 
+         * @param {CreateCategoryDto} createCategoryDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async categoryControllerCreate(body: object, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.categoryControllerCreate(body, options);
+        async categoryControllerCreate(createCategoryDto: CreateCategoryDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.categoryControllerCreate(createCategoryDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CategoryApi.categoryControllerCreate']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1018,24 +905,12 @@ export const CategoryApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} id 
+         * @param {UpdateCategoryDto} updateCategoryDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async categoryControllerRemove(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.categoryControllerRemove(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CategoryApi.categoryControllerRemove']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string} id 
-         * @param {object} body 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async categoryControllerUpdate(id: string, body: object, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.categoryControllerUpdate(id, body, options);
+        async categoryControllerUpdate(id: string, updateCategoryDto: UpdateCategoryDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.categoryControllerUpdate(id, updateCategoryDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CategoryApi.categoryControllerUpdate']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1051,12 +926,12 @@ export const CategoryApiFactory = function (configuration?: Configuration, baseP
     return {
         /**
          * 
-         * @param {object} body 
+         * @param {CreateCategoryDto} createCategoryDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        categoryControllerCreate(body: object, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.categoryControllerCreate(body, options).then((request) => request(axios, basePath));
+        categoryControllerCreate(createCategoryDto: CreateCategoryDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.categoryControllerCreate(createCategoryDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1078,21 +953,12 @@ export const CategoryApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @param {string} id 
+         * @param {UpdateCategoryDto} updateCategoryDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        categoryControllerRemove(id: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.categoryControllerRemove(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id 
-         * @param {object} body 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        categoryControllerUpdate(id: string, body: object, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.categoryControllerUpdate(id, body, options).then((request) => request(axios, basePath));
+        categoryControllerUpdate(id: string, updateCategoryDto: UpdateCategoryDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.categoryControllerUpdate(id, updateCategoryDto, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1103,12 +969,12 @@ export const CategoryApiFactory = function (configuration?: Configuration, baseP
 export class CategoryApi extends BaseAPI {
     /**
      * 
-     * @param {object} body 
+     * @param {CreateCategoryDto} createCategoryDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public categoryControllerCreate(body: object, options?: RawAxiosRequestConfig) {
-        return CategoryApiFp(this.configuration).categoryControllerCreate(body, options).then((request) => request(this.axios, this.basePath));
+    public categoryControllerCreate(createCategoryDto: CreateCategoryDto, options?: RawAxiosRequestConfig) {
+        return CategoryApiFp(this.configuration).categoryControllerCreate(createCategoryDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1133,22 +999,213 @@ export class CategoryApi extends BaseAPI {
     /**
      * 
      * @param {string} id 
+     * @param {UpdateCategoryDto} updateCategoryDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public categoryControllerRemove(id: string, options?: RawAxiosRequestConfig) {
-        return CategoryApiFp(this.configuration).categoryControllerRemove(id, options).then((request) => request(this.axios, this.basePath));
+    public categoryControllerUpdate(id: string, updateCategoryDto: UpdateCategoryDto, options?: RawAxiosRequestConfig) {
+        return CategoryApiFp(this.configuration).categoryControllerUpdate(id, updateCategoryDto, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * MediaApi - axios parameter creator
+ */
+export const MediaApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {string} categoryId 
+         * @param {string} fileName 
+         * @param {string} mimeType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mediaControllerGetCategoryUploadUrl: async (categoryId: string, fileName: string, mimeType: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'categoryId' is not null or undefined
+            assertParamExists('mediaControllerGetCategoryUploadUrl', 'categoryId', categoryId)
+            // verify required parameter 'fileName' is not null or undefined
+            assertParamExists('mediaControllerGetCategoryUploadUrl', 'fileName', fileName)
+            // verify required parameter 'mimeType' is not null or undefined
+            assertParamExists('mediaControllerGetCategoryUploadUrl', 'mimeType', mimeType)
+            const localVarPath = `/api/media/upload/category/{categoryId}`
+                .replace(`{${"categoryId"}}`, encodeURIComponent(String(categoryId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (fileName !== undefined) {
+                localVarQueryParameter['fileName'] = fileName;
+            }
+
+            if (mimeType !== undefined) {
+                localVarQueryParameter['mimeType'] = mimeType;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} productId 
+         * @param {string} fileName 
+         * @param {string} mimeType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mediaControllerGetPublicUploadUrl: async (productId: string, fileName: string, mimeType: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'productId' is not null or undefined
+            assertParamExists('mediaControllerGetPublicUploadUrl', 'productId', productId)
+            // verify required parameter 'fileName' is not null or undefined
+            assertParamExists('mediaControllerGetPublicUploadUrl', 'fileName', fileName)
+            // verify required parameter 'mimeType' is not null or undefined
+            assertParamExists('mediaControllerGetPublicUploadUrl', 'mimeType', mimeType)
+            const localVarPath = `/api/media/media/upload/product/{productId}`
+                .replace(`{${"productId"}}`, encodeURIComponent(String(productId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (fileName !== undefined) {
+                localVarQueryParameter['fileName'] = fileName;
+            }
+
+            if (mimeType !== undefined) {
+                localVarQueryParameter['mimeType'] = mimeType;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * MediaApi - functional programming interface
+ */
+export const MediaApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = MediaApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {string} categoryId 
+         * @param {string} fileName 
+         * @param {string} mimeType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async mediaControllerGetCategoryUploadUrl(categoryId: string, fileName: string, mimeType: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mediaControllerGetCategoryUploadUrl(categoryId, fileName, mimeType, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['MediaApi.mediaControllerGetCategoryUploadUrl']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} productId 
+         * @param {string} fileName 
+         * @param {string} mimeType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async mediaControllerGetPublicUploadUrl(productId: string, fileName: string, mimeType: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mediaControllerGetPublicUploadUrl(productId, fileName, mimeType, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['MediaApi.mediaControllerGetPublicUploadUrl']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * MediaApi - factory interface
+ */
+export const MediaApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = MediaApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {string} categoryId 
+         * @param {string} fileName 
+         * @param {string} mimeType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mediaControllerGetCategoryUploadUrl(categoryId: string, fileName: string, mimeType: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.mediaControllerGetCategoryUploadUrl(categoryId, fileName, mimeType, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} productId 
+         * @param {string} fileName 
+         * @param {string} mimeType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mediaControllerGetPublicUploadUrl(productId: string, fileName: string, mimeType: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.mediaControllerGetPublicUploadUrl(productId, fileName, mimeType, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * MediaApi - object-oriented interface
+ */
+export class MediaApi extends BaseAPI {
+    /**
+     * 
+     * @param {string} categoryId 
+     * @param {string} fileName 
+     * @param {string} mimeType 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public mediaControllerGetCategoryUploadUrl(categoryId: string, fileName: string, mimeType: string, options?: RawAxiosRequestConfig) {
+        return MediaApiFp(this.configuration).mediaControllerGetCategoryUploadUrl(categoryId, fileName, mimeType, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {string} id 
-     * @param {object} body 
+     * @param {string} productId 
+     * @param {string} fileName 
+     * @param {string} mimeType 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public categoryControllerUpdate(id: string, body: object, options?: RawAxiosRequestConfig) {
-        return CategoryApiFp(this.configuration).categoryControllerUpdate(id, body, options).then((request) => request(this.axios, this.basePath));
+    public mediaControllerGetPublicUploadUrl(productId: string, fileName: string, mimeType: string, options?: RawAxiosRequestConfig) {
+        return MediaApiFp(this.configuration).mediaControllerGetPublicUploadUrl(productId, fileName, mimeType, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1225,15 +1282,11 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        productControllerFindOne: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('productControllerFindOne', 'id', id)
-            const localVarPath = `/api/product/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        productControllerFindFeed: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/product/feed`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1262,9 +1315,9 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        productControllerRemove: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        productControllerFindOne: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('productControllerRemove', 'id', id)
+            assertParamExists('productControllerFindOne', 'id', id)
             const localVarPath = `/api/product/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1274,7 +1327,7 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -1362,14 +1415,13 @@ export const ProductApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async productControllerFindOne(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.productControllerFindOne(id, options);
+        async productControllerFindFeed(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.productControllerFindFeed(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProductApi.productControllerFindOne']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ProductApi.productControllerFindFeed']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1378,10 +1430,10 @@ export const ProductApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async productControllerRemove(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.productControllerRemove(id, options);
+        async productControllerFindOne(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.productControllerFindOne(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProductApi.productControllerRemove']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ProductApi.productControllerFindOne']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1425,12 +1477,11 @@ export const ProductApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        productControllerFindOne(id: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.productControllerFindOne(id, options).then((request) => request(axios, basePath));
+        productControllerFindFeed(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.productControllerFindFeed(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1438,8 +1489,8 @@ export const ProductApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        productControllerRemove(id: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.productControllerRemove(id, options).then((request) => request(axios, basePath));
+        productControllerFindOne(id: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.productControllerFindOne(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1479,12 +1530,11 @@ export class ProductApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public productControllerFindOne(id: string, options?: RawAxiosRequestConfig) {
-        return ProductApiFp(this.configuration).productControllerFindOne(id, options).then((request) => request(this.axios, this.basePath));
+    public productControllerFindFeed(options?: RawAxiosRequestConfig) {
+        return ProductApiFp(this.configuration).productControllerFindFeed(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1493,8 +1543,8 @@ export class ProductApi extends BaseAPI {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public productControllerRemove(id: string, options?: RawAxiosRequestConfig) {
-        return ProductApiFp(this.configuration).productControllerRemove(id, options).then((request) => request(this.axios, this.basePath));
+    public productControllerFindOne(id: string, options?: RawAxiosRequestConfig) {
+        return ProductApiFp(this.configuration).productControllerFindOne(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1743,51 +1793,14 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        userControllerRemove: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('userControllerRemove', 'id', id)
-            const localVarPath = `/api/user/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id 
          * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        userControllerUpdate: async (id: string, body: object, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('userControllerUpdate', 'id', id)
+        userControllerUpdate: async (body: object, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             assertParamExists('userControllerUpdate', 'body', body)
-            const localVarPath = `/api/user/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            const localVarPath = `/api/user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1870,25 +1883,12 @@ export const UserApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async userControllerRemove(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.userControllerRemove(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserApi.userControllerRemove']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string} id 
          * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async userControllerUpdate(id: string, body: object, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.userControllerUpdate(id, body, options);
+        async userControllerUpdate(body: object, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.userControllerUpdate(body, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.userControllerUpdate']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1938,22 +1938,12 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        userControllerRemove(id: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.userControllerRemove(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id 
          * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        userControllerUpdate(id: string, body: object, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.userControllerUpdate(id, body, options).then((request) => request(axios, basePath));
+        userControllerUpdate(body: object, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.userControllerUpdate(body, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2002,23 +1992,12 @@ export class UserApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} id 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public userControllerRemove(id: string, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).userControllerRemove(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id 
      * @param {object} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public userControllerUpdate(id: string, body: object, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).userControllerUpdate(id, body, options).then((request) => request(this.axios, this.basePath));
+    public userControllerUpdate(body: object, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).userControllerUpdate(body, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -1,5 +1,6 @@
 import { AUTH_SERVICES } from "@/api/auth/auth.service";
 import { USER_SERVICES } from "@/api/user/user.service";
+import { authApi } from "@/lib/axios";
 import { User } from "@/types/user.types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -10,7 +11,6 @@ interface AuthState {
     user: User | null;
     login: () => Promise<void>;
     logout: () => Promise<void>;
-    setUser: (user: Partial<User>) => void;
     refreshToken: () => Promise<boolean>;
     fetchUser: () => Promise<void>
 }
@@ -30,7 +30,6 @@ export const useAuthStore = create<AuthState>()(
             fetchUser: async () => {
                 if (get().isAuthenticated) {
                     const { success, data: user } = await USER_SERVICES.me()
-                    console.log(success, user, 'fetchUser me')
                     if (success) {
                         set({ user, isAuthenticated: true })
                     }
@@ -41,23 +40,17 @@ export const useAuthStore = create<AuthState>()(
             },
 
             logout: async () => {
-                set({ isLoading: true })
                 const { success } = await AUTH_SERVICES.logout()
-                if (success) {
-                    set({ user: null, isAuthenticated: false })
-                }
-                set({ isLoading: false })
-            },
-
-            setUser: (userUpdate) => {
-                set((state) => ({
-                    user: state.user ? { ...state.user, ...userUpdate } : null,
-                }))
+                set({ user: null, isAuthenticated: false, isLoading: false })
             },
 
             refreshToken: async () => {
-                console.log('refreshingg');
-                return false;
+                try {
+                    const res = await authApi.authControllerRefreshToken();
+                    return true
+                } catch (err) {
+                    return false
+                }
             },
         }),
         {

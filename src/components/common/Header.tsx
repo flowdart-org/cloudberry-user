@@ -12,7 +12,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { APP_CONFIG } from "@/lib/app.config";
 import Image from "next/image";
 
-const Header = ({categories = false}: {categories?: boolean}) => {
+const Header = ({ categories = false }: { categories?: boolean }) => {
   const { cart } = useStore();
   const { isAuthenticated } = useAuthStore()
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -75,7 +75,7 @@ const Header = ({categories = false}: {categories?: boolean}) => {
 
             {isAuthenticated ? (
               <>
-                <Link href="/profile">
+                <Link href="/account/profile">
                   <Button variant="ghost" size="icon">
                     <User className="h-5 w-5" />
                   </Button>
@@ -105,8 +105,12 @@ const Header = ({categories = false}: {categories?: boolean}) => {
         </div>
       </header>
 
-      
-        {categories && <CategoryBar showCategories={showCategories} />}
+
+       <CategoryBar
+        position="fixed"
+        topOffset="6rem"
+        show={false}
+      />
 
     </>
   );

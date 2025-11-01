@@ -27,7 +27,7 @@ const items = [
   { title: "Home", url: "/", icon: Home },
   { title: "Shop", url: "/shop", icon: Store },
   { title: "Cart", url: "/cart", icon: ShoppingCart },
-  { title: "Profile", url: "/profile", icon: User },
+  { title: "Profile", url: "/account/profile", icon: User },
 ];
 
 interface AppSidebarProps {

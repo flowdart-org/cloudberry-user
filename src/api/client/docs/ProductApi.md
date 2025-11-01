@@ -6,8 +6,8 @@ All URIs are relative to *http://localhost*
 |------------- | ------------- | -------------|
 |[**productControllerCreate**](#productcontrollercreate) | **POST** /api/product | |
 |[**productControllerFindAll**](#productcontrollerfindall) | **GET** /api/product | |
+|[**productControllerFindFeed**](#productcontrollerfindfeed) | **GET** /api/product/feed | |
 |[**productControllerFindOne**](#productcontrollerfindone) | **GET** /api/product/{id} | |
-|[**productControllerRemove**](#productcontrollerremove) | **DELETE** /api/product/{id} | |
 |[**productControllerUpdate**](#productcontrollerupdate) | **PATCH** /api/product/{id} | |
 
 # **productControllerCreate**
@@ -104,8 +104,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **productControllerFindOne**
-> productControllerFindOne()
+# **productControllerFindFeed**
+> productControllerFindFeed()
 
 
 ### Example
@@ -119,18 +119,11 @@ import {
 const configuration = new Configuration();
 const apiInstance = new ProductApi(configuration);
 
-let id: string; // (default to undefined)
-
-const { status, data } = await apiInstance.productControllerFindOne(
-    id
-);
+const { status, data } = await apiInstance.productControllerFindFeed();
 ```
 
 ### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **id** | [**string**] |  | defaults to undefined|
+This endpoint does not have any parameters.
 
 
 ### Return type
@@ -154,8 +147,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **productControllerRemove**
-> productControllerRemove()
+# **productControllerFindOne**
+> productControllerFindOne()
 
 
 ### Example
@@ -171,7 +164,7 @@ const apiInstance = new ProductApi(configuration);
 
 let id: string; // (default to undefined)
 
-const { status, data } = await apiInstance.productControllerRemove(
+const { status, data } = await apiInstance.productControllerFindOne(
     id
 );
 ```
