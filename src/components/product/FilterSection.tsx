@@ -1,0 +1,91 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
+import { useProductStore } from "@/store/useProductStore";
+
+const FilterSection = () => {
+  const [sizeOpen, setSizeOpen] = useState(false);
+  const [priceOpen, setPriceOpen] = useState(false);
+  const { filters, toggleSizeFilter, togglePriceFilter, clearFilters, applyFilters } =
+    useProductStore();
+
+  const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+  const priceRanges = ["Under ₹500", "₹500 - ₹1000", "₹1000 - ₹1500", "Over ₹1500"];
+
+  return (
+    <aside className="w-full lg:w-64 flex-shrink-0">
+      <h2 className="text-sm font-semibold mb-6 tracking-wide">FILTERS</h2>
+
+      {/* Size Filter */}
+      <div className={`mb-3 border-b border-border ${sizeOpen ? 'pb-4' : '' }`}>
+        <button
+          onClick={() => setSizeOpen(!sizeOpen)}
+          className="flex items-center justify-between w-full text-left text-sm font-semibold mb-4"
+        >
+          SIZE
+          <ChevronDown
+            className={`h-4 w-4 transition-transform ${sizeOpen ? "rotate-180" : ""}`}
+          />
+        </button>
+        {sizeOpen && (
+          <div className="space-y-3">
+            {sizes.map((size) => (
+              <label key={size} className="flex items-center gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={filters.sizes.includes(size)}
+                  onChange={() => toggleSizeFilter(size)}
+                  className="rounded border-border w-4 h-4 cursor-pointer"
+                />
+                <span className="text-sm group-hover:text-foreground/80 transition-colors">
+                  {size}
+                </span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Price Filter */}
+      <div className="mb-6 pb-6">
+        <button
+          onClick={() => setPriceOpen(!priceOpen)}
+          className="flex items-center justify-between w-full text-left text-sm font-semibold mb-4"
+        >
+          PRICE
+          <ChevronDown
+            className={`h-4 w-4 transition-transform ${priceOpen ? "rotate-180" : ""}`}
+          />
+        </button>
+        {priceOpen && (
+          <div className="space-y-3">
+            {priceRanges.map((range) => (
+              <label key={range} className="flex items-center gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={filters.priceRanges.includes(range)}
+                  onChange={() => togglePriceFilter(range)}
+                  className="rounded border-border w-4 h-4 cursor-pointer"
+                />
+                <span className="text-sm group-hover:text-foreground/80 transition-colors">
+                  {range}
+                </span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="flex gap-2">
+        <Button variant="outline" className="flex-1" onClick={clearFilters}>
+          CLEAR
+        </Button>
+        <Button className="flex-1" onClick={applyFilters}>
+          APPLY
+        </Button>
+      </div>
+    </aside>
+  );
+};
+
+export default FilterSection;

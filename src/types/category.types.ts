@@ -1,7 +1,7 @@
 export interface Category {
+  id: string
   name: string;
   thumbnail: string;
-  description: string;
   products: number;
   status: "active" | "inactive"
 }

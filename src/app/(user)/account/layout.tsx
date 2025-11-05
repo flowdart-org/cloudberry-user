@@ -21,77 +21,77 @@ export default function AccountLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  // Extract the active tab from URL
   const activeTab = useMemo(() => {
     const lastSegment = pathname?.split("/").pop() || "";
     const validTab = tabs.some((tab) => tab.id === lastSegment);
     return validTab ? lastSegment : "profile";
   }, [pathname]);
 
-  // Redirect `/account` → `/account/profile`
   useEffect(() => {
     if (pathname === "/account") {
       router.replace("/account/profile");
     }
   }, [pathname, router]);
 
-  // Handle tab change
   const handleTabChange = (tabId: string) => {
     router.push(`/account/${tabId}`);
   };
 
   return (
-    <div className="min-h-screen bg-background">
-        <Header />
-      <div className="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
-        <h1 className="text-3xl md:text-4xl font-light tracking-tight mb-8 md:mb-12">
-          My Account
-        </h1>
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      <Header />
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar Navigation - Desktop */}
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="mb-8 md:mb-6">
+          <h1 className="text-3xl md:text-4xl font-light tracking-tight mb-2">
+            My Account
+          </h1>
+          <p className="text-muted-foreground">
+            Manage your profile, orders, and preferences
+          </p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row md:gap-3">
           <aside className="hidden lg:block w-64 flex-shrink-0">
-            <nav className="space-y-1">
+            <div className="sticky top-24 space-y-1 bg-card border border-border rounded-lg p-2 shadow-sm">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
                   className={cn(
-                    "w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors border-l-2",
+                    "w-full flex items-center gap-3 px-4 py-3 text-sm rounded-md transition-all duration-200",
                     activeTab === tab.id
-                      ? "border-primary bg-secondary text-foreground font-medium"
-                      : "border-transparent text-muted-foreground hover:text-foreground hover:bg-accent"
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   )}
                 >
                   <tab.icon className="h-5 w-5" />
-                  <span>{tab.label}</span>
+                  <span className="font-medium">{tab.label}</span>
                 </button>
               ))}
-            </nav>
+            </div>
           </aside>
 
-          {/* Mobile Navigation */}
-          <div className="lg:hidden">
-            <div className="flex overflow-x-auto gap-2 pb-4 -mx-4 px-4 scrollbar-hide">
+          <div className="lg:hidden mb-6">
+            <div className="flex overflow-x-auto gap-2 pb-2 -mx-4 px-4 scrollbar-hide">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
                   className={cn(
-                    "flex items-center gap-2 px-4 py-2.5 rounded-sm text-sm whitespace-nowrap transition-colors flex-shrink-0",
+                    "flex items-center gap-2 px-2 py-1 rounded-md text-[10px] whitespace-nowrap transition-all duration-200 flex-shrink-0 border",
                     activeTab === tab.id
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-foreground hover:bg-accent"
+                      ? "bg-primary text-primary-foreground shadow-md border-primary"
+                      : "bg-card text-foreground hover:bg-accent border-border"
                   )}
                 >
                   <tab.icon className="h-4 w-4" />
-                  <span>{tab.label}</span>
+                  <span className="font-medium">{tab.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Main Content */}
           <main className="flex-1 min-w-0">{children}</main>
         </div>
       </div>

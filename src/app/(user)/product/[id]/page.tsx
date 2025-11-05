@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import ProductCard from "@/components/product/ProductCard";
@@ -14,6 +14,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
+import { PRODUCT_SERVICES } from "@/api/product/product.service";
 
 const mockProducts: Product[] = [
   { id: 1, name: "Regular Fit Shirt", price: 1499, image: product1, category: "SHIRTS" },
@@ -37,6 +38,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const { wishlist, toggleWishlist, addToCart } = useStore();
   const { toast } = useToast();
+  const [productDetails, setProductDetails] = useState<null | Product>(null)
   // const [open, setOpen] = useState(false)
 
   const product = mockProducts.find((p) => p.id === Number(id)) || mockProducts[4];
@@ -50,6 +52,16 @@ const ProductDetails = () => {
   const images = [product.image, product2, product1, product.image];
 
   const relatedProducts = mockProducts.filter((p) => p.id !== product.id).slice(0, 4);
+
+  useEffect(() => {
+    fetchProductDetails()
+  }, [])
+
+  const fetchProductDetails = async () => {
+    const response = await PRODUCT_SERVICES.getProduct(id as string)
+    setProductDetails(response.data | null)
+
+  }
 
   const handleAddToBag = () => {
     if (!selectedSize) {
@@ -256,17 +268,6 @@ const ProductDetails = () => {
                   Premium quality {product.category.toLowerCase()} designed for comfort and style.
                   Made with high-quality materials and expert craftsmanship. Perfect for any occasion.
                 </p>
-              </div>
-
-              {/* Care Instructions */}
-              <div className="pt-4">
-                <h3 className="font-semibold text-foreground mb-2">Care Instructions</h3>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• Machine wash cold</li>
-                  <li>• Do not bleach</li>
-                  <li>• Tumble dry low</li>
-                  <li>• Iron on low heat</li>
-                </ul>
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-# AdminControllerGetAdmin200Response
+# AuthControllerRequestOtp200Response
 
 
 ## Properties
@@ -7,14 +7,14 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** |  | [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**AdminResponseDto**](AdminResponseDto.md) |  | [optional] [default to undefined]
+**data** | **any** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { AdminControllerGetAdmin200Response } from './api';
+import { AuthControllerRequestOtp200Response } from './api';
 
-const instance: AdminControllerGetAdmin200Response = {
+const instance: AuthControllerRequestOtp200Response = {
     success,
     message,
     data,

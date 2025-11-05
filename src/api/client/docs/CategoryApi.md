@@ -10,7 +10,7 @@ All URIs are relative to *http://localhost*
 |[**categoryControllerUpdate**](#categorycontrollerupdate) | **PATCH** /api/category/{id} | |
 
 # **categoryControllerCreate**
-> categoryControllerCreate(createCategoryDto)
+> CategoryControllerFindAll200Response categoryControllerCreate(createCategoryDto)
 
 
 ### Example
@@ -41,7 +41,7 @@ const { status, data } = await apiInstance.categoryControllerCreate(
 
 ### Return type
 
-void (empty response body)
+**CategoryControllerFindAll200Response**
 
 ### Authorization
 
@@ -50,18 +50,18 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**201** |  |  -  |
+|**200** |  |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **categoryControllerFindAll**
-> categoryControllerFindAll()
+> CategoryControllerFindAll200Response categoryControllerFindAll()
 
 
 ### Example
@@ -84,7 +84,7 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-void (empty response body)
+**CategoryControllerFindAll200Response**
 
 ### Authorization
 
@@ -93,7 +93,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -104,7 +104,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **categoryControllerFindOne**
-> categoryControllerFindOne()
+> CategoryControllerFindAll200Response categoryControllerFindOne()
 
 
 ### Example
@@ -134,7 +134,7 @@ const { status, data } = await apiInstance.categoryControllerFindOne(
 
 ### Return type
 
-void (empty response body)
+**CategoryControllerFindAll200Response**
 
 ### Authorization
 
@@ -143,7 +143,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -154,7 +154,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **categoryControllerUpdate**
-> categoryControllerUpdate(updateCategoryDto)
+> CategoryControllerFindAll200Response categoryControllerUpdate(updateCategoryDto)
 
 
 ### Example
@@ -188,7 +188,7 @@ const { status, data } = await apiInstance.categoryControllerUpdate(
 
 ### Return type
 
-void (empty response body)
+**CategoryControllerFindAll200Response**
 
 ### Authorization
 
@@ -197,7 +197,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details

@@ -1,28 +1,11 @@
 'use client'
 
 import ProductCard from "./ProductCard";
-import { Product } from "@/store/useStore";
-import product1 from "@/assets/product-1.jpg";
-import product2 from "@/assets/product-2.jpg";
+import { useProductStore } from "@/store/useProductStore";
 
-const categories = ["ALL", "TROUSERS", "SHORTS", "JEANS", "T-SHIRTS", "LUXE", "FORMAL WEAR"];
-
-const mockProducts: Product[] = [
-  { id: 1, name: "Regular Fit Shirt", price: 1499, image: product1, category: "SHIRTS" },
-  { id: 2, name: "Relaxed Polo", price: 999, image: product2, category: "T-SHIRTS" },
-  { id: 3, name: "Relaxed Polo", price: 1299, image: product1, category: "SHIRTS" },
-  { id: 4, name: "Relaxed Polo", price: 899, image: product2, category: "T-SHIRTS" },
-  { id: 5, name: "Washed Baggy Jeans", price: 1799, image: product1, category: "JEANS" },
-  { id: 6, name: "Regular Fit Shirt", price: 1499, image: product2, category: "SHIRTS" },
-  { id: 7, name: "Relaxed Polo", price: 999, image: product1, category: "T-SHIRTS" },
-  { id: 8, name: "Relaxed Polo", price: 1299, image: product2, category: "SHIRTS" },
-  { id: 9, name: "Relaxed Polo", price: 899, image: product1, category: "T-SHIRTS" },
-  { id: 10, name: "Washed Baggy Jeans", price: 1799, image: product2, category: "JEANS" },
-];
 
 const ProductGrid = () => {
-
-
+  const { filteredProducts, page, limit, setPage, category } = useProductStore();
   return (
     <section className="py-12 md:py-16 bg-muted/30">
       <div className="">
@@ -46,8 +29,8 @@ const ProductGrid = () => {
         </div> */}
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 md:gap-2">
-          {mockProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {filteredProducts.slice(0, 10).map((product) => (
+            <ProductCard key={product.id} product={product} is3D={true}/>
           ))}
         </div>
       </div>

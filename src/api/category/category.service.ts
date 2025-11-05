@@ -22,7 +22,7 @@ export const CATEGORY_SERVICES = {
   },
 
   getCategories: async (): Promise<ApiResponse<Category[]>> => {
-    const response: any = await categoryApi.categoryControllerFindAll();
-    return response.data;
+    const response = await categoryApi.categoryControllerFindAll();
+    return response.data ;
   },
 };

@@ -3,27 +3,36 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/types/product.types";
+import { ProductResponseDto } from "@/api/client";
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductResponseDto;
+  is3D: boolean
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, is3D = false }: ProductCardProps) => {
   return (
-  <div className="group relative bg-card overflow-hidden rounded-none transition-transform duration-500 hover:scale-105">
+  <div className={`group relative bg-card overflow-hidden rounded-none transition-transform duration-500
+  ${is3D && ' hover:scale-105'}`}>
       {/* Image with overlay */}
       <Link href={`/product/${product.id}`}>
         <div className="relative aspect-[3/4] overflow-hidden bg-muted">
-          <Image
-            src={product.image}
+          {product?.images?.length && 
+          <Image loading="eager" fetchPriority="high"
+            src={product?.images[0] || ''}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
+            width={500}
+            height={500}
+            className={`w-full h-full object-cover transition-transform duration-500 ${is3D && 'group-hover:scale-110'}`}
+          />}
           {/* subtle gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
           {/* product name on image */}
-          <h3 className="absolute bottom-3 left-3 right-3 text-cente text-white text-sm md:text-base font-medium line-clamp-2 drop-shadow-md max-w-[200px]">
+          <h3 className="absolute bottom-3 left-3 right-3 text-cente text-white text-sm md:text-base font-medium line-clamp-2 drop-shadow-md max-w-[200px] transition-all duration-300 group-hover:-translate-y-4 group-hover:scale-105">
             {product.name}
+          </h3>
+          <h3 className="absolute bottom-3 left-3 right-3 text-cente text-white text-sm md:text-base font-medium line-clamp-2 drop-shadow-md max-w-[200px] transition-all duration-300 ">
+            {product.description}
           </h3>
         </div>
       </Link>

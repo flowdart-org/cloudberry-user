@@ -16,3 +16,18 @@ export interface VariantDto {
   size: string;
   stock: number;
 }
+
+export interface ProductResponseDto {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    discountPrice?: number;
+    discountPercentage?: number;
+    images: Array<string>;
+    variants: Array<string>;
+    categoryId: string;
+    category: object;
+    createdAt: string;
+    updatedAt: string;
+}

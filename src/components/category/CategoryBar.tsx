@@ -1,93 +1,92 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
 import { useRouter, usePathname } from "next/navigation";
+import { CATEGORY_SERVICES } from "@/api/category/category.service";
+import { Category } from "@/types/category.types";
+import { Button } from "../ui/button";
 
-export interface CategoryBarProps {
-  categories?: string[];          // optional custom category list
-  show?: boolean;                 // show or hide the bar
-  position?: "sticky" | "fixed";  // control position behavior
-  topOffset?: string;             // distance from top (e.g., "0", "4rem")
-  basePath?: string;              // base route (default: "/shop")
-  className?: string;             // optional styling overrides
+interface CategoryBarProps {
+  showCategories: boolean;
 }
 
-const defaultCategories = [
-  "ALL",
-  "TROUSERS",
-  "SHORTS",
-  "JEANS",
-  "T-SHIRTS",
-  "LUXE",
-  "FORMAL WEAR",
-  "SHIRTS",
-  "JACKETS",
-  "SWEATERS",
-  "BLAZERS",
-  "CASUALS",
-];
-
-export const CategoryBar = ({
-  categories = defaultCategories,
-  show = true,
-  position = "sticky",
-  topOffset = "0",
-  basePath = "/shop",
-  className = "",
-}: CategoryBarProps) => {
+const CategoryBar = ({ showCategories }: CategoryBarProps) => {
+  const [categories, setCategories] = useState<Category[]>([]);
   const [activeCategory, setActiveCategory] = useState("ALL");
   const router = useRouter();
   const pathname = usePathname();
 
+  // ✅ Fetch categories once
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // ✅ Update active category from URL
   useEffect(() => {
     if (!pathname) return;
+
     const parts = pathname.split("/");
     const lastSegment = parts[parts.length - 1] || "all";
     const formattedCategory = lastSegment.replace(/-/g, " ").toUpperCase();
 
-    if (categories.includes(formattedCategory)) {
+    const categoryExists = categories.some(
+      (cat) => cat.name.toUpperCase() === formattedCategory
+    );
+
+    if (categoryExists || formattedCategory === "ALL") {
       setActiveCategory(formattedCategory);
     } else {
       setActiveCategory("ALL");
     }
   }, [pathname, categories]);
 
-  const handleCategorySelect = (category: string) => {
-    setActiveCategory(category);
-    const slug = category.toLowerCase().replace(/\s+/g, "-");
-    const path = category === "ALL" ? basePath : `${basePath}/${slug}`;
+  const handleCategorySelect = (categoryName: string) => {
+    setActiveCategory(categoryName);
+    const slug = categoryName.toLowerCase().replace(/\s+/g, "-");
+    const path = categoryName === "ALL" ? "/shop" : `/shop/${slug}`;
     router.push(path);
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await CATEGORY_SERVICES.getCategories();
+      setCategories(response?.data || []);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
   };
 
   return (
     <div
-      className={`
-        ${position} 
-        top-[${topOffset}] 
-        z-50 
-        w-full 
-        bg-background 
-        border-b border-border 
-        overflow-hidden 
-        transition-all duration-500 ease-in-out 
-        ${show ? "max-h-20 opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-full"} 
-        ${className}
-      `}
+      className={`sticky top-0 z-50 w-full bg-background border-b border-border overflow-hidden transition-all duration-500 ease-in-out ${
+        showCategories
+          ? "max-h-20 opacity-100 translate-y-0"
+          : "max-h-0 opacity-0 -translate-y-full"
+      }`}
     >
-      <div className="flex gap-2 py-3 px-3 overflow-x-auto scrollbar-hide transition-all duration-500 ease-in-out md:justify-center w-screen">
-        {categories.map((category) => (
-          <div key={category} className="relative flex-shrink-0 whitespace-nowrap">
-            <Button
-              variant={activeCategory === category ? "default" : "outline"}
-              size="sm"
-              onClick={() => handleCategorySelect(category)}
-              className="z-10 relative"
-            >
-              {category}
-            </Button>
-          </div>
-        ))}
+      <div className="flex gap-2 py-2 px-3 overflow-x-auto scrollbar-hide transition-all duration-500 ease-in-out md:justify-center w-screen">
+        <Button
+          variant={activeCategory === "ALL" ? "default" : "outline"}
+          size="sm"
+          onClick={() => handleCategorySelect("ALL")}
+          className="z-10 relative flex-shrink-0 whitespace-nowrap"
+        >
+          ALL
+        </Button>
+        {categories
+          .filter((category) => category.status === "active")
+          .map((category) => (
+            <div key={category.name} className="relative flex-shrink-0 whitespace-nowrap">
+              <Button
+                variant={activeCategory === category.name ? "default" : "outline"}
+                size="sm"
+                onClick={() => handleCategorySelect(category.name)}
+                className="z-10 relative"
+              >
+                {category.name}
+              </Button>
+            </div>
+          ))}
       </div>
     </div>
   );

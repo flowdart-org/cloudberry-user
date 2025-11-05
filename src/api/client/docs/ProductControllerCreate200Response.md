@@ -1,4 +1,4 @@
-# AdminControllerGetAdmin200Response
+# ProductControllerCreate200Response
 
 
 ## Properties
@@ -7,14 +7,14 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** |  | [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**AdminResponseDto**](AdminResponseDto.md) |  | [optional] [default to undefined]
+**data** | [**ProductResponseDto**](ProductResponseDto.md) |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { AdminControllerGetAdmin200Response } from './api';
+import { ProductControllerCreate200Response } from './api';
 
-const instance: AdminControllerGetAdmin200Response = {
+const instance: ProductControllerCreate200Response = {
     success,
     message,
     data,

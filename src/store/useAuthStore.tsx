@@ -13,6 +13,7 @@ interface AuthState {
     logout: () => Promise<void>;
     refreshToken: () => Promise<boolean>;
     fetchUser: () => Promise<void>
+    updateUser: (data: User) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -29,9 +30,15 @@ export const useAuthStore = create<AuthState>()(
 
             fetchUser: async () => {
                 if (get().isAuthenticated) {
-                    const { success, data: user } = await USER_SERVICES.me()
-                    if (success) {
-                        set({ user, isAuthenticated: true })
+                    try {
+                        const { success, data: user } = await USER_SERVICES.me()
+                        if (success) {
+                            set({ user, isAuthenticated: true })
+                        }
+                    } catch (error: any) {
+                        if (error?.response?.data?.error?.code === 'ForbiddenException') {
+                            get().logout()
+                        }
                     }
                 } else {
                     set({ user: null })
@@ -51,6 +58,10 @@ export const useAuthStore = create<AuthState>()(
                 } catch (err) {
                     return false
                 }
+            },
+
+            updateUser: (updates: User) => {
+                set({ user: updates})
             },
         }),
         {
