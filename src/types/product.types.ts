@@ -1,18 +1,21 @@
+import { ProductPreviewCategory } from "./category.types";
+export  type ProductStatus  = "active" | 'inactive'
+
 export interface Product {
   id: string;
   name: string;
   description: string;
   actualPrice: number;
-  variants: VariantDto[];
+  variants: VariantsDto[];
   discountPrice: number;
   discountPercent: number;
   categoryId: number;
-  status: "active" | "inactive";
+  status: ProductStatus;
   tryOn: boolean;
   tags?: string[];
 }
 
-export interface VariantDto {
+export interface VariantsDto {
   size: string;
   stock: number;
 }
@@ -28,6 +31,21 @@ export interface ProductResponseDto {
     variants: Array<string>;
     categoryId: string;
     category: object;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface ProductDetails {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    discountPrice: number;
+    discountPercentage: number;
+    images: string[];
+    variants: VariantsDto[];
+    category: ProductPreviewCategory;
+    status: ProductStatus;
     createdAt: string;
     updatedAt: string;
 }

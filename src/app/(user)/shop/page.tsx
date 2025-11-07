@@ -10,7 +10,7 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
 const Shop = () => {
-  const { filteredProducts, page, limit, setPage, category, setCategory } = useProductStore();
+  const { products, page, limit, setPage, category, setCategory } = useProductStore();
   const {category: pathCategory} = useParams()
 
   useEffect(() => {

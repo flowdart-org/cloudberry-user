@@ -1,10 +1,10 @@
 import { ApiResponse } from "../types";
 import { productApi } from "@/lib/axios";
-import { Product } from "@/types/product.types";
+import { Product, ProductDetails } from "@/types/product.types";
 import { ProductResponseDto } from "../client";
 
 export const PRODUCT_SERVICES = {
-  getProduct: async (id: string): Promise<ApiResponse<Product>> => {
+  getProduct: async (id: string): Promise<ApiResponse<ProductDetails>> => {
         const response = await productApi.productControllerFindOne(id);
         return response.data;
   },
@@ -14,7 +14,7 @@ export const PRODUCT_SERVICES = {
         return response.data;
   },
 
-  getFeeds: async (d: any): Promise<ApiResponse<ProductResponseDto[]>> => {
+  getFeeds: async (d?: any): Promise<ApiResponse<ProductResponseDto[]>> => {
       const response = await productApi.productControllerFindFeed();
         return response.data;
   },

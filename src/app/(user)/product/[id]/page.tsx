@@ -15,6 +15,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
 import { PRODUCT_SERVICES } from "@/api/product/product.service";
+import { ProductDetails } from "@/types/product.types";
 
 const mockProducts: Product[] = [
   { id: 1, name: "Regular Fit Shirt", price: 1499, image: product1, category: "SHIRTS" },
@@ -38,29 +39,34 @@ const ProductDetails = () => {
   const { id } = useParams();
   const { wishlist, toggleWishlist, addToCart } = useStore();
   const { toast } = useToast();
-  const [productDetails, setProductDetails] = useState<null | Product>(null)
+  const [product, setProduct] = useState<null | ProductDetails>(null)
   // const [open, setOpen] = useState(false)
 
-  const product = mockProducts.find((p) => p.id === Number(id)) || mockProducts[4];
-  const isWishlisted = wishlist.includes(product.id);
+
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
 
-  const images = [product.image, product2, product1, product.image];
+  // const images = [product.image, product2, product1, product.image];
 
-  const relatedProducts = mockProducts.filter((p) => p.id !== product.id).slice(0, 4);
+  // const relatedProducts = mockProducts.filter((p) => p.id !== product.id).slice(0, 4);
 
   useEffect(() => {
     fetchProductDetails()
   }, [])
 
-  const fetchProductDetails = async () => {
-    const response = await PRODUCT_SERVICES.getProduct(id as string)
-    setProductDetails(response.data | null)
+  // if(!product) return 
 
+  async function fetchProductDetails() {
+    try {
+      const response = await PRODUCT_SERVICES.getProduct(id as string)
+      console.log(response)
+      setProduct(response ?? null)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleAddToBag = () => {
@@ -107,14 +113,14 @@ const ProductDetails = () => {
             <span className="mx-2">/</span>
             <Link href="/shop/all" className="hover:text-foreground">Shop</Link>
             <span className="mx-2">/</span>
-            <span className="text-foreground">{product.name}</span>
+            <span className="text-foreground">{product?.name}</span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+          {product ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
             {/* Image Gallery */}
             <div className="flex flex-col-reverse md:flex-row gap-4">
               {/* Thumbnails */}
-              <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
+              {/* <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
                 {images.map((img, idx) => (
                   <button
                     key={idx}
@@ -133,29 +139,16 @@ const ProductDetails = () => {
                     />
                   </button>
                 ))}
-              </div>
+              </div> */}
 
               {/* Main Image */}
               <div className="relative flex-1 bg-muted rounded-lg overflow-hidden aspect-[3/4]">
-                <Image
+                {/* <Image
                   src={images[selectedImage]}
                   alt={product.name}
                   className="w-full h-full object-cover"
-                />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-4 right-4 bg-background/80 hover:bg-background"
-                  onClick={() => toggleWishlist(product.id)}
-                >
-                  <Heart
-                    className={cn(
-                      "h-5 w-5 transition-colors",
-                      isWishlisted ? "fill-accent text-accent" : "text-foreground"
-                    )}
-                  />
-                </Button>
-                <Button
+                /> */}
+                {/* <Button
                   variant="ghost"
                   size="icon"
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
@@ -170,7 +163,7 @@ const ProductDetails = () => {
                   onClick={() => setSelectedImage((prev) => (prev < images.length - 1 ? prev + 1 : 0))}
                 >
                   <ChevronRight className="h-5 w-5" />
-                </Button>
+                </Button> */}
               </div>
             </div>
 
@@ -202,7 +195,7 @@ const ProductDetails = () => {
                   AVAILABLE SIZE
                 </label>
                 <div className="flex gap-2">
-                  {sizes.map((size) => (
+                  {product.variants.map((variant) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
@@ -246,8 +239,9 @@ const ProductDetails = () => {
               {/* Action Buttons */}
               <div className="flex gap-3 pt-4 ">
                 <Button
-                  variant="outline"
+                  variant={product?.tryon ? 'default' : 'disabled'}
                   className="flex-1 h-12 font-semibold font-pirulen"
+
                   // onClick={() => setOpen(true)}
                 >
                   TRY ON
@@ -265,23 +259,23 @@ const ProductDetails = () => {
               <div className="pt-6 border-t border-border">
                 <h3 className="font-semibold text-foreground mb-2">Product Details</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Premium quality {product.category.toLowerCase()} designed for comfort and style.
-                  Made with high-quality materials and expert craftsmanship. Perfect for any occasion.
+                  {product.description}
                 </p>
               </div>
             </div>
-          </div>
+          </div> :
+          <div>Loading</div> }
 
           {/* You Might Also Like */}
           <section className="py-8 border-t border-border">
             <h2 className="text-2xl font-bold text-center mb-8 text-foreground">
               You might also like
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {relatedProducts.map((relatedProduct) => (
                 <ProductCard key={relatedProduct.id} product={relatedProduct} />
               ))}
-            </div>
+            </div> */}
           </section>
         </div>
       </main>

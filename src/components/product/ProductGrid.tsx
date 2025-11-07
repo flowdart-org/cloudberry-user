@@ -1,11 +1,17 @@
 'use client'
 
+import { useEffect } from "react";
 import ProductCard from "./ProductCard";
 import { useProductStore } from "@/store/useProductStore";
 
 
 const ProductGrid = () => {
-  const { filteredProducts, page, limit, setPage, category } = useProductStore();
+  const { products, page, limit, setPage, category, applyFilters } = useProductStore();
+
+
+  useEffect(() => {
+    applyFilters()
+  }, [])
   return (
     <section className="py-12 md:py-16 bg-muted/30">
       <div className="">
@@ -29,7 +35,7 @@ const ProductGrid = () => {
         </div> */}
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 md:gap-2">
-          {filteredProducts.slice(0, 10).map((product) => (
+          {products.slice(0, 10).map((product) => (
             <ProductCard key={product.id} product={product} is3D={true}/>
           ))}
         </div>
