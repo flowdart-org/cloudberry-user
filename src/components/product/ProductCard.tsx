@@ -17,9 +17,9 @@ const ProductCard = ({ product, is3D = false }: ProductCardProps) => {
       {/* Image with overlay */}
       <Link href={`/product/${product.id}`}>
         <div className="relative aspect-[3/4] overflow-hidden bg-muted">
-          {product?.images?.length && 
+          {(product?.thumbnail || product?.images?.length) && 
           <Image loading="eager" fetchPriority="high"
-            src={product?.images[0] || ''}
+            src={product?.thumbnail || product?.images[0] || ''}
             alt={product.name}
             width={500}
             height={500}
@@ -31,9 +31,14 @@ const ProductCard = ({ product, is3D = false }: ProductCardProps) => {
           <h3 className="absolute bottom-3 left-3 right-3 text-cente text-white text-sm md:text-base font-medium line-clamp-2 drop-shadow-md max-w-[200px] transition-all duration-300 group-hover:-translate-y-4 group-hover:scale-105">
             {product.name}
           </h3>
-          <h3 className="absolute bottom-3 left-3 right-3 text-cente text-white text-sm md:text-base font-medium line-clamp-2 drop-shadow-md max-w-[200px] transition-all duration-300 ">
-            {product.description}
-          </h3>
+       <h3
+  className="absolute bottom-3 left-3 text-white text-xs md:text-[12px]
+             font-medium drop-shadow-md w-[200px]
+             transition-all duration-300 hidden group-hover:block truncate">
+  {product.description}
+</h3>
+
+
         </div>
       </Link>
 

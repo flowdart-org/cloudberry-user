@@ -53,8 +53,8 @@ const Cart = () => {
                   className="bg-card border border-border rounded-lg p-4 flex gap-4"
                 >
                   <div className="relative w-24 h-28 flex-shrink-0 rounded overflow-hidden bg-muted">
-                    <Image
-                      src={item.product.image}
+                    <img
+                      src={item.product.thumbnail}
                       alt={item.product.name}
                       className="w-full h-full object-cover"
                     />

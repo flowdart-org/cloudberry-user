@@ -1,4 +1,4 @@
-import { ProductPreviewCategory } from "./category.types";
+import { ProductPreviewCategory } from ./category.types";
 export  type ProductStatus  = "active" | 'inactive'
 
 export interface Product {
@@ -16,8 +16,13 @@ export interface Product {
 }
 
 export interface VariantsDto {
+  id: string;
+  productId: string;
   size: string;
   stock: number;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProductResponseDto {
@@ -41,11 +46,12 @@ export interface ProductDetails {
     description: string;
     price: number;
     discountPrice: number;
-    discountPercentage: number;
+    discountPercent: number;
     images: string[];
     variants: VariantsDto[];
     category: ProductPreviewCategory;
     status: ProductStatus;
+    tryOn: boolean;
     createdAt: string;
     updatedAt: string;
 }

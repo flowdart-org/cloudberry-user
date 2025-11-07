@@ -8,13 +8,12 @@ Name | Type | Description | Notes
 **name** | **string** | Name of the product | [optional] [default to undefined]
 **description** | **string** | Description of the product | [optional] [default to undefined]
 **price** | **number** | Actual price of the product | [optional] [default to undefined]
-**variants** | [**Array&lt;VariantDto&gt;**](VariantDto.md) | Array of product variants with size and stock | [optional] [default to undefined]
 **discountPercent** | **number** | Discount percentage of the product | [optional] [default to undefined]
+**variants** | [**Array&lt;VariantDto&gt;**](VariantDto.md) | Array of product variants with size and stock | [optional] [default to undefined]
 **categoryId** | **string** | ID of the category the product belongs to | [optional] [default to undefined]
 **status** | **string** | Status of the product | [optional] [default to undefined]
 **tryOn** | **boolean** | Whether the product supports virtual try-on | [optional] [default to undefined]
 **tags** | **Array&lt;string&gt;** | Array of tags for the product | [optional] [default to undefined]
-**id** | **string** | ID of the product to update | [default to undefined]
 
 ## Example
 
@@ -25,13 +24,12 @@ const instance: UpdateProductDto = {
     name,
     description,
     price,
-    variants,
     discountPercent,
+    variants,
     categoryId,
     status,
     tryOn,
     tags,
-    id,
 };
 ```
 

@@ -5,7 +5,8 @@ All URIs are relative to *http://localhost*
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
 |[**mediaControllerGetCategoryUploadUrl**](#mediacontrollergetcategoryuploadurl) | **GET** /api/media/upload/category/{categoryId} | |
-|[**mediaControllerGetProductUploadUrl**](#mediacontrollergetproductuploadurl) | **GET** /api/media/upload/product/{productId} | |
+|[**mediaControllerGetProductThumbnailUploadUrl**](#mediacontrollergetproductthumbnailuploadurl) | **GET** /api/media/upload/product/{productId}/thumbnail | |
+|[**mediaControllerGetProductUploadUrl**](#mediacontrollergetproductuploadurl) | **GET** /api/media/upload/product/{productId}/{order} | |
 
 # **mediaControllerGetCategoryUploadUrl**
 > mediaControllerGetCategoryUploadUrl()
@@ -23,12 +24,10 @@ const configuration = new Configuration();
 const apiInstance = new MediaApi(configuration);
 
 let categoryId: string; // (default to undefined)
-let fileName: string; // (default to undefined)
 let mimeType: string; // (default to undefined)
 
 const { status, data } = await apiInstance.mediaControllerGetCategoryUploadUrl(
     categoryId,
-    fileName,
     mimeType
 );
 ```
@@ -38,7 +37,59 @@ const { status, data } = await apiInstance.mediaControllerGetCategoryUploadUrl(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **categoryId** | [**string**] |  | defaults to undefined|
-| **fileName** | [**string**] |  | defaults to undefined|
+| **mimeType** | [**string**] |  | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** |  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **mediaControllerGetProductThumbnailUploadUrl**
+> mediaControllerGetProductThumbnailUploadUrl()
+
+
+### Example
+
+```typescript
+import {
+    MediaApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new MediaApi(configuration);
+
+let productId: string; // (default to undefined)
+let mimeType: string; // (default to undefined)
+
+const { status, data } = await apiInstance.mediaControllerGetProductThumbnailUploadUrl(
+    productId,
+    mimeType
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **productId** | [**string**] |  | defaults to undefined|
 | **mimeType** | [**string**] |  | defaults to undefined|
 
 
@@ -79,12 +130,12 @@ const configuration = new Configuration();
 const apiInstance = new MediaApi(configuration);
 
 let productId: string; // (default to undefined)
-let fileName: string; // (default to undefined)
+let order: number; // (default to undefined)
 let mimeType: string; // (default to undefined)
 
 const { status, data } = await apiInstance.mediaControllerGetProductUploadUrl(
     productId,
-    fileName,
+    order,
     mimeType
 );
 ```
@@ -94,7 +145,7 @@ const { status, data } = await apiInstance.mediaControllerGetProductUploadUrl(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **productId** | [**string**] |  | defaults to undefined|
-| **fileName** | [**string**] |  | defaults to undefined|
+| **order** | [**number**] |  | defaults to undefined|
 | **mimeType** | [**string**] |  | defaults to undefined|
 
 

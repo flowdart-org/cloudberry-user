@@ -105,7 +105,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
 
     const fetchProducts = async () => {
       const response = await PRODUCT_SERVICES.getFeeds()
-      filtered = response
+      filtered = response.data
     }
     
     await fetchProducts()

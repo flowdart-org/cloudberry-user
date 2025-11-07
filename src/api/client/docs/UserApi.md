@@ -147,7 +147,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **userControllerUpdate**
-> UserControllerMe200Response userControllerUpdate(body)
+> UserControllerMe200Response userControllerUpdate(updateUserDto)
 
 
 ### Example
@@ -155,16 +155,17 @@ No authorization required
 ```typescript
 import {
     UserApi,
-    Configuration
+    Configuration,
+    UpdateUserDto
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new UserApi(configuration);
 
-let body: object; //
+let updateUserDto: UpdateUserDto; //
 
 const { status, data } = await apiInstance.userControllerUpdate(
-    body
+    updateUserDto
 );
 ```
 
@@ -172,7 +173,7 @@ const { status, data } = await apiInstance.userControllerUpdate(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **body** | **object**|  | |
+| **updateUserDto** | **UpdateUserDto**|  | |
 
 
 ### Return type

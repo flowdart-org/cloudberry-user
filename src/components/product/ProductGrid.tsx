@@ -35,7 +35,7 @@ const ProductGrid = () => {
         </div> */}
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 md:gap-2">
-          {products.slice(0, 10).map((product) => (
+          {products?.slice(0, 10).map((product) => (
             <ProductCard key={product.id} product={product} is3D={true}/>
           ))}
         </div>

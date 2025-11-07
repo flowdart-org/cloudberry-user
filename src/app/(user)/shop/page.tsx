@@ -19,8 +19,8 @@ const Shop = () => {
 
   const startIdx = (page - 1) * limit;
   const endIdx = startIdx + limit;
-  const paginatedProducts = filteredProducts.slice(startIdx, endIdx);
-  const totalPages = Math.ceil(filteredProducts.length / limit);
+  const paginatedProducts = products.slice(startIdx, endIdx);
+  const totalPages = Math.ceil(products.length / limit);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -35,11 +35,11 @@ const Shop = () => {
               <div className="flex items-center justify-between mb-8">
                 <h1 className="text-2xl font-bold tracking-tight uppercase">{category}</h1>
                 <p className="text-sm text-muted-foreground">
-                  {filteredProducts.length} products
+                  {products.length} products
                 </p>
               </div>
 
-              {filteredProducts.length === 0 ? (
+              {products.length === 0 ? (
                 <div className="text-center py-20">
                   <p className="text-muted-foreground">No products found with selected filters</p>
                   <Button

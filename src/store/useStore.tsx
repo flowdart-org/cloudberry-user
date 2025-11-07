@@ -1,17 +1,11 @@
+import { ProductDetails } from '@/types/product.types';
 import { StaticImageData } from 'next/image';
 import { create } from 'zustand';
 
-export interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string | StaticImageData;
-  category: string;
-}
 
 export interface CartItem {
   productId: number;
-  product: Product;
+  product: ProductDetails;
   quantity: number;
   size?: string;
   color?: string;

@@ -3,27 +3,16 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import ProductCard from "@/components/product/ProductCard";
 import { Button } from "@/components/ui/button";
-import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
-import { useStore, Product } from "@/store/useStore";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useStore } from "@/store/useStore";
 import { cn } from "@/lib/utils";
-import product1 from "@/assets/product-1.jpg";
-import product2 from "@/assets/product-2.jpg";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
 import { PRODUCT_SERVICES } from "@/api/product/product.service";
 import { ProductDetails } from "@/types/product.types";
-
-const mockProducts: Product[] = [
-  { id: 1, name: "Regular Fit Shirt", price: 1499, image: product1, category: "SHIRTS" },
-  { id: 2, name: "Relaxed Polo", price: 899, image: product2, category: "T-SHIRTS" },
-  { id: 3, name: "Ribbed Polo T-Shirt", price: 899, image: product1, category: "T-SHIRTS" },
-  { id: 4, name: "Ribbed Polo T-Shirt", price: 899, image: product2, category: "T-SHIRTS" },
-  { id: 5, name: "Stretch Slim Fit", price: 1299, image: product1, category: "TROUSERS" },
-];
 
 const colors = [
   { name: "Beige", hex: "#D4C5B0" },
@@ -35,35 +24,27 @@ const colors = [
 
 const sizes = ["28", "30", "32", "34", "36"];
 
-const ProductDetails = () => {
+const ProductDetailsPage = () => {
   const { id } = useParams();
-  const { wishlist, toggleWishlist, addToCart } = useStore();
+  const { addToCart } = useStore();
   const { toast } = useToast();
   const [product, setProduct] = useState<null | ProductDetails>(null)
-  // const [open, setOpen] = useState(false)
 
 
-
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<null | number>(null);
   const [selectedColor, setSelectedColor] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
-
-  // const images = [product.image, product2, product1, product.image];
-
-  // const relatedProducts = mockProducts.filter((p) => p.id !== product.id).slice(0, 4);
 
   useEffect(() => {
     fetchProductDetails()
   }, [])
 
-  // if(!product) return 
-
   async function fetchProductDetails() {
     try {
       const response = await PRODUCT_SERVICES.getProduct(id as string)
       console.log(response)
-      setProduct(response ?? null)
+      setProduct(response.data ?? null)
     } catch (error) {
       console.error(error)
     }
@@ -120,39 +101,56 @@ const ProductDetails = () => {
             {/* Image Gallery */}
             <div className="flex flex-col-reverse md:flex-row gap-4">
               {/* Thumbnails */}
-              {/* <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
-                {images.map((img, idx) => (
+              <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
+                <button
+                    key={'thumbnail'}
+                    onClick={() => setSelectedImage(null)}
+                    className={cn(
+                      "relative w-20 h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all",
+                      selectedImage === null
+                        ? "border-primary"
+                        : "border-transparent hover:border-border"
+                    )}
+                  >
+                    <img
+                      src={product?.thumbnail}
+                      alt={`Product thumbnail view`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+
+                {product.images.map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
                     className={cn(
                       "relative w-20 h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all",
-                      selectedImage === idx
+                       selectedImage === idx
                         ? "border-primary"
                         : "border-transparent hover:border-border"
                     )}
                   >
-                    <Image
+                    <img
                       src={img}
                       alt={`Product view ${idx + 1}`}
                       className="w-full h-full object-cover"
                     />
                   </button>
                 ))}
-              </div> */}
+              </div>
 
               {/* Main Image */}
               <div className="relative flex-1 bg-muted rounded-lg overflow-hidden aspect-[3/4]">
-                {/* <Image
-                  src={images[selectedImage]}
+                <img
+                  src={selectedImage === null ? product?.thumbnail : product.images[selectedImage]}
                   alt={product.name}
                   className="w-full h-full object-cover"
-                /> */}
-                {/* <Button
+                />
+                <Button
                   variant="ghost"
                   size="icon"
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                  onClick={() => setSelectedImage((prev) => (prev > 0 ? prev - 1 : images.length - 1))}
+                  onClick={() => setSelectedImage((prev) => (prev || -1 > 0 ? prev || - 1 : product.images.length - 1))}
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
@@ -160,10 +158,10 @@ const ProductDetails = () => {
                   variant="ghost"
                   size="icon"
                   className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                  onClick={() => setSelectedImage((prev) => (prev < images.length - 1 ? prev + 1 : 0))}
+                  onClick={() => setSelectedImage((prev) => (prev < product.images.length - 1 ? prev + 1 : 0))}
                 >
                   <ChevronRight className="h-5 w-5" />
-                </Button> */}
+                </Button>
               </div>
             </div>
 
@@ -177,13 +175,13 @@ const ProductDetails = () => {
                   <div className="flex text-2xl md:text-3xl font-light font-pirulen text-neutral-300">
                     <p>₹</p>
                     <p className=" line-through">
-                      {product.price}
+                      {product.price.toFixed(2)}
                     </p>
                   </div>
 
                   {/* Discounted Price */}
                   <p className="text-3xl md:text-4xl font-pirulen font- text-accent">
-                    ₹{product.price}
+                    ₹{((product.price/100) * (100-product.discountPercent)).toFixed(2)}
                   </p>
                 </div>
 
@@ -197,16 +195,16 @@ const ProductDetails = () => {
                 <div className="flex gap-2">
                   {product.variants.map((variant) => (
                     <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
+                      key={variant.id}
+                      onClick={() => setSelectedSize(variant.size)}
                       className={cn(
                         "w-12 h-12 border-2 text-sm font-medium transition-all",
-                        selectedSize === size
+                        selectedSize === variant.size
                           ? "border-foreground bg-foreground text-background"
                           : "border-border hover:border-foreground"
                       )}
                     >
-                      {size}
+                      {variant.size}
                     </button>
                   ))}
                 </div>
@@ -239,7 +237,7 @@ const ProductDetails = () => {
               {/* Action Buttons */}
               <div className="flex gap-3 pt-4 ">
                 <Button
-                  variant={product?.tryon ? 'default' : 'disabled'}
+                  variant={product?.tryOn ? 'default' : 'disabled'}
                   className="flex-1 h-12 font-semibold font-pirulen"
 
                   // onClick={() => setOpen(true)}
@@ -285,4 +283,4 @@ const ProductDetails = () => {
   );
 };
 
-export default ProductDetails;
+export default ProductDetailsPage;

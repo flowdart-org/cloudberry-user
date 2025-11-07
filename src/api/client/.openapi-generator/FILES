@@ -10,6 +10,7 @@ docs/AdminLoginDto.md
 docs/AdminResponseDto.md
 docs/AuthApi.md
 docs/AuthControllerRequestOtp200Response.md
+docs/CartApi.md
 docs/CategoryApi.md
 docs/CategoryControllerFindAll200Response.md
 docs/CreateCategoryDto.md
@@ -28,6 +29,8 @@ docs/ProductImage.md
 docs/ProductResponseDto.md
 docs/TryOnApi.md
 docs/UpdateCategoryDto.md
+docs/UpdateProductDto.md
+docs/UpdateUserDto.md
 docs/UserApi.md
 docs/UserControllerFindAll200Response.md
 docs/UserControllerMe200Response.md
