@@ -11,6 +11,7 @@ import { Category } from "@/types/category.types";
 import Link from "next/link";
 
 const CategoryGrid = () => {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const swiperRef = useRef<any>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);

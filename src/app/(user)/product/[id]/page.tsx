@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
 import { PRODUCT_SERVICES } from "@/api/product/product.service";
 import { ProductDetails } from "@/types/product.types";
+import TryOnModal from "@/components/product/TryOnModal";
 
 const colors = [
   { name: "Beige", hex: "#D4C5B0" },
@@ -29,6 +30,7 @@ const ProductDetailsPage = () => {
   const { addToCart } = useStore();
   const { toast } = useToast();
   const [product, setProduct] = useState<null | ProductDetails>(null)
+  const [isTryOnOpen, setIsTryOnOpen] = useState(false);
 
 
   const [selectedImage, setSelectedImage] = useState<null | number>(null);
@@ -37,6 +39,7 @@ const ProductDetailsPage = () => {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
+    console.log('calling ')
     fetchProductDetails()
   }, [])
 
@@ -239,7 +242,7 @@ const ProductDetailsPage = () => {
                 <Button
                   variant={product?.tryOn ? 'default' : 'disabled'}
                   className="flex-1 h-12 font-semibold font-pirulen"
-
+                  onClick={() => setIsTryOnOpen(true)}
                   // onClick={() => setOpen(true)}
                 >
                   TRY ON
@@ -277,6 +280,12 @@ const ProductDetailsPage = () => {
           </section>
         </div>
       </main>
+
+      <TryOnModal
+        isOpen={isTryOnOpen}
+        onClose={() => setIsTryOnOpen(false)}
+        product={product}
+      />
 
       <Footer />
     </div>

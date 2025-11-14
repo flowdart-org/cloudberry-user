@@ -5,6 +5,9 @@ export interface User {
     phone?: string;
     dob?: string;
     gender?: string;
+    tryOnImage?: string;
+    tryOnCount: number;
+    tier: "free" | "pro" | "premium";
     createdAt?: string;
     updatedAt?: string;
 }

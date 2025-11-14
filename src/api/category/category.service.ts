@@ -15,6 +15,7 @@ import { Category } from "@/types/category.types";
 //   },
 // };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const CATEGORY_SERVICES = {
   getCategory: async (id: string): Promise<ApiResponse<Category>> => {
     const response: any = await categoryApi.categoryControllerFindOne(id);
@@ -22,7 +23,7 @@ export const CATEGORY_SERVICES = {
   },
 
   getCategories: async (): Promise<ApiResponse<Category[]>> => {
-    const response = await categoryApi.categoryControllerFindAll();
+    const response: any = await categoryApi.categoryControllerFindAllActive();
     return response.data ;
   },
 };

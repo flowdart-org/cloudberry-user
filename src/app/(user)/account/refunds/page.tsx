@@ -92,7 +92,7 @@ export default function RefundsTab() {
           <RefreshCw className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
           <h3 className="text-lg font-medium mb-2">No refund requests</h3>
           <p className="text-sm text-muted-foreground">
-            You haven't submitted any refund requests yet
+            You haven&apos;t submitted any refund requests yet
           </p>
         </Card>
       )}

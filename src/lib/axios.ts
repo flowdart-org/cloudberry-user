@@ -3,6 +3,7 @@ import {
   AuthApi,
   CategoryApi,
   Configuration,
+  MediaApi,
   ProductApi,
   TryOnApi,
   UserApi,
@@ -98,6 +99,7 @@ api.interceptors.response.use(
   }
 );
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export async function request<T>(
   callback: any,
   ...props: any[]
@@ -118,3 +120,4 @@ export const categoryApi = new CategoryApi(config, baseURL, api);
 export const productApi = new ProductApi(config, baseURL, api);
 export const userApi = new UserApi(config, baseURL, api);
 export const tryOnApi = new TryOnApi(config, baseURL, api);
+export const mediaApi = new MediaApi(config, baseURL, api);

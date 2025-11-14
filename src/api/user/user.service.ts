@@ -1,7 +1,7 @@
 import { ApiResponse } from "../types";
 import { userApi } from "@/lib/axios";
 import { User } from "@/types/user.types";
-import { UpdateUserDto } from "./user.dto";
+import { UpdateUserDto } from "../client";
 
 export const USER_SERVICES = {
    me: async (): Promise<ApiResponse<User>> => {

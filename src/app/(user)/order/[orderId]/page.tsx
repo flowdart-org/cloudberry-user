@@ -58,7 +58,7 @@ const OrderDetails = () => {
           <p className="text-muted-foreground">
             <span className="font-semibold text-foreground">Zen Fashion Studio</span> will start working on this right away.
             <br />
-            We'll email you as soon as it ships.
+            We&apos;ll email you as soon as it ships.
           </p>
         </div>
 
@@ -96,7 +96,7 @@ const OrderDetails = () => {
           </div>
 
           <p className="text-center text-sm text-muted-foreground">
-            Delivery times are estimated. If you're experiencing difficulty with this order, please{" "}
+            Delivery times are estimated. If you&apos;re experiencing difficulty with this order, please{" "}
             <button className="underline hover:text-foreground">contact the seller</button>.{" "}
             <button className="underline hover:text-foreground">See more info</button>.
           </p>

@@ -11,7 +11,7 @@ All URIs are relative to *http://localhost*
 |[**cartControllerUpdateQuantity**](#cartcontrollerupdatequantity) | **PATCH** /api/cart/{itemId} | |
 
 # **cartControllerAddToCart**
-> cartControllerAddToCart(body)
+> cartControllerAddToCart(createCartDto)
 
 
 ### Example
@@ -19,16 +19,17 @@ All URIs are relative to *http://localhost*
 ```typescript
 import {
     CartApi,
-    Configuration
+    Configuration,
+    CreateCartDto
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new CartApi(configuration);
 
-let body: object; //
+let createCartDto: CreateCartDto; //
 
 const { status, data } = await apiInstance.cartControllerAddToCart(
-    body
+    createCartDto
 );
 ```
 
@@ -36,7 +37,7 @@ const { status, data } = await apiInstance.cartControllerAddToCart(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **body** | **object**|  | |
+| **createCartDto** | **CreateCartDto**|  | |
 
 
 ### Return type
@@ -197,7 +198,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **cartControllerUpdateQuantity**
-> cartControllerUpdateQuantity(body)
+> cartControllerUpdateQuantity(updateCartDto)
 
 
 ### Example
@@ -205,18 +206,19 @@ No authorization required
 ```typescript
 import {
     CartApi,
-    Configuration
+    Configuration,
+    UpdateCartDto
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new CartApi(configuration);
 
 let itemId: string; // (default to undefined)
-let body: object; //
+let updateCartDto: UpdateCartDto; //
 
 const { status, data } = await apiInstance.cartControllerUpdateQuantity(
     itemId,
-    body
+    updateCartDto
 );
 ```
 
@@ -224,7 +226,7 @@ const { status, data } = await apiInstance.cartControllerUpdateQuantity(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **body** | **object**|  | |
+| **updateCartDto** | **UpdateCartDto**|  | |
 | **itemId** | [**string**] |  | defaults to undefined|
 
 

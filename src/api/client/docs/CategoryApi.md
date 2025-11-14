@@ -5,12 +5,13 @@ All URIs are relative to *http://localhost*
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
 |[**categoryControllerCreate**](#categorycontrollercreate) | **POST** /api/category | |
-|[**categoryControllerFindAll**](#categorycontrollerfindall) | **GET** /api/category | |
+|[**categoryControllerFindAll**](#categorycontrollerfindall) | **GET** /api/category/all | |
+|[**categoryControllerFindAllActive**](#categorycontrollerfindallactive) | **GET** /api/category | |
 |[**categoryControllerFindOne**](#categorycontrollerfindone) | **GET** /api/category/{id} | |
 |[**categoryControllerUpdate**](#categorycontrollerupdate) | **PATCH** /api/category/{id} | |
 
 # **categoryControllerCreate**
-> CategoryControllerFindAll200Response categoryControllerCreate(createCategoryDto)
+> CategoryControllerFindAllActive200Response categoryControllerCreate(createCategoryDto)
 
 
 ### Example
@@ -41,7 +42,7 @@ const { status, data } = await apiInstance.categoryControllerCreate(
 
 ### Return type
 
-**CategoryControllerFindAll200Response**
+**CategoryControllerFindAllActive200Response**
 
 ### Authorization
 
@@ -61,7 +62,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **categoryControllerFindAll**
-> CategoryControllerFindAll200Response categoryControllerFindAll()
+> CategoryControllerFindAllActive200Response categoryControllerFindAll()
 
 
 ### Example
@@ -84,7 +85,50 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**CategoryControllerFindAll200Response**
+**CategoryControllerFindAllActive200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** |  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **categoryControllerFindAllActive**
+> CategoryControllerFindAllActive200Response categoryControllerFindAllActive()
+
+
+### Example
+
+```typescript
+import {
+    CategoryApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new CategoryApi(configuration);
+
+const { status, data } = await apiInstance.categoryControllerFindAllActive();
+```
+
+### Parameters
+This endpoint does not have any parameters.
+
+
+### Return type
+
+**CategoryControllerFindAllActive200Response**
 
 ### Authorization
 
@@ -104,7 +148,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **categoryControllerFindOne**
-> CategoryControllerFindAll200Response categoryControllerFindOne()
+> CategoryControllerFindAllActive200Response categoryControllerFindOne()
 
 
 ### Example
@@ -134,7 +178,7 @@ const { status, data } = await apiInstance.categoryControllerFindOne(
 
 ### Return type
 
-**CategoryControllerFindAll200Response**
+**CategoryControllerFindAllActive200Response**
 
 ### Authorization
 
@@ -154,7 +198,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **categoryControllerUpdate**
-> CategoryControllerFindAll200Response categoryControllerUpdate(updateCategoryDto)
+> CategoryControllerFindAllActive200Response categoryControllerUpdate(updateCategoryDto)
 
 
 ### Example
@@ -188,7 +232,7 @@ const { status, data } = await apiInstance.categoryControllerUpdate(
 
 ### Return type
 
-**CategoryControllerFindAll200Response**
+**CategoryControllerFindAllActive200Response**
 
 ### Authorization
 

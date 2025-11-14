@@ -40,7 +40,7 @@ export const OTPInputs: React.FC<OTPInputsProps> = ({
         chars[idx] = digit;
         // fill subsequent empty boxes if user pasted multiple digits into one field
         let nextIdx = idx + 1;
-        let remaining = raw.slice(1).split("");
+        const remaining = raw.slice(1).split("");
         while (remaining.length && nextIdx < length) {
             chars[nextIdx] = remaining.shift()!;
             nextIdx++;

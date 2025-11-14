@@ -7,7 +7,7 @@ All URIs are relative to *http://localhost*
 |[**tryOnControllerTryOn**](#tryoncontrollertryon) | **POST** /api/ai/try-on | |
 
 # **tryOnControllerTryOn**
-> tryOnControllerTryOn(createTryOnDto)
+> TryOnControllerTryOn200Response tryOnControllerTryOn(createTryOnDto)
 
 
 ### Example
@@ -38,7 +38,7 @@ const { status, data } = await apiInstance.tryOnControllerTryOn(
 
 ### Return type
 
-void (empty response body)
+**TryOnControllerTryOn200Response**
 
 ### Authorization
 
@@ -47,13 +47,13 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**201** |  |  -  |
+|**200** |  |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

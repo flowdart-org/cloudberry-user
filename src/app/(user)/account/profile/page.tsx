@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { USER_SERVICES } from "@/api/user/user.service";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useToast } from "@/hooks/useToast";
+import TryOnImageUpload from "@/components/product/TryonImageUpload";
 type VerificationStep = null | "email" | "phone";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,8 +30,8 @@ export default function ProfilePage() {
     gender: user?.gender || "",
   });
 
-  const emailVerified = !!user?.emailVerified;
-  const phoneVerified = !!user?.phoneVerified;
+  const emailVerified = !!user?.email;
+  const phoneVerified = !!user?.phone;
 
   const requestOTP = async (type: "email" | "phone") => {
     const value = type === "email" ? tempEmail : tempPhone;
@@ -80,18 +81,18 @@ export default function ProfilePage() {
 
     setIsLoading(true);
     try {
-      const response = await USER_SERVICES.verifyOtp({
-        type: verificationStep,
-        value,
-        code: otpCode,
-      });
+      // const response = await USER_SERVICES.verifyOtp({
+      //   type: verificationStep,
+      //   value,
+      //   code: otpCode,
+      // });
 
-      updateUser(response.data);
+      // updateUser(response.data);
       
-      setFormData((prev) => ({
-        ...prev,
-        [verificationStep]: value,
-      }));
+      // setFormData((prev) => ({
+      //   ...prev,
+      //   [verificationStep]: value,
+      // }));
 
       toast({
         title: "Success",
@@ -151,6 +152,32 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6  max-w-4xl mx-auto">
+      <Card>
+              <CardHeader>
+                <CardTitle>Virtual Try-On Image</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Upload your photo once and use it for all virtual try-ons across the platform
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <TryOnImageUpload showLabel={false} />
+                  </div>
+                  <div className="flex flex-col justify-center space-y-3">
+                    <div className="p-4 bg-muted/50 rounded-lg">
+                      <h4 className="text-sm font-semibold mb-2">Tips for best results:</h4>
+                      <ul className="text-xs text-muted-foreground space-y-1">
+                        <li>• Use a well-lit, full-body photo</li>
+                        <li>• Stand straight facing the camera</li>
+                        <li>• Plain background works best</li>
+                        <li>• Wear fitted clothing for accurate results</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
       <Card className="border-border">
         <CardHeader className="space-y-1 pb-8">
           <div className="flex items-start justify-between">
