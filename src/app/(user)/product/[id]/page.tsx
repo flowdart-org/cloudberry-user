@@ -52,11 +52,14 @@ const ProductDetailsPage = () => {
       return;
     }
 
+    if(!product) return null
+
     addToCart({
       productId: product.id,
       product: product,
       quantity: quantity,
       variantId: selectedVariantId,
+      variant: product?.variants.find((v) => v.id === selectedVariantId),
     });
 
     toast({
@@ -71,11 +74,6 @@ const ProductDetailsPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header categories />
-{/* 
-      <div className="flex justify-center items-center h-screen">
-        <Button onClick={() => setOpen(true)}>Open Try-On</Button>
-        <TryOnModal isOpen={open} setOpen={setOpen} image={images[0]} />
-      </div> */}
 
       <main className="flex-1">
         <div className="container px-4 md:px-8 py-6">
@@ -230,8 +228,8 @@ const ProductDetailsPage = () => {
                 <Button
                   variant={product?.tryOn ? 'default' : 'disabled'}
                   className="flex-1 h-12 font-semibold font-pirulen"
+                  disabled={!product?.tryOn}
                   onClick={() => setIsTryOnOpen(true)}
-                  // onClick={() => setOpen(true)}
                 >
                   TRY ON
                 </Button>

@@ -6,7 +6,7 @@ import { VariantDto } from "@/api/client";
 
 export interface CartItem {
   id: string;
-  productId: number;
+  productId: string;
   product: Product;
   quantity: number;
   variantId: string;
@@ -20,24 +20,24 @@ interface StoreState {
   getInitialCart: () => Promise<void>;
   addToCart: (item: CartItem) => Promise<void>;
   removeFromCart: (productId: string) => Promise<void>;
-  updateCartItemQuantity: (productId: number, quantity: number) => void;
+  updateCartItemQuantity: (cartItemId: string, quantity: number) => void;
 }
 
 export const useCartStore = create<StoreState>()(
-  persist(
     (set, get) => ({
       cart: [],
 
       getInitialCart: async () => {
         try {
           const response = await CART_SERVICES.getUserCart();
-          if (response?.items) set({ cart: response.items });
+          if (response?.data.items) set({ cart: response.data.items });
         } catch {
           console.warn("Using local persisted cart.");
         }
       },
 
       addToCart: async (item) => {
+        console.log(item, 'hhhh')
         const prev = get().cart;
 
         const existing = prev.find((i) => i.variantId === item.variantId);
@@ -55,9 +55,16 @@ export const useCartStore = create<StoreState>()(
         }
 
         try {
-          await CART_SERVICES.addToCart({
+          const {data} = await CART_SERVICES.addToCart({
             variantId: item.variantId,
             quantity: item.quantity,
+          });
+          set({
+            cart: get().cart.map((i) =>
+              i.variantId === data.variantId
+                ? { ...i, id: data.id }
+                : i
+            ),
           });
         } catch {
           set({ cart: prev }); // rollback
@@ -75,26 +82,22 @@ export const useCartStore = create<StoreState>()(
         }
       },
 
-      updateCartItemQuantity: async (productId, quantity) => {
+      updateCartItemQuantity: async (cartItemId, quantity) => {
+        console.log(cartItemId)
         const prev = get().cart;
 
         set({
           cart: prev.map((i) =>
-            i.productId === productId ? { ...i, quantity } : i
+            i.id === cartItemId ? { ...i, quantity } : i
           ),
         });
 
         try {
-          await CART_SERVICES.updateQuantity(String(productId), { quantity });
+          await CART_SERVICES.updateQuantity(String(cartItemId), { quantity });
         } catch {
           set({ cart: prev });
         }
       },
 
     }),
-    {
-      name: "user-cart",
-      partialize: (state) => ({ cart: state.cart }),
-    }
-  )
 );

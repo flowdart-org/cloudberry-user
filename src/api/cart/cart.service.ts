@@ -9,7 +9,6 @@ export const CART_SERVICES = {
     },
 
     addToCart: async (item: CreateCartDto): Promise<ApiResponse<void>> => {
-        console.log(item, ' for add to cart')
       const response: any = await cartApi.cartControllerAddToCart(item);
       return response.data;
     },

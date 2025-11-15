@@ -2,7 +2,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useState, useRef } from "react";
-import { Upload, Sparkles, Download } from "lucide-react";
+import { Upload, Sparkles, Download, X } from "lucide-react";
 import { toast } from "sonner";
 import { TRYON_SERVICES } from "@/api/tryon/tryon.service";
 import { Product } from "@/types/product.types";
@@ -94,7 +94,7 @@ const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
         
         {/* HEADER */}
-        <div className="sticky top-0 bg-background border-b px-6 py-4 flex justify-between">
+        <div className="sticky top-0 bg-background border-b px-6 py-4 flex justify-between z-40">
           <div>
             <h2 className="text-2xl font-bold">Virtual Try-On</h2>
             <p className="text-sm text-muted-foreground">{product.name}</p>
@@ -107,6 +107,7 @@ const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
               {user.tryOnCount} / {tierInfo.limit} remaining
             </p>
           </div>
+            <X onClick={handleClose} />
         </div>
 
         {/* CONTENT */}
@@ -115,12 +116,12 @@ const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
             <>
               {/* Upload & Preview */}
               <div className="grid md:grid-cols-2 gap-6">
-                <div>
+                <div className="">
                   <h3 className="text-sm font-semibold mb-2">PRODUCT IMAGE</h3>
                   <img src={product.thumbnail} className="w-full rounded-lg object-cover aspect-[3/4]" />
                 </div>
 
-                <TryOnImageUpload />
+                <TryOnImageUpload className=""/>
               </div>
 
               <div className="bg-muted/50 rounded-lg p-4">

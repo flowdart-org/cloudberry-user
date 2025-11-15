@@ -10,71 +10,62 @@ import { loadRazorpay } from "@/lib/loadRazorpay";
 import { PAYMENT_SERVICES } from "@/api/payment/payment.service";
 import { api } from "@/lib/axios";
 import { ENV } from "@/lib/env";
+import { useAddressStore } from "@/store/useAddressStore";
+import { useState } from "react";
+import { AddressModal } from "@/components/address/AddressModal";
 
 const Cart = () => {
   const { cart, removeFromCart, updateCartItemQuantity } = useCartStore();
   const totalPrice = useCartStore((state) =>
     state.cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
   );
+  const { address, setAddress } = useAddressStore();
+  const [showAddressModal, setShowAddressModal] = useState(false);
 
-  const handleQuantityChange = (productId: number, newQuantity: number) => {
+  const handleQuantityChange = (cartItemId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
-    updateCartItemQuantity(productId, newQuantity);
+    updateCartItemQuantity(cartItemId, newQuantity);
   };
 
   const handleCheckout = async () => {
-    const rzpLoaded = await loadRazorpay();
-
-    if (!rzpLoaded) {
-      alert("Razorpay failed to load. Check your connection.");
+    // 👇 Check if address exists
+    if (!address) {
+      setShowAddressModal(true);
       return;
     }
 
-    try {
-      // Call backend to create order
-      const response = await PAYMENT_SERVICES.createOrder(totalPrice)
+    // Continue to Razorpay if address exists
+    const rzpLoaded = await loadRazorpay();
+    if (!rzpLoaded) return alert("Failed to load Razorpay");
 
+    try {
+      const response = await PAYMENT_SERVICES.createOrder(totalPrice);
       const { orderId, amount, currency } = response;
 
       const options = {
-        key: ENV.RAZORPAY_KEY_ID, 
+        key: ENV.RAZORPAY_KEY_ID,
         amount,
         currency,
-        // name: "",
         description: "Order Payment",
         order_id: orderId,
+        prefill: { name: "Ajmal", contact: "9876543210" },
+        theme: { color: "#111827" },
 
-        // Prefill customer details (optional)
-        prefill: {
-          name: "Ajmal T A",
-          email: "ajmal@example.com",
-          contact: "9876543210",
-        },
-
-        theme: {
-          color: "#111827",
-        },
-
-        // Payment Callback
-        handler: async (response: any) => {
-          console.log("Payment Success:", response);
-
+        handler: async (res: any) => {
           await api.post("/api/payment/verify", {
             orderId,
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpayOrderId: response.razorpay_order_id,
-            razorpaySignature: response.razorpay_signature,
+            razorpayPaymentId: res.razorpay_payment_id,
+            razorpayOrderId: res.razorpay_order_id,
+            razorpaySignature: res.razorpay_signature,
+            address,
           });
-
-          // Redirect or show success modal
           window.location.href = "/order-success";
         },
       };
 
-      const paymentObject = new (window as any).Razorpay(options);
-      paymentObject.open();
+      new (window as any).Razorpay(options).open();
     } catch (error) {
-      console.error("Payment Error:", error);
+      console.error(error);
     }
   };
 
@@ -127,6 +118,7 @@ const Cart = () => {
                         <h3 className="font-semibold text-foreground line-clamp-2">
                           {item?.product.name}
                         </h3>
+                        {/* <p>{item?.variant.size}</p> */}
                         <div className="text-sm text-muted-foreground mt-1 space-y-1">
                           {item?.variant && (
                             <p>
@@ -151,7 +143,7 @@ const Cart = () => {
                           variant="outline"
                           size="icon"
                           className="h-8 w-8"
-                          onClick={() => handleQuantityChange(item?.productId, item?.quantity - 1)}
+                          onClick={() => handleQuantityChange(item?.id, item?.quantity - 1)}
                         >
                           -
                         </Button>
@@ -162,7 +154,7 @@ const Cart = () => {
                           variant="outline"
                           size="icon"
                           className="h-8 w-8"
-                          onClick={() => handleQuantityChange(item?.productId, item?.quantity + 1)}
+                          onClick={() => handleQuantityChange(item?.id, item?.quantity + 1)}
                         >
                           +
                         </Button>
@@ -176,6 +168,13 @@ const Cart = () => {
               ))}
             </div>
 
+            <AddressModal
+              open={showAddressModal}
+              onClose={() => setShowAddressModal(false)}
+              onSave={(value) => setAddress(value)}
+            />
+
+
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-card border border-border rounded-lg p-6 sticky top-24">
@@ -183,13 +182,22 @@ const Cart = () => {
                   <Truck className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
                   <div className="text-sm">
                     <p className="font-semibold text-foreground mb-1">Delivering to:</p>
-                    <p className="text-muted-foreground">
-                      Ajmal, 673586
-                      <br />
-                      Kozhikode, Puduppadi, Kerala 6735...
-                    </p>
-                    <Button variant="link" className="h-auto p-0 text-accent font-semibold mt-2">
-                      CHANGE
+
+                    {address ? (
+                      <p className="text-muted-foreground leading-tight">
+                        {address.name}, {address.houseName}, {address.street}<br />
+                        {address.city}, {address.state}, {address.country} - {address.pincode}
+                      </p>
+                    ) : (
+                      <p className="text-muted-foreground">No address added yet.</p>
+                    )}
+
+                    <Button
+                      variant="link"
+                      className="h-auto p-0 text-accent font-semibold mt-2"
+                      onClick={() => setShowAddressModal(true)}
+                    >
+                      {address ? "CHANGE" : "ADD ADDRESS"}
                     </Button>
                   </div>
                 </div>
