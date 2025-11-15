@@ -11,12 +11,13 @@ export default function UserLayout({
     const { isLoading, fetchUser } = useAuthStore()
 
     useEffect(() => {
-            fetchUser()
+        fetchUser()
     }, [fetchUser])
 
+   
     if (isLoading) {
         return <div className="w-screen h-screen bg-amber-200 flex items-center justify-center">Loading....</div>
     }
-    
+
     return children;
 }

@@ -4,6 +4,7 @@ import { authApi } from "@/lib/axios";
 import { User } from "@/types/user.types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useCartStore } from "./useCartStore";
 
 interface AuthState {
     isAuthenticated: boolean;
@@ -46,6 +47,7 @@ export const useAuthStore = create<AuthState>()(
 
             if (success) {
               set({ user, isAuthenticated: true });
+              useCartStore.getState().getInitialCart()
             }
           } catch (error: any) {
             const code = error?.response?.data?.error?.code;

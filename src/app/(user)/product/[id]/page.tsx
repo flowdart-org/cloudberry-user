@@ -5,37 +5,26 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useStore } from "@/store/useStore";
+import { useCartStore } from "@/store/useCartStore";
 import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { useToast } from "@/hooks/useToast";
 import { PRODUCT_SERVICES } from "@/api/product/product.service";
 import { ProductDetails } from "@/types/product.types";
 import TryOnModal from "@/components/product/TryOnModal";
 
-const colors = [
-  { name: "Beige", hex: "#D4C5B0" },
-  { name: "Gray", hex: "#8B8B8B" },
-  { name: "Brown", hex: "#8B6F47" },
-  { name: "Black", hex: "#000000" },
-  { name: "Navy", hex: "#1A2332" },
-];
-
-const sizes = ["28", "30", "32", "34", "36"];
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
-  const { addToCart } = useStore();
+  const { addToCart } = useCartStore();
   const { toast } = useToast();
   const [product, setProduct] = useState<null | ProductDetails>(null)
   const [isTryOnOpen, setIsTryOnOpen] = useState(false);
 
 
   const [selectedImage, setSelectedImage] = useState<null | number>(null);
-  const [selectedColor, setSelectedColor] = useState(0);
-  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedVariantId, setSelectedVariantId] = useState("");
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -54,7 +43,7 @@ const ProductDetailsPage = () => {
   }
 
   const handleAddToBag = () => {
-    if (!selectedSize) {
+    if (!selectedVariantId) {
       toast({
         title: "Size Required",
         description: "Please select a size before adding to bag",
@@ -67,8 +56,7 @@ const ProductDetailsPage = () => {
       productId: product.id,
       product: product,
       quantity: quantity,
-      size: selectedSize,
-      color: colors[selectedColor].name,
+      variantId: selectedVariantId,
     });
 
     toast({
@@ -184,7 +172,7 @@ const ProductDetailsPage = () => {
 
                   {/* Discounted Price */}
                   <p className="text-3xl md:text-4xl font-pirulen font- text-accent">
-                    ₹{((product.price/100) * (100-product.discountPercent)).toFixed(2)}
+                    ₹{product.discountPrice}
                   </p>
                 </div>
 
@@ -199,10 +187,10 @@ const ProductDetailsPage = () => {
                   {product.variants.map((variant) => (
                     <button
                       key={variant.id}
-                      onClick={() => setSelectedSize(variant.size)}
+                      onClick={() => setSelectedVariantId(variant.id)}
                       className={cn(
                         "w-12 h-12 border-2 text-sm font-medium transition-all",
-                        selectedSize === variant.size
+                        selectedVariantId === variant.id
                           ? "border-foreground bg-foreground text-background"
                           : "border-border hover:border-foreground"
                       )}

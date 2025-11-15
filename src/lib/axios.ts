@@ -1,9 +1,11 @@
 import axios, { AxiosRequestConfig } from "axios";
 import {
   AuthApi,
+  CartApi,
   CategoryApi,
   Configuration,
   MediaApi,
+  PaymentApi,
   ProductApi,
   TryOnApi,
   UserApi,
@@ -121,3 +123,5 @@ export const productApi = new ProductApi(config, baseURL, api);
 export const userApi = new UserApi(config, baseURL, api);
 export const tryOnApi = new TryOnApi(config, baseURL, api);
 export const mediaApi = new MediaApi(config, baseURL, api);
+export const cartApi = new CartApi(config, baseURL, api);
+export const paymentApi = new PaymentApi(config, baseURL, api);

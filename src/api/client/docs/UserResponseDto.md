@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **phone** | **string** | Phone number of the user | [optional] [default to undefined]
 **dob** | **string** | Date of birth of the user | [optional] [default to undefined]
 **gender** | **string** | Gender of the user | [optional] [default to undefined]
+**tryOnImage** | **object** | URL of the user try-on image | [optional] [default to undefined]
 **status** | **string** | Current status of the user account | [default to undefined]
 **createdAt** | **string** | Account creation timestamp | [default to undefined]
 **updatedAt** | **string** | Last account update timestamp | [default to undefined]
@@ -27,6 +28,7 @@ const instance: UserResponseDto = {
     phone,
     dob,
     gender,
+    tryOnImage,
     status,
     createdAt,
     updatedAt,

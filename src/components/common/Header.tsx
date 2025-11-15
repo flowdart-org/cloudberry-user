@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Menu, User, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useStore } from "@/store/useStore";
+import { useCartStore } from "@/store/useCartStore";
 import Link from "next/link";
 import { AppSidebar } from "./AppSidebar";
 import AuthModal from "../auth/AuthModal";
@@ -13,9 +13,11 @@ import { APP_CONFIG } from "@/lib/app.config";
 import Image from "next/image";
 
 const Header = ({categories = false}: {categories?: boolean}) => {
-  const { cart } = useStore();
+  const cartItemCount = useCartStore((state) =>
+  state.cart.reduce((total, item) => total + item.quantity, 0)
+);
+
   const { isAuthenticated } = useAuthStore()
-  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -24,7 +26,7 @@ const Header = ({categories = false}: {categories?: boolean}) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowCategories(window.scrollY > 20);
+      if(categories) setShowCategories(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -42,10 +44,10 @@ const Header = ({categories = false}: {categories?: boolean}) => {
 
       {/* Header */}
       <header
-        className={`sticky top-0 z-50 w-full transition-all duration-500
+        className={`sticky top-0 z-50 w-full transition-all duration-500 
         ${showCategories ? "translate-y-[-100%] opacity-0" : "translate-y-0 opacity-100"}`}
       >
-        <div className="flex h-16 items-center justify-between px-4 md:px-8">
+        <div className="flex h-16 items-center justify-between px-4 md:px-8 bg-white">
           {/* Left: menu + logo */}
           <Button
             variant="ghost"
