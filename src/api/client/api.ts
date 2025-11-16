@@ -67,6 +67,12 @@ export interface AuthControllerRequestOtp200Response {
     'data'?: any;
     'accessToken'?: string;
 }
+export interface CartControllerCheckout200Response {
+    'success': boolean;
+    'message': string;
+    'data'?: CheckoutCartResponseDto;
+    'accessToken'?: string;
+}
 export interface CartControllerGetUserCart200Response {
     'success': boolean;
     'message': string;
@@ -78,6 +84,20 @@ export interface CategoryControllerFindAllActive200Response {
     'message': string;
     'data'?: object;
     'accessToken'?: string;
+}
+export interface CheckoutCartResponseDto {
+    /**
+     * Razorpay order ID
+     */
+    'id': string;
+    /**
+     * Amount for the order in smallest currency unit
+     */
+    'amount': number;
+    /**
+     * Currency for the order
+     */
+    'currency': string;
 }
 export interface CreateCartDto {
     /**
@@ -94,12 +114,6 @@ export interface CreateCategoryDto {
      * The name of the category
      */
     'name': string;
-}
-export interface CreateOrderDto {
-    /**
-     * Amount for the order in INR
-     */
-    'amount': number;
 }
 export interface CreateProductDto {
     /**
@@ -955,6 +969,35 @@ export const CartApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        cartControllerCheckout: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/cart/checkout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         cartControllerGetUserCart: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/cart`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1077,6 +1120,17 @@ export const CartApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async cartControllerCheckout(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CartControllerCheckout200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.cartControllerCheckout(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CartApi.cartControllerCheckout']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async cartControllerGetUserCart(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CartControllerGetUserCart200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.cartControllerGetUserCart(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -1131,6 +1185,14 @@ export const CartApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        cartControllerCheckout(options?: RawAxiosRequestConfig): AxiosPromise<CartControllerCheckout200Response> {
+            return localVarFp.cartControllerCheckout(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         cartControllerGetUserCart(options?: RawAxiosRequestConfig): AxiosPromise<CartControllerGetUserCart200Response> {
             return localVarFp.cartControllerGetUserCart(options).then((request) => request(axios, basePath));
         },
@@ -1168,6 +1230,15 @@ export class CartApi extends BaseAPI {
      */
     public cartControllerAddToCart(createCartDto: CreateCartDto, options?: RawAxiosRequestConfig) {
         return CartApiFp(this.configuration).cartControllerAddToCart(createCartDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public cartControllerCheckout(options?: RawAxiosRequestConfig) {
+        return CartApiFp(this.configuration).cartControllerCheckout(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1889,76 +1960,6 @@ export const PaymentApiAxiosParamCreator = function (configuration?: Configurati
     return {
         /**
          * 
-         * @param {CreateOrderDto} createOrderDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        paymentControllerCreateOrder: async (createOrderDto: CreateOrderDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createOrderDto' is not null or undefined
-            assertParamExists('paymentControllerCreateOrder', 'createOrderDto', createOrderDto)
-            const localVarPath = `/api/payment/create-order`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createOrderDto, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {CreateOrderDto} createOrderDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        paymentControllerCreateOrderLink: async (createOrderDto: CreateOrderDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createOrderDto' is not null or undefined
-            assertParamExists('paymentControllerCreateOrderLink', 'createOrderDto', createOrderDto)
-            const localVarPath = `/api/payment/create-order-link`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createOrderDto, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2003,30 +2004,6 @@ export const PaymentApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {CreateOrderDto} createOrderDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async paymentControllerCreateOrder(createOrderDto: CreateOrderDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.paymentControllerCreateOrder(createOrderDto, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['PaymentApi.paymentControllerCreateOrder']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {CreateOrderDto} createOrderDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async paymentControllerCreateOrderLink(createOrderDto: CreateOrderDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.paymentControllerCreateOrderLink(createOrderDto, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['PaymentApi.paymentControllerCreateOrderLink']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
          * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2048,24 +2025,6 @@ export const PaymentApiFactory = function (configuration?: Configuration, basePa
     return {
         /**
          * 
-         * @param {CreateOrderDto} createOrderDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        paymentControllerCreateOrder(createOrderDto: CreateOrderDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.paymentControllerCreateOrder(createOrderDto, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {CreateOrderDto} createOrderDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        paymentControllerCreateOrderLink(createOrderDto: CreateOrderDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.paymentControllerCreateOrderLink(createOrderDto, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @param {object} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2080,26 +2039,6 @@ export const PaymentApiFactory = function (configuration?: Configuration, basePa
  * PaymentApi - object-oriented interface
  */
 export class PaymentApi extends BaseAPI {
-    /**
-     * 
-     * @param {CreateOrderDto} createOrderDto 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public paymentControllerCreateOrder(createOrderDto: CreateOrderDto, options?: RawAxiosRequestConfig) {
-        return PaymentApiFp(this.configuration).paymentControllerCreateOrder(createOrderDto, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {CreateOrderDto} createOrderDto 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public paymentControllerCreateOrderLink(createOrderDto: CreateOrderDto, options?: RawAxiosRequestConfig) {
-        return PaymentApiFp(this.configuration).paymentControllerCreateOrderLink(createOrderDto, options).then((request) => request(this.axios, this.basePath));
-    }
-
     /**
      * 
      * @param {object} body 

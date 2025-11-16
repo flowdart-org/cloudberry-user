@@ -37,7 +37,6 @@ export const useCartStore = create<StoreState>()(
       },
 
       addToCart: async (item) => {
-        console.log(item, 'hhhh')
         const prev = get().cart;
 
         const existing = prev.find((i) => i.variantId === item.variantId);
@@ -55,14 +54,15 @@ export const useCartStore = create<StoreState>()(
         }
 
         try {
-          const {data} = await CART_SERVICES.addToCart({
+          const response = await CART_SERVICES.addToCart({
             variantId: item.variantId,
             quantity: item.quantity,
           });
+
           set({
             cart: get().cart.map((i) =>
-              i.variantId === data.variantId
-                ? { ...i, id: data.id }
+              i.variantId === response.variantId
+                ? { ...i, id: response.id }
                 : i
             ),
           });

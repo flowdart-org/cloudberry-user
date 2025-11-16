@@ -7,12 +7,12 @@ import { Truck, X } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import Link from "next/link";
 import { loadRazorpay } from "@/lib/loadRazorpay";
-import { PAYMENT_SERVICES } from "@/api/payment/payment.service";
 import { api } from "@/lib/axios";
 import { ENV } from "@/lib/env";
 import { useAddressStore } from "@/store/useAddressStore";
 import { useState } from "react";
 import { AddressModal } from "@/components/address/AddressModal";
+import { CART_SERVICES } from "@/api/cart/cart.service";
 
 const Cart = () => {
   const { cart, removeFromCart, updateCartItemQuantity } = useCartStore();
@@ -39,11 +39,12 @@ const Cart = () => {
     if (!rzpLoaded) return alert("Failed to load Razorpay");
 
     try {
-      const response = await PAYMENT_SERVICES.createOrder(totalPrice);
-      const { orderId, amount, currency } = response;
+      const response = await CART_SERVICES.checkout();
+      const { orderId, amount, currency } = response.data;
 
       const options = {
         key: ENV.RAZORPAY_KEY_ID,
+        name: 'Cloudberry',
         amount,
         currency,
         description: "Order Payment",
@@ -106,7 +107,7 @@ const Cart = () => {
                 >
                   <div className="relative w-24 h-28 flex-shrink-0 rounded overflow-hidden bg-muted">
                     <img
-                      // src={item?.product.thumbnail}
+                      src={item?.product.thumbnail}
                       alt={item?.product.name}
                       className="w-full h-full object-cover"
                     />

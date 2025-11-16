@@ -1,6 +1,6 @@
 # CategoryApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *http://api.dev.cloudberrytryon.com*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|

@@ -18,6 +18,11 @@ export const CART_SERVICES = {
       return response.data;
     },
 
+    checkout: async (): Promise<ApiResponse> => {
+      const response: any = await cartApi.cartControllerCheckout();
+      return response.data;
+    },
+
 
     updateQuantity: async (itemId: string, item: UpdateCartDto): Promise<ApiResponse> => {
       const response: any = await cartApi.cartControllerUpdateQuantity(itemId, item);

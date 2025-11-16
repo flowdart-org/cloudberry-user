@@ -88,9 +88,8 @@ const TryOnImageUpload = ({ showLabel = true, className = "" }: TryOnImageUpload
       // Upload image using PUT
       await MEDIA_SERVICES.uploadImage(data, fileToUpload);
 
-      const publicUrl = data.split("?")[0];
 
-      setTryOnImage(publicUrl);
+      setTryOnImage(data);
 
       toast.success("Profile try-on image updated!");
 

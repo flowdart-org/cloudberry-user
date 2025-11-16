@@ -11,12 +11,13 @@ docs/AdminResponseDto.md
 docs/AuthApi.md
 docs/AuthControllerRequestOtp200Response.md
 docs/CartApi.md
+docs/CartControllerCheckout200Response.md
 docs/CartControllerGetUserCart200Response.md
 docs/CategoryApi.md
 docs/CategoryControllerFindAllActive200Response.md
+docs/CheckoutCartResponseDto.md
 docs/CreateCartDto.md
 docs/CreateCategoryDto.md
-docs/CreateOrderDto.md
 docs/CreateProductDto.md
 docs/CreateTryOnDto.md
 docs/GetCartResponseDto.md
