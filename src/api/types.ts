@@ -1,8 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export interface ApiResponse<T = any> {
+
+export interface PaginatedResponse<T> {
+  message: string;
+  success: boolean;
+  data?: T;
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface ApiResponse<T> {
   message: string;
   success: boolean;
   data?: T;
   error?: string;
 }
-

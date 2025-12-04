@@ -20,20 +20,14 @@ interface AuthState {
     fetchUser: () => Promise<void>
     updateUser: (data: User) => void;
 }
-const mockUser: User = {
-  id: "1",
-  name: "John Doe",
-  email: "john@example.com",
-  tryOnCount: 3,
-  tier: "free",
-};
+
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       isAuthenticated: false,
       isLoading: true,
-      user: mockUser,
+      user: null,
 
       login: async () => {
         set({ isAuthenticated: true });
@@ -44,13 +38,12 @@ export const useAuthStore = create<AuthState>()(
         if (get().isAuthenticated) {
           try {
             const { success, data: user } = await USER_SERVICES.me();
-
             if (success) {
               set({ user, isAuthenticated: true });
               useCartStore.getState().getInitialCart()
             }
-          } catch (error: any) {
-            const code = error?.response?.data?.error?.code;
+          } catch (error) {
+            const code = (error as {response: { data: {error: {code: string}}}})?.response?.data?.error?.code;
 
             if (code === "ForbiddenException") {
               get().logout();
@@ -64,7 +57,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: async () => {
-        await AUTH_SERVICES.logout();
+        AUTH_SERVICES.logout();
         set({ user: null, isAuthenticated: false, isLoading: false });
       },
 
@@ -94,7 +87,7 @@ export const useAuthStore = create<AuthState>()(
           return {
             user: {
               ...state.user,
-              tryOnCount: Math.max(0, (state.user.tryOnCount ?? 0) - 1),
+              tryOnLimit: Math.max(0, (state.user.tryOnLimit ?? 0) - 1),
             },
           };
         });

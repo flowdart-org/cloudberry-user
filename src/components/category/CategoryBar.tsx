@@ -1,95 +1,116 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { CATEGORY_SERVICES } from "@/api/category/category.service";
-import { Category } from "@/types/category.types";
 import { Button } from "../ui/button";
+import { useCategoryStore } from "@/store/useCategoryStore";
+import { cn } from "@/lib/utils";
 
 interface CategoryBarProps {
   showCategories: boolean;
+  isShop?: boolean;
 }
 
-const CategoryBar = ({ showCategories }: CategoryBarProps) => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [activeCategory, setActiveCategory] = useState("ALL");
+const normalize = (text: string) =>
+  text.trim().toLowerCase().replace(/\s+/g, "-");
+
+export default function CategoryBar({ showCategories, isShop = false }: CategoryBarProps) {
+  const { categories } = useCategoryStore();
   const router = useRouter();
   const pathname = usePathname();
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // ✅ Fetch categories once
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const [active, setActive] = useState(pathname.split("/").pop() || '');
+  const [readyToScroll, setReadyToScroll] = useState(false);
 
-  // ✅ Update active category from URL
+  /** 🧠 Detect category from URL once route page is fully rendered */
   useEffect(() => {
     if (!pathname) return;
 
-    const parts = pathname.split("/");
-    const lastSegment = parts[parts.length - 1] || "all";
-    const formattedCategory = lastSegment.replace(/-/g, " ").toUpperCase();
+    const slug = pathname.split("/").pop() || "all";
+    const exists = categories.some((c) => normalize(c.name) === slug);
 
-    const categoryExists = categories.some(
-      (cat) => cat.name.toUpperCase() === formattedCategory
-    );
+    setActive(exists ? slug : "all");
 
-    if (categoryExists || formattedCategory === "ALL") {
-      setActiveCategory(formattedCategory);
-    } else {
-      setActiveCategory("ALL");
-    }
+    // Delay scroll until component settles
+    setTimeout(() => setReadyToScroll(true), 60);
   }, [pathname, categories]);
 
-  const handleCategorySelect = (categoryName: string) => {
-    setActiveCategory(categoryName);
-    const slug = categoryName.toLowerCase().replace(/\s+/g, "-");
-    const path = categoryName === "ALL" ? "/shop" : `/shop/${slug}`;
-    router.push(path);
-  };
 
-  const fetchCategories = async () => {
-    try {
-      const response = await CATEGORY_SERVICES.getCategories();
-      setCategories(response?.data || []);
-    } catch (error) {
-      console.error("Failed to fetch categories:", error);
+  /** 🎯 Scroll to active button AFTER active state fully updated */
+  useEffect(() => {
+    if (!readyToScroll) return;
+
+    const buttons = containerRef.current?.querySelectorAll("[data-category]");
+    const activeBtn = Array.from(buttons || []).find(
+      (el) => el.getAttribute("data-category") === active
+    );
+
+    if (activeBtn) {
+      activeBtn.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
     }
+  }, [active, readyToScroll]);
+
+  /** 🚀 Change route & UI smoothly */
+  const handleCategorySelect = (name: string) => {
+    const slug = normalize(name);
+    setActive(slug); // immediate visual feedback
+
+    router.push(slug === "all" ? "/shop/all" : `/shop/${slug}`);
+
+    // prevent scrolling until route settles again
+    setReadyToScroll(false);
   };
 
   return (
     <div
-      className={`sticky top-0 z-50 w-full bg-background border-b border-border overflow-hidden transition-all duration-500 ease-in-out ${
-        showCategories
-          ? "max-h-20 opacity-100 translate-y-0"
-          : "max-h-0 opacity-0 -translate-y-full"
-      }`}
+      className={cn(
+        pathname?.startsWith("/shop") && !isShop && "hidden",
+        "sticky top-0 z-50 w-full bg-background border-b border-border overflow-hidden transition-all duration-300",
+        showCategories ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+      )}
     >
-      <div className="flex gap-2 py-2 px-3 overflow-x-auto scrollbar-hide transition-all duration-500 ease-in-out md:justify-center w-screen">
+      <div
+        ref={containerRef}
+        className={cn(
+          "flex gap-2 py-2 px-3 overflow-x-auto scrollbar-hide transition-all duration-300",
+          isShop ? "" : "w-screen md:justify-center"
+        )}
+      >
+        {/* ALL */}
         <Button
-          variant={activeCategory === "ALL" ? "default" : "outline"}
           size="sm"
+          data-category="all"
+          variant={active === "all" ? "default" : "outline"}
           onClick={() => handleCategorySelect("ALL")}
-          className="z-10 relative flex-shrink-0 whitespace-nowrap"
+          className="whitespace-nowrap flex-shrink-0"
         >
           ALL
         </Button>
+
+        {/* Dynamic Categories */}
         {categories
-          .filter((category) => category.status === "active")
-          .map((category) => (
-            <div key={category.name} className="relative flex-shrink-0 whitespace-nowrap">
+          .filter((c) => c.status === "active")
+          .map((category) => {
+            const slug = normalize(category.name);
+            return (
               <Button
-                variant={activeCategory === category.name ? "default" : "outline"}
+                key={category.id}
                 size="sm"
+                data-category={slug}
+                variant={active === slug ? "default" : "outline"}
                 onClick={() => handleCategorySelect(category.name)}
-                className="z-10 relative"
+                className="whitespace-nowrap flex-shrink-0"
               >
                 {category.name}
               </Button>
-            </div>
-          ))}
+            );
+          })}
       </div>
     </div>
   );
-};
-
-export default CategoryBar;
+}

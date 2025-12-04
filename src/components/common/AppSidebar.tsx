@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Home, Store, ShoppingCart, User, X, LogOut } from "lucide-react";
+import { Home, Store, ShoppingCart, User, LogOut, ChevronRight } from "lucide-react";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetClose,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -45,17 +44,12 @@ export function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
       {/* Sidebar Sheet */}
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="left" className="w-64 p-0">
-          <SheetHeader className="border-b p-4 flex flex-row items-center justify-between">
-            <SheetTitle>Menu</SheetTitle>
-            <SheetClose asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <X className="h-4 w-4" />
-              </Button>
-            </SheetClose>
+          <SheetHeader className="border-b p-4 flex flex-row items-center justify-between w-full bg-black">
+            <SheetTitle className="font-pirulen mb-0 text-white mx-auto">Cloudberry</SheetTitle>
           </SheetHeader>
 
-          <div className="p-4">
-            <nav className="space-y-1">
+          <div className="">
+            <nav className="space-y-">
               {items.map((item) => {
                 const isActive = pathname === item.url;
                 return (
@@ -64,14 +58,17 @@ export function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
                     href={item.url}
                     onClick={() => onOpenChange(false)}
                     className={cn(
-                      "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors rounded-md",
+                      "flex items-center justify-between  px-4 py-3 text-sm font-medium transition-colors border-b border-t border-border/50 group hover:border-black",
                       isActive
                         ? "bg-accent text-accent-foreground"
                         : "text-foreground hover:bg-muted"
                     )}
                   >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.title}</span>
+                    <div className="flex items-center justify-center gap-3">
+                      <item.icon className="h-5 w-5" />
+                      <span className="text-md md:text-lg lg:text-xl">{item.title}</span>
+                    </div>
+                    <ChevronRight className="text-border group-hover:text-black" />
                   </Link>
                 );
               })}
@@ -80,11 +77,15 @@ export function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
               {isAuthenticated && <div
                 onClick={() => setShowLogoutModal(true)}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors rounded-md text-foreground hover:bg-muted cursor-pointer"
+                  "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors  text-foreground hover:bg-muted cursor-pointer border-b border-t border-border/50 hover:border-black group justify-between"
                 )}
               >
-                <LogOut className="h-5 w-5" />
-                <span>Logout</span>
+                <div className="flex items-center justify-center gap-3">
+                  <LogOut className="h-5 w-5" />
+                  <span className="text-md md:text-lg lg:text-xl">Logout</span>
+                </div>
+                <ChevronRight className="text-border group-hover:text-black" />
+
               </div>}
             </nav>
           </div>
@@ -113,7 +114,7 @@ export function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
               onClick={() => {
                 logout();
                 setShowLogoutModal(false);
-                onOpenChange(false); 
+                onOpenChange(false);
               }}
             >
               Logout

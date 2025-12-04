@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** |  | [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**GetCartResponseDto**](GetCartResponseDto.md) |  | [optional] [default to undefined]
+**data** | [**CartResponseDto**](CartResponseDto.md) |  | [optional] [default to undefined]
 **accessToken** | **string** |  | [optional] [default to undefined]
 
 ## Example

@@ -62,7 +62,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **categoryControllerFindAll**
-> CategoryControllerFindAllActive200Response categoryControllerFindAll()
+> CategoryControllerFindAll200Response categoryControllerFindAll()
 
 
 ### Example
@@ -76,16 +76,32 @@ import {
 const configuration = new Configuration();
 const apiInstance = new CategoryApi(configuration);
 
-const { status, data } = await apiInstance.categoryControllerFindAll();
+let page: number; // (optional) (default to undefined)
+let limit: number; // (optional) (default to undefined)
+let search: string; // (optional) (default to undefined)
+let status: 'active' | 'inactive'; // (optional) (default to undefined)
+
+const { status, data } = await apiInstance.categoryControllerFindAll(
+    page,
+    limit,
+    search,
+    status
+);
 ```
 
 ### Parameters
-This endpoint does not have any parameters.
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **page** | [**number**] |  | (optional) defaults to undefined|
+| **limit** | [**number**] |  | (optional) defaults to undefined|
+| **search** | [**string**] |  | (optional) defaults to undefined|
+| **status** | [**&#39;active&#39; | &#39;inactive&#39;**]**Array<&#39;active&#39; &#124; &#39;inactive&#39;>** |  | (optional) defaults to undefined|
 
 
 ### Return type
 
-**CategoryControllerFindAllActive200Response**
+**CategoryControllerFindAll200Response**
 
 ### Authorization
 

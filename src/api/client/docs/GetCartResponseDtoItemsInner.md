@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **productId** | **string** |  | [optional] [default to undefined]
 **variantId** | **string** |  | [optional] [default to undefined]
 **quantity** | **number** |  | [optional] [default to undefined]
-**product** | [**GetCartResponseDtoItemsInnerProduct**](GetCartResponseDtoItemsInnerProduct.md) |  | [optional] [default to undefined]
+**ProductDTO** | [**GetCartResponseDtoItemsInnerProduct**](GetCartResponseDtoItemsInnerProduct.md) |  | [optional] [default to undefined]
 
 ## Example
 
@@ -21,7 +21,7 @@ const instance: GetCartResponseDtoItemsInner = {
     productId,
     variantId,
     quantity,
-    product,
+    ProductDTO,
 };
 ```
 

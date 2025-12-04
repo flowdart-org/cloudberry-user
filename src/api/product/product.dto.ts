@@ -1,6 +1,4 @@
 import { VariantsDto } from "@/types/product.types";
-
-
 export interface CreateProductDTO {
   name: string;
   description: string;

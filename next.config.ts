@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cloudberrybucket.blob.core.windows.net",
+        hostname: "cloudberryblobs.blob.core.windows.net",
         pathname: "/**",
       },
     ],

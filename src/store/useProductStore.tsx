@@ -1,23 +1,15 @@
 import { PRODUCT_SERVICES } from "@/api/product/product.service";
-import { Product } from "@/types/product.types";
+import { ProductDTO } from "@/types/product.types";
 import { create } from "zustand";
 
-// export interface Product {
-//   id: string;
-//   name: string;
-//   price: number;
-//   images: string[];
-//   category: string;
-//   sizes: string[];
-// }
-
-interface FilterState {
+export interface FilterState {
   sizes: string[];
-  priceRanges: string[];
+  minPrice: number | null;
+  maxPrice: number | null;
 }
 
 interface ProductStore {
-  products: Product[];
+  products: ProductDTO[];
   isLoading: boolean;
   page: number;
   limit: number;
@@ -28,28 +20,22 @@ interface ProductStore {
   setCategory: (category: string) => void;
   setPage: (page: number) => void;
   toggleSizeFilter: (size: string) => void;
-  togglePriceFilter: (range: string) => void;
+  setPriceRange: (minPrice: number | null, maxPrice: number | null) => void;
   clearFilters: () => void;
   applyFilters: () => void;
 }
 
-
-const getPriceRange = (price: number): string => {
-  if (price < 500) return "Under ₹500";
-  if (price <= 1000) return "₹500 - ₹1000";
-  if (price <= 1500) return "₹1000 - ₹1500";
-  return "Over ₹1500";
-};
 
 export const useProductStore = create<ProductStore>((set, get) => ({
   products: [],
   isLoading: false,
   page: 1,
   limit: 12,
-  category: "all",
+  category: 'all',
   filters: {
     sizes: [],
-    priceRanges: [],
+    minPrice: null,
+    maxPrice: null
   },
 
   setCategory: (category) => {
@@ -67,27 +53,32 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     set({ filters: { ...filters, sizes } });
   },
 
-  togglePriceFilter: (range) => {
-    const { filters } = get();
-    const priceRanges = filters.priceRanges.includes(range)
-      ? filters.priceRanges.filter((r) => r !== range)
-      : [...filters.priceRanges, range];
-    set({ filters: { ...filters, priceRanges } });
-  },
-
   clearFilters: () => {
-    set({ filters: { sizes: [], priceRanges: [] }, page: 1 });
+    set({ filters: { sizes: [], minPrice: null, maxPrice: null }, page: 1 });
     get().applyFilters();
   },
 
+  setPriceRange: (minPrice, maxPrice) =>{
+    set((state) => ({
+      filters: { ...state.filters, minPrice, maxPrice },
+    }))
+  },
+
   applyFilters: async () => {
-    const { category, filters } = get();
+    const { category, filters, page } = get();
     
-    let filtered: Product[] = [];
+    let filtered: ProductDTO[] = [];
 
     const fetchProducts = async () => {
-      const response = await PRODUCT_SERVICES.getFeeds()
-      filtered = response.data
+      const response = await PRODUCT_SERVICES.getFeeds({
+        categories: category !== 'all' ? [category] : undefined,
+        minPrice: filters.minPrice ? filters.minPrice : undefined,
+        maxPrice: filters.maxPrice ? filters.maxPrice : undefined,
+        page
+      })
+      if (response.data) {
+        filtered = response.data
+      }
     }
     
     await fetchProducts()

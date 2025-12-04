@@ -1,65 +1,51 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useState, useRef } from "react";
-import { Upload, Sparkles, Download, X } from "lucide-react";
+import { useState } from "react";
+import { Sparkles, Download, X } from "lucide-react";
 import { toast } from "sonner";
 import { TRYON_SERVICES } from "@/api/tryon/tryon.service";
-import { Product } from "@/types/product.types";
 import TryOnImageUpload from "./TryonImageUpload";
+import { ProductDTO } from "@/types/product.types";
 
 interface TryOnModalProps {
   isOpen: boolean;
   onClose: () => void;
-  product: Product;
+  product: ProductDTO;
 }
 
 const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
-  const { user, setTryOnImage, decrementTryOnCount } = useAuthStore();
+  const { user, decrementTryOnCount } = useAuthStore();
 
   // Hooks must always run
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!user || !product) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="p-6 text-center">
-          <p className="text-muted-foreground">No user or product found.</p>
+          <p className="text-neutral-400 ">No user or product found.</p>
           <Button onClick={onClose} className="mt-4">Close</Button>
         </DialogContent>
       </Dialog>
     );
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setTryOnImage(reader.result as string);
-      toast.success("Try-on image uploaded successfully");
-    };
-    reader.readAsDataURL(file);
-  };
-
   const handleGenerate = async () => {
     if (!user.tryOnImage) return toast.error("Upload your photo first");
-    if (user.tryOnCount <= 0) return toast.error("Try-on limit reached");
+    if (user.tryOnLimit <= 0) return toast.error("Try-on limit reached");
 
     setIsGenerating(true);
 
     try {
       const {data} = await TRYON_SERVICES.generateTryOn(product.id);
-      console.log(data, 'its data')
-      if (!data || data.length <= 0) {
+      if (!data || data?.images.length <= 0) {
         toast.error("Failed to generate try-on");
         return;
       }
 
-      setGeneratedImages(data);
+      setGeneratedImages(data.images);
       decrementTryOnCount();
       toast.success("Try-on generated!");
     } catch (err) {
@@ -83,28 +69,23 @@ const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
     onClose();
   };
 
-  const tierInfo = {
-    free: { limit: 3, color: "text-muted-foreground" },
-    pro: { limit: 10, color: "text-blue-500" },
-    premium: { limit: "Unlimited", color: "text-purple-500" },
-  }[user.tier ?? "free"];
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 sm:rounded-none">
         
         {/* HEADER */}
-        <div className="sticky top-0 bg-background border-b px-6 py-4 flex justify-between z-40">
+        <div className="sticky top-0 bg-background border-b border-border px-6 py-4 flex justify-between z-40">
           <div>
             <h2 className="text-2xl font-bold">Virtual Try-On</h2>
-            <p className="text-sm text-muted-foreground">{product.name}</p>
+            <p className="text-sm text-neutral-400 ">{product.name}</p>
           </div>
           <div className="text-right">
-            <p className={`font-semibold text-sm ${tierInfo.color}`}>
+            <p className={`font-semibold text-sm`}>
               {/* {user.tier.toUpperCase()} TIER */}
             </p>
-            <p className="text-xs text-muted-foreground">
-              {user.tryOnCount} / {tierInfo.limit} remaining
+            <p className="text-xs text-neutral-400  flex items-center justify-center gap-2">
+              {user.tryOnLimit} / 3 <Sparkles size={13} fill='' />
             </p>
           </div>
             <X onClick={handleClose} />
@@ -117,8 +98,8 @@ const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
               {/* Upload & Preview */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="">
-                  <h3 className="text-sm font-semibold mb-2">PRODUCT IMAGE</h3>
-                  <img src={product.thumbnail} className="w-full rounded-lg object-cover aspect-[3/4]" />
+                  <h3 className="text-sm font-semibold mb-2">product IMAGE</h3>
+                  <img src={product.thumbnail} className="w-full object-cover aspect-[3/4]" />
                 </div>
 
                 <TryOnImageUpload className=""/>
@@ -126,7 +107,7 @@ const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
 
               <div className="bg-muted/50 rounded-lg p-4">
                 <h4 className="text-sm font-semibold mb-2">Tips for best results:</h4>
-                <ul className="text-xs text-muted-foreground space-y-1">
+                <ul className="text-xs text-neutral-400  space-y-1">
                   <li>• Use a well-lit, full-body photo</li>
                   <li>• Stand straight facing the camera</li>
                   <li>• Plain background works best</li>
@@ -137,7 +118,7 @@ const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
           ) : (
             <div className="grid md:grid-cols-3 gap-4">
               {generatedImages.map((img, i) => (
-                <div key={i} className="relative group">
+                <div key={i} className="relative group aspect-[3/4]">
                   <img src={img} className="rounded-lg object-cover aspect-[3/4]" />
                   <button
                     onClick={() => handleDownload(img, i)}
@@ -147,9 +128,6 @@ const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
                   </button>
                 </div>
               ))}
-              <Button variant="outline" onClick={() => setGeneratedImages([])} className="w-full mt-4">
-                Try Again
-              </Button>
             </div>
           )}
         </div>
@@ -157,11 +135,13 @@ const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
         {/* FOOTER */}
         <div className="sticky bottom-0  px-6 py-4 bg-white">
           {generatedImages.length === 0 ? (
-            <Button onClick={handleGenerate} disabled={isGenerating || !user.tryOnImage} className="w-full">
-              {isGenerating ? "Generating..." : "Generate Try-On"}
+            <Button onClick={handleGenerate} disabled={isGenerating || !user.tryOnImage || user.tryOnLimit <= 0} className="w-full">
+              {user.tryOnLimit <= 0 ? "Limit Exeeded" : isGenerating ? "Generating..." : "Generate Try-On"}
             </Button>
           ) : (
-            <Button variant="outline" className="w-full" onClick={handleClose}>Close</Button>
+            <Button onClick={() => setGeneratedImages([])} className="w-full mt-4">
+                Try Again
+            </Button>
           )}
         </div>
 

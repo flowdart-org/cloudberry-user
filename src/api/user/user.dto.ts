@@ -1,6 +1,6 @@
 export interface UpdateUserDto {
     name?: string;
-    dob?: string;
+    dob?: Date;
     gender?: string;
 }
 

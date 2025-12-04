@@ -1,16 +1,14 @@
 import { ApiResponse } from "../types";
-import { userApi } from "@/lib/axios";
+import { request, userApi } from "@/lib/axios";
 import { User } from "@/types/user.types";
-import { UpdateUserDto } from "../client";
+import { UpdateUserDto } from "./user.dto";
 
 export const USER_SERVICES = {
    me: async (): Promise<ApiResponse<User>> => {
-    const respnose = await userApi.userControllerMe()
-    return respnose.data
+    return await request(userApi.userControllerMe.bind(userApi)) as ApiResponse<User>
   },
 
   updateProfile: async (data: UpdateUserDto): Promise<ApiResponse<User>> => {
-    const response = await userApi.userControllerUpdate(data);
-    return response.data;
+     return await request(userApi.userControllerUpdate.bind(userApi), data) as ApiResponse<User>
   },
 };

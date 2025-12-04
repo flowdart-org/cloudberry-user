@@ -1,3 +1,5 @@
+import { Address } from "./address.types";
+
 export interface User {
     id?: string;
     name?: string;
@@ -6,8 +8,9 @@ export interface User {
     dob?: string;
     gender?: string;
     tryOnImage?: string;
-    tryOnCount: number;
-    tier: "free" | "pro" | "premium";
+    tryOnLimit?: number;
+    tier?: "free" | "pro" | "premium";
+    addresses?: Array<Address>;
     createdAt?: string;
     updatedAt?: string;
 }

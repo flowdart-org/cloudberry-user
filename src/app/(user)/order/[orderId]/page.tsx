@@ -1,189 +1,268 @@
 "use client"
-import Header from "@/components/common/Header";
+import { OrderResponseDto } from "@/api/client";
+import { ORDER_SERVICES } from "@/api/order/order.service";
 import Footer from "@/components/common/Footer";
+import Header from "@/components/common/Header";
+import StatusProgress from "@/components/orders/StatusProgress";
+import ProductMiniCard from "@/components/product/ProductMiniCard";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ArrowLeft, Link } from "lucide-react";
+import { formatDate } from "@/lib/utils";
+import { downloadInvoicePDF } from "@/lib/invoice-generator";
+import { useToast } from "@/hooks/useToast";
+import { ArrowLeft, Download, HelpCircle, Package, Truck, MapPin, CreditCard, Clock } from "lucide-react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const OrderDetails = () => {
-  const { orderId } = useParams();
+export default function OrderDetails() {
+    const { orderId } = useParams();
+    const [orderDetails, setOrderDetails] = useState<OrderResponseDto | null>(null)
+    const [isDownloading, setIsDownloading] = useState(false);
+    const { toast } = useToast();
 
-  const order = {
-    id: orderId,
-    confirmationNumber: "6500600",
-    transactionId: "1806790905",
-    date: "Feb 17, 2025",
-    expectedDelivery: "Feb 22 - 26",
-    status: "ordered",
-    product: {
-      name: "Premium Cotton T-Shirt",
-      image: "/placeholder.svg",
-      size: "M",
-      quantity: 1,
-      price: 16.85,
-    },
-    shipping: {
-      name: "John Doe",
-      address: "600 Montgomery St",
-      city: "San Francisco",
-      state: "CA",
-      zip: "94111",
-      country: "United States",
-    },
-    payment: {
-      method: "Credit card",
-      subtotal: 16.85,
-      tax: 1.50,
-      shipping: 8.12,
-      total: 26.47,
-    },
-  };
+    useEffect(() => {
+        const getOrderDetails = async () => {
+            const response = await ORDER_SERVICES.getOrderDetails(orderId as string)
+            if (response.data) {
+                setOrderDetails(response.data)
+            }
+        }
+        getOrderDetails()
+    }, [])
 
-  return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header categories />
-      
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl">
-        <Link href="/profile">
-          <Button variant="ghost" className="mb-6 -ml-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Profile
-          </Button>
-        </Link>
+    const handleDownloadInvoice = async () => {
+        try {
+            setIsDownloading(true);
+            if (orderDetails) {
+                downloadInvoicePDF(orderDetails);
+                toast({
+                    title: "Success",
+                    description: "Invoice prepared for download. Use your browser's print dialog to save as PDF.",
+                });
+            }
+        } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to generate invoice",
+                variant: "destructive",
+            });
+        } finally {
+            setIsDownloading(false);
+        }
+    }
 
-        {/* Confirmation Header */}
-        <div className="text-center mb-12 relative">
-          <h1 className="text-4xl font-bold mb-4">Woohoo! Your order is confirmed.</h1>
-          <p className="text-muted-foreground">
-            <span className="font-semibold text-foreground">Zen Fashion Studio</span> will start working on this right away.
-            <br />
-            We&apos;ll email you as soon as it ships.
-          </p>
+    if (!orderDetails) return null
+
+    return (
+        <div className="min-h-screen flex flex-col bg-background">
+            <Header />
+
+            <main className="flex-1 w-full">
+                <div className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+                    {/* Back Button */}
+                    <Link href="/account/orders">
+                        <button className="group flex items-center gap-2 text-sm text-neutral-400 hover:text-foreground transition-colors mb-8">
+                            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                            Back to Orders
+                        </button>
+                    </Link>
+
+                    {/* Page Header */}
+                    <div className="mb-6 pb-4 border-b border-border">
+                        <div className="flex items-center gap-3 mb-3">
+                            <div className="p-2 bg-muted rounded-lg">
+                                <Package className="h-5 w-5 text-neutral-400" />
+                            </div>
+                            <span className="text-xs font-medium tracking-widest text-neutral-400 uppercase">
+                                Order Details
+                            </span>
+                        </div>
+                        <div className="space-y-2">
+                            <p className="text-sm text-neutral-400">
+                                order ID: 
+                            </p>
+                        </div>
+                            <h1 className="md:text-lg text-md font-semibold tracking-tight">
+                                {orderDetails.orderNumber}
+                            </h1>
+                    </div>
+
+                    {/* Layout */}
+                        <div className="grid lg:grid-cols-3 gap-6">
+                        {/* LEFT CONTENT */}
+                        <div className="lg:col-span-2 space-y-4">
+                            {/* STATUS CARD */}
+                            <div className="p-4 sm:p-6 bg-card border border-border rounded-lg shadow-sm animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 pb-4 border-b border-border">
+                                    <h2 className="font-semibold text-base">Delivery Status</h2>
+                                    <span className="text-xs font-medium tracking-wide px-3 py-1.5 bg-foreground text-background rounded-full w-fit">
+                                        {orderDetails.orderStatus}
+                                    </span>
+                                </div>
+
+                                <StatusProgress status={orderDetails.orderStatus} />
+
+                                <div className="mt-6 pt-4 border-t border-border space-y-3">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-neutral-400">Estimated Delivery:</span>
+                                        <span className="text-sm font-medium text-foreground">Dec 5, 2024</span>
+                                    </div>
+                                    <Button className="w-full" size="default">
+                                        <Truck className="mr-2 h-4 w-4" />
+                                        Track Package
+                                    </Button>
+                                </div>
+                            </div>
+
+                            {/* PRODUCTS SECTION */}
+                            <div className="space-y-3">
+                                <div className="pb-3 border-b border-border">
+                                    <h2 className="font-semibold text-base">Items ({orderDetails.items.length})</h2>
+                                </div>
+                                <div className="space-y-2">
+                                    {orderDetails.items.map((item, index) => (
+                                        <div key={index} style={{ animationDelay: `${0.2 + index * 0.05}s` }}>
+                                            <ProductMiniCard item={item} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* DELIVERY ADDRESS */}
+                            <div className="p-4 sm:p-6 bg-card border border-border rounded-lg shadow-sm animate-fade-in" style={{ animationDelay: "0.4s" }}>
+                                <div className="flex items-center gap-3 mb-4 pb-3 border-b border-border">
+                                    <div className="p-2 bg-muted rounded-lg">
+                                        <MapPin className="h-5 w-5 text-neutral-400" />
+                                    </div>
+                                    <h2 className="font-semibold text-lg">Delivery Address</h2>
+                                </div>
+                                <div className="text-sm space-y-2">
+                                    <div>
+                                        <p className="text-neutral-400 text-xs uppercase tracking-wide mb-1">Name</p>
+                                        <p className="font-medium text-foreground">{orderDetails.customer?.name || 'N/A'}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-neutral-400 text-xs uppercase tracking-wide mb-1">Phone</p>
+                                        <p className="text-foreground">{orderDetails.customer?.phone || 'N/A'}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-neutral-400 text-xs uppercase tracking-wide mb-1">Email</p>
+                                        <p className="text-foreground break-all">{orderDetails.customer?.email || 'N/A'}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* PAYMENT & ORDER INFO */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 animate-fade-in" style={{ animationDelay: "0.5s" }}>
+                                <div className="p-4 sm:p-6 bg-card border border-border rounded-lg">
+                                    <div className="flex items-center gap-3 mb-3 pb-3 border-b border-border">
+                                        <div className="p-2 bg-muted rounded-lg">
+                                            <CreditCard className="h-5 w-5 text-neutral-400" />
+                                        </div>
+                                        <h3 className="font-semibold">Payment</h3>
+                                    </div>
+                                    <div className="space-y-2 text-sm">
+                                        <div>
+                                            <p className="text-neutral-400 text-xs uppercase tracking-wide mb-1">Method</p>
+                                            <p className="text-foreground">
+                                                {orderDetails.paymentMethod ? (
+                                                    typeof orderDetails.paymentMethod === 'object'
+                                                        ? (orderDetails.paymentMethod as any).method || 'Online Payment'
+                                                        : 'Online Payment'
+                                                ) : 'Pending'}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p className="text-neutral-400 text-xs uppercase tracking-wide mb-1">Status</p>
+                                            <p className="text-foreground font-medium">{orderDetails.paymentStatus}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="p-4 sm:p-6 bg-card border border-border rounded-lg">
+                                    <div className="flex items-center gap-3 mb-3 pb-3 border-b border-border">
+                                        <div className="p-2 bg-muted rounded-lg">
+                                            <Clock className="h-5 w-5 text-neutral-400" />
+                                        </div>
+                                        <h3 className="font-semibold">Timeline</h3>
+                                    </div>
+                                    <div className="space-y-2 text-sm">
+                                        <div>
+                                            <p className="text-neutral-400 text-xs uppercase tracking-wide mb-1">Placed</p>
+                                            <p className="text-foreground">{formatDate(orderDetails.placedAt as string)}</p>
+                                        </div>
+                                        {orderDetails.deliveredAt && (
+                                            <div>
+                                                <p className="text-neutral-400 text-xs uppercase tracking-wide mb-1">Delivered</p>
+                                                <p className="text-foreground">{formatDate(orderDetails.deliveredAt)}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* RIGHT SIDEBAR — ORDER SUMMARY */}
+                        <div className="space-y-6">
+                            {/* SUMMARY CARD */}
+                            <div className="p-6 sm:p-8 bg-card border border-border rounded-xl animate-fade-in" style={{ animationDelay: "0.2s" }}>
+                                <h2 className="font-semibold text-lg mb-6 pb-4 border-b border-border">Order Summary</h2>
+
+                                <div className="space-y-4 mb-6">
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="text-neutral-400">Subtotal</span>
+                                        <span className="font-medium">₹{orderDetails.subtotal.toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="text-neutral-400">Shipping</span>
+                                        <span className="font-medium">₹{orderDetails.shippingCharge.toFixed(2)}</span>
+                                    </div>
+                                    {orderDetails.discount > 0 && (
+                                        <div className="flex justify-between items-center text-sm">
+                                            <span className="text-neutral-400">Discount</span>
+                                            <span className="text-green-500 font-medium">-₹{orderDetails.discount.toFixed(2)}</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="flex justify-between items-center pt-6 border-t border-border">
+                                    <span className="font-semibold text-foreground">Total</span>
+                                    <span className="text-2xl font-semibold text-foreground">₹{orderDetails.total.toFixed(2)}</span>
+                                </div>
+                            </div>
+
+                            {/* ACTIONS CARD */}
+                            <div className="p-6 sm:p-8 bg-card border border-border rounded-xl animate-fade-in space-y-3" style={{ animationDelay: "0.3s" }}>
+                                <Button
+                                    variant="outline"
+                                    className="w-full"
+                                    size="lg"
+                                    onClick={handleDownloadInvoice}
+                                    disabled={isDownloading}
+                                >
+                                    <Download className="mr-2 h-4 w-4" />
+                                    {isDownloading ? 'Downloading...' : 'Download Invoice'}
+                                </Button>
+                            </div>
+
+                            {/* ORDER INFO CARD */}
+                            <div className="p-6 sm:p-8 bg-muted border border-border rounded-xl text-sm space-y-3 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+                                <div className="space-y-1">
+                                    <p className="text-neutral-400 text-xs uppercase tracking-wide">Order Number</p>
+                                    <p className="font-mono font-medium text-foreground break-all">{orderDetails.orderNumber}</p>
+                                </div>
+                                <div className="pt-3 border-t border-border space-y-1">
+                                    <p className="text-neutral-400 text-xs uppercase tracking-wide">Order Date</p>
+                                    <p className="text-foreground">{formatDate(orderDetails.placedAt as string)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+            </main>
+
+            <Footer />
         </div>
+    );
+}
 
-        {/* Order Status Progress */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between max-w-2xl mx-auto mb-8">
-            <div className="flex flex-col items-center flex-1">
-              <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center mb-2 relative z-10">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <p className="text-sm font-medium">Ordered</p>
-              <p className="text-xs text-muted-foreground">on {order.date}</p>
-            </div>
-            
-            <div className="flex-1 h-0.5 bg-muted -mt-14" />
-            
-            <div className="flex flex-col items-center flex-1">
-              <div className="w-12 h-12 rounded-full border-2 border-muted bg-background flex items-center justify-center mb-2 relative z-10" />
-              <p className="text-sm font-medium">Ready to ship</p>
-            </div>
-            
-            <div className="flex-1 h-0.5 bg-muted -mt-14" />
-            
-            <div className="flex flex-col items-center flex-1">
-              <div className="w-12 h-12 rounded-full border-2 border-muted bg-background flex items-center justify-center mb-2 relative z-10" />
-              <p className="text-sm font-medium">Expected delivery</p>
-              <p className="text-xs text-muted-foreground">{order.expectedDelivery}</p>
-            </div>
-          </div>
 
-          <div className="flex justify-center mb-8">
-            <Button size="lg" className="rounded-full">View your order</Button>
-          </div>
-
-          <p className="text-center text-sm text-muted-foreground">
-            Delivery times are estimated. If you&apos;re experiencing difficulty with this order, please{" "}
-            <button className="underline hover:text-foreground">contact the seller</button>.{" "}
-            <button className="underline hover:text-foreground">See more info</button>.
-          </p>
-        </div>
-
-        {/* Order Details Card */}
-        <Card className="p-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-2">Order details</h2>
-            <p className="text-sm text-muted-foreground">
-              Confirmation number: <span className="font-medium text-foreground">{order.confirmationNumber}</span>
-            </p>
-          </div>
-
-          {/* Product Info */}
-          <div className="flex gap-6 pb-6 border-b mb-6">
-            <img
-              src={order.product.image}
-              alt={order.product.name}
-              className="w-24 h-24 object-cover rounded-md bg-muted"
-            />
-            <div className="flex-1">
-              <h3 className="font-semibold mb-2">{order.product.name}</h3>
-              <div className="space-y-1 text-sm text-muted-foreground">
-                <p>Transaction ID: {order.transactionId}</p>
-                <p>SIZE: {order.product.size}</p>
-                <p>Quantity: {order.product.quantity}</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-xl font-bold">${order.product.price.toFixed(2)}</p>
-            </div>
-          </div>
-
-          {/* Shipping & Payment Details */}
-          <div className="grid md:grid-cols-2 gap-8 mb-6">
-            {/* Shipping Address */}
-            <div>
-              <h3 className="font-semibold mb-3">Shipping address</h3>
-              <div className="text-sm space-y-1">
-                <p>{order.shipping.name}</p>
-                <p>{order.shipping.address}</p>
-                <p>{order.shipping.city}, {order.shipping.state} {order.shipping.zip}</p>
-                <p>{order.shipping.country}</p>
-              </div>
-            </div>
-
-            {/* Payment Summary */}
-            <div>
-              <h3 className="font-semibold mb-3">Paid with <span className="font-normal">{order.payment.method}</span></h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span className="font-medium">${order.payment.subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Sales tax</span>
-                  <span className="font-medium">${order.payment.tax.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span className="font-medium">${order.payment.shipping.toFixed(2)}</span>
-                </div>
-                <div className="text-xs text-muted-foreground">USPS Priority Mail</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Total */}
-          <div className="flex justify-between items-center pt-6 border-t">
-            <span className="text-lg font-semibold">Total (1 item)</span>
-            <span className="text-3xl font-bold">${order.payment.total.toFixed(2)}</span>
-          </div>
-
-          {/* Environmental Note */}
-          <div className="mt-6 pt-6 border-t flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z" />
-            </svg>
-            <span>Zen Fashion Studio offsets carbon emissions from every delivery</span>
-          </div>
-        </Card>
-      </main>
-
-      <Footer />
-    </div>
-  );
-};
-
-export default OrderDetails;

@@ -9,6 +9,7 @@ import ReactCrop, { Crop, PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { MEDIA_SERVICES } from "@/api/media/media.service";
 import { useAuthStore } from "@/store/useAuthStore";
+import Image from "next/image";
 
 interface TryOnImageUploadProps {
   showLabel?: boolean;
@@ -81,15 +82,15 @@ const TryOnImageUpload = ({ showLabel = true, className = "" }: TryOnImageUpload
       const fileToUpload = new File([croppedBlob], selectedFile.name, { type: selectedFile.type });
 
       // Get upload URL
-      const { data, error } = await MEDIA_SERVICES.getUserTryOnUploadUrl(fileToUpload);
+      const response = await MEDIA_SERVICES.getUserTryOnUploadUrl(fileToUpload);
 
-      if (error || !data) throw new Error("Upload URL failed");
+      if (!response?.data) throw new Error("Upload URL failed");
 
       // Upload image using PUT
-      await MEDIA_SERVICES.uploadImage(data, fileToUpload);
+      await MEDIA_SERVICES.uploadImage(response.data.uploadUrl, fileToUpload);
 
 
-      setTryOnImage(data);
+      setTryOnImage(response.data.readUrl);
 
       toast.success("Profile try-on image updated!");
 
@@ -118,7 +119,7 @@ const TryOnImageUpload = ({ showLabel = true, className = "" }: TryOnImageUpload
         <div className="relative group">
           <img
             src={user.tryOnImage}
-            className="rounded-lg object-cover aspect-[3/4] w-full"
+            className="object-cover aspect-[3/4] w-full bg-gray-400"
           />
           <button
             className="absolute top-2 right-2 bg-black/60 text-white p-2 rounded opacity-0 group-hover:opacity-100 transition"
@@ -139,7 +140,7 @@ const TryOnImageUpload = ({ showLabel = true, className = "" }: TryOnImageUpload
           onClick={() => fileInputRef.current?.click()}
           className="aspect-[3/4] bg-muted border-2 border-dashed rounded-lg flex flex-col justify-center items-center hover:border-primary/60 transition"
         >
-          <Upload className="text-muted-foreground w-10 h-10 mb-2" />
+          <Upload className="text-neutral-400  w-10 h-10 mb-2" />
           Upload Your Try-On Image
         </button>
       )}
@@ -166,7 +167,16 @@ const TryOnImageUpload = ({ showLabel = true, className = "" }: TryOnImageUpload
               onComplete={(crop) => setCompletedCrop(crop)}
               aspect={3 / 4}
             >
-              <img ref={imgRef} src={imageToCrop} className="max-h-[400px]" />
+              <img ref={imgRef} src={imageToCrop} className="max-h-[200px]" />
+              {/* <Image
+  src={imageToCrop}
+  alt="Crop"
+  width={500}
+  height={500}
+  unoptimized
+  className="max-h-[200px] object-contain"
+/> */}
+
             </ReactCrop>
           )}
 

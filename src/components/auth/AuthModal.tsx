@@ -1,9 +1,9 @@
 "use client";
 
-import { sendOtp, verifyOtp } from "@/lib/functions/auth";
 import { useEffect, useState } from "react";
 import { OTPInputs } from "../ui/otp-inputs";
 import { useAuthStore } from "@/store/useAuthStore";
+import { AUTH_SERVICES } from "@/api/auth/auth.service";
 
 interface AuthModalProps {
     isOpen: boolean;
@@ -43,7 +43,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
     const handleSendOTP = async () => {
         setLoading(true);
-        const response = await sendOtp(identifier);
+        const response = await AUTH_SERVICES.requestOtp({identifier});
         if (response.success) {
             setError("");
             startResendTimer();
@@ -58,7 +58,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     const handleVerifyOTP = async () => {
         
         setLoading(true);
-        const response = await verifyOtp( identifier, otp)
+        const response = await AUTH_SERVICES.verifyOtp({identifier, otp})
 
         if (response.success) {
             await login()

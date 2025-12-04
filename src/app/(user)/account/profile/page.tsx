@@ -77,7 +77,7 @@ export default function ProfilePage() {
       return;
     }
 
-    const value = verificationStep === "email" ? tempEmail : tempPhone;
+    // const value = verificationStep === "email" ? tempEmail : tempPhone;
 
     setIsLoading(true);
     try {
@@ -124,6 +124,11 @@ export default function ProfilePage() {
       };
 
       const response = await USER_SERVICES.updateProfile(updateData);
+
+      if(!response.success || !response?.data) {
+        throw new Error(response.error || "Failed to update profile")
+      }
+      
       updateUser(response?.data);
 
       toast({
@@ -135,7 +140,7 @@ export default function ProfilePage() {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.response?.data?.message || "Failed to update profile",
+        description: error.response?.data?.message[0] || "Failed to update profile",
         variant: "destructive",
       });
     } finally {
@@ -152,12 +157,12 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6  max-w-4xl mx-auto">
-      <Card>
+      <Card className="border-border">
               <CardHeader>
                 <CardTitle>Virtual Try-On Image</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm text-neutral-400  mb-4">
                   Upload your photo once and use it for all virtual try-ons across the platform
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -167,7 +172,7 @@ export default function ProfilePage() {
                   <div className="flex flex-col justify-center space-y-3">
                     <div className="p-4 bg-muted/50 rounded-lg">
                       <h4 className="text-sm font-semibold mb-2">Tips for best results:</h4>
-                      <ul className="text-xs text-muted-foreground space-y-1">
+                      <ul className="text-xs text-neutral-400  space-y-1">
                         <li>• Use a well-lit, full-body photo</li>
                         <li>• Stand straight facing the camera</li>
                         <li>• Plain background works best</li>

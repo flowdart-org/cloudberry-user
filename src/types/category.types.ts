@@ -8,6 +8,7 @@ export interface Category {
 
 export type CategoryBarItem = Pick<Category, 'id' | 'name'>;
 
+
 export type HomeCategory = Pick<Category, 'id' | 'name' | 'thumbnail'>; 
 
 export type ProductPreviewCategory = Pick<Category, 'id' | 'name' | 'status'>;

@@ -1,103 +1,111 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { CART_SERVICES } from "@/api/cart/cart.service";
-import { Product } from "@/types/product.types";
-import { VariantDto } from "@/api/client";
-
-export interface CartItem {
-  id: string;
-  productId: string;
-  product: Product;
-  quantity: number;
-  variantId: string;
-  variant: VariantDto;
-}
+import {  CartItem } from "@/types/cart.types";
+import { AddToCartResponseDto } from "@/api/cart/cart.dto";
 
 interface StoreState {
   cart: CartItem[];
 
-  // Actions
   getInitialCart: () => Promise<void>;
   addToCart: (item: CartItem) => Promise<void>;
   removeFromCart: (productId: string) => Promise<void>;
   updateCartItemQuantity: (cartItemId: string, quantity: number) => void;
 }
 
-export const useCartStore = create<StoreState>()(
-    (set, get) => ({
-      cart: [],
+export const useCartStore = create<StoreState>()((set, get) => ({
+  cart: [],
 
-      getInitialCart: async () => {
-        try {
-          const response = await CART_SERVICES.getUserCart();
-          if (response?.data.items) set({ cart: response.data.items });
-        } catch {
-          console.warn("Using local persisted cart.");
-        }
-      },
+  getInitialCart: async () => {
+    try {
+      const response = await CART_SERVICES.getUserCart();
+      if (response?.data?.items) {
+        set({ cart: response.data.items });
+      }
+    } catch {
+      console.warn("Failed syncing cart with server — using local state.");
+    }
+  },
 
-      addToCart: async (item) => {
-        const prev = get().cart;
+  addToCart: async (item: CartItem) => {
+  const prev = get().cart;
 
-        const existing = prev.find((i) => i.variantId === item.variantId);
+  // Check if item already exists in cart
+  const existing = prev.find(i => i.variantId === item.variantId);
 
-        if (existing) {
-          set({
-            cart: prev.map((i) =>
-              i.variantId === item.variantId
-                ? { ...i, quantity: i.quantity + item.quantity }
-                : i
-            ),
-          });
-        } else {
-          set({ cart: [...prev, item] });
-        }
+  // --------------------------------
+  // CASE 1: Item already exists → update quantity
+  // --------------------------------
+  if (existing) {
 
-        try {
-          const response = await CART_SERVICES.addToCart({
-            variantId: item.variantId,
-            quantity: item.quantity,
-          });
+    const newQuantity = (existing.quantity ?? 0) + (item.quantity ?? 1);
 
-          set({
-            cart: get().cart.map((i) =>
-              i.variantId === response.variantId
-                ? { ...i, id: response.id }
-                : i
-            ),
-          });
-        } catch {
-          set({ cart: prev }); // rollback
-        }
-      },
+    // Optimistic UI update
+    set({
+      cart: prev.map(i =>
+        i.variantId === item.variantId
+          ? { ...i, quantity: newQuantity }
+          : i
+      ),
+    });
 
-      removeFromCart: async (itemId: string) => {
-        const prev = get().cart;
-        set({ cart: prev.filter((i) => i.id !== itemId) });
+    try {
+      await CART_SERVICES.updateQuantity(existing.id, { quantity: newQuantity });
 
-        try {
-          await CART_SERVICES.removeItem(String(itemId));
-        } catch {
-          set({ cart: prev });
-        }
-      },
+    } catch (error) {
+      // rollback if server fails
+      set({ cart: prev });
+    }
 
-      updateCartItemQuantity: async (cartItemId, quantity) => {
-        console.log(cartItemId)
-        const prev = get().cart;
+    return; // exit here, no further addToCart call needed
+  }
 
-        set({
-          cart: prev.map((i) =>
-            i.id === cartItemId ? { ...i, quantity } : i
-          ),
-        });
+  // --------------------------------
+  // CASE 2: Item is NEW → normal addToCart behavior
+  // --------------------------------
+  set({ cart: [...prev, { ...item, id: item.id }] });
 
-        try {
-          await CART_SERVICES.updateQuantity(String(cartItemId), { quantity });
-        } catch {
-          set({ cart: prev });
-        }
-      },
+  try {
+    const response: AddToCartResponseDto = await CART_SERVICES.addToCart({
+      variantId: item.variantId,
+      quantity: item.quantity ?? 1,
+    });
 
-    }),
-);
+    set({
+      cart: get().cart.map(i =>
+        i.variantId === response.variantId
+          ? { ...i, ...response }
+          : i
+      ),
+    });
+  } catch {
+    set({ cart: prev });
+  }
+},
+
+  removeFromCart: async (itemId: string) => {
+    const prev = get().cart;
+    set({ cart: prev.filter(i => i.id !== itemId) });
+
+    try {
+      await CART_SERVICES.removeItem(itemId);
+    } catch {
+      set({ cart: prev });
+    }
+  },
+
+  updateCartItemQuantity: async (cartItemId, quantity) => {
+    const prev = get().cart;
+
+    set({
+      cart: prev.map(i =>
+        i.id === cartItemId ? { ...i, quantity } : i
+      ),
+    });
+
+    try {
+      await CART_SERVICES.updateQuantity(cartItemId, { quantity });
+    } catch {
+      set({ cart: prev });
+    }
+  },
+}));

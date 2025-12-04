@@ -11,16 +11,20 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useToast } from "@/hooks/useToast";
 import { PRODUCT_SERVICES } from "@/api/product/product.service";
-import { ProductDetails } from "@/types/product.types";
+import { ProductDTO } from "@/types/product.types";
 import TryOnModal from "@/components/product/TryOnModal";
+import { useAuthStore } from "@/store/useAuthStore";
+import AuthModal from "@/components/auth/AuthModal";
 
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const { addToCart } = useCartStore();
+  const {isAuthenticated} = useAuthStore()
   const { toast } = useToast();
-  const [product, setProduct] = useState<null | ProductDetails>(null)
+  const [product, setProduct] = useState<null | ProductDTO>(null)
   const [isTryOnOpen, setIsTryOnOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
 
   const [selectedImage, setSelectedImage] = useState<null | number>(null);
@@ -28,21 +32,25 @@ const ProductDetailsPage = () => {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    console.log('calling ')
-    fetchProductDetails()
-  }, [])
-
-  async function fetchProductDetails() {
+    async function fetchProductDetails() {
     try {
       const response = await PRODUCT_SERVICES.getProduct(id as string)
-      console.log(response)
       setProduct(response.data ?? null)
+      setSelectedVariantId(response.data?.variants[0].id ?? '')
     } catch (error) {
       console.error(error)
     }
   }
+    fetchProductDetails()
+  }, [])
+
+  
 
   const handleAddToBag = () => {
+    if (!isAuthenticated) {
+      setLoginModalOpen(true);
+      return
+    }
     if (!selectedVariantId) {
       toast({
         title: "Size Required",
@@ -54,12 +62,22 @@ const ProductDetailsPage = () => {
 
     if(!product) return null
 
+    const variant = product.variants.find((v) => v.id === selectedVariantId);
+    if (!variant) {
+      toast({
+        title: "Size not available",
+        description: "Selected size was not found for this product.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     addToCart({
-      productId: product.id,
+      id: product.id,
       product: product,
       quantity: quantity,
       variantId: selectedVariantId,
-      variant: product?.variants.find((v) => v.id === selectedVariantId),
+      variant: { id: variant.id, size: variant.size, stock: variant.stock },
     });
 
     toast({
@@ -71,6 +89,14 @@ const ProductDetailsPage = () => {
     setQuantity(1);
   };
 
+  const handleTryOnModal = () => {
+    if (!isAuthenticated) {
+      setLoginModalOpen(true);
+      return
+    }
+    setIsTryOnOpen(true)
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header categories />
@@ -78,7 +104,7 @@ const ProductDetailsPage = () => {
       <main className="flex-1">
         <div className="container px-4 md:px-8 py-6">
           {/* Breadcrumb */}
-          <div className="text-sm text-muted-foreground mb-6">
+          <div className="text-sm text-neutral-400  mb-6">
             <Link href="/" className="hover:text-foreground">Home</Link>
             <span className="mx-2">/</span>
             <Link href="/shop/all" className="hover:text-foreground">Shop</Link>
@@ -103,7 +129,7 @@ const ProductDetailsPage = () => {
                   >
                     <img
                       src={product?.thumbnail}
-                      alt={`Product thumbnail view`}
+                      alt={`product thumbnail view`}
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -121,7 +147,7 @@ const ProductDetailsPage = () => {
                   >
                     <img
                       src={img}
-                      alt={`Product view ${idx + 1}`}
+                      alt={`product view ${idx + 1}`}
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -147,14 +173,14 @@ const ProductDetailsPage = () => {
                   variant="ghost"
                   size="icon"
                   className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                  onClick={() => setSelectedImage((prev) => (prev < product.images.length - 1 ? prev + 1 : 0))}
+                  onClick={() => setSelectedImage((prev) => ((prev ?? 0) < product.images.length - 1 ? (prev ?? 0) + 1 : 0))}
                 >
                   <ChevronRight className="h-5 w-5" />
                 </Button>
               </div>
             </div>
 
-            {/* Product Info */}
+            {/* product Info */}
             <div className="space-y-6">
               <div>
                 <h1 className="text-2xl md:text-3xl font-light text-foreground mb-2">
@@ -170,7 +196,7 @@ const ProductDetailsPage = () => {
 
                   {/* Discounted Price */}
                   <p className="text-3xl md:text-4xl font-pirulen font- text-accent">
-                    ₹{product.discountPrice}
+                    ₹{product.discountPrice.toFixed(2)}
                   </p>
                 </div>
 
@@ -229,7 +255,7 @@ const ProductDetailsPage = () => {
                   variant={product?.tryOn ? 'default' : 'disabled'}
                   className="flex-1 h-12 font-semibold font-pirulen"
                   disabled={!product?.tryOn}
-                  onClick={() => setIsTryOnOpen(true)}
+                  onClick={handleTryOnModal}
                 >
                   TRY ON
                 </Button>
@@ -242,10 +268,10 @@ const ProductDetailsPage = () => {
                 </Button>
               </div>
 
-              {/* Product Description */}
+              {/* product Description */}
               <div className="pt-6 border-t border-border">
-                <h3 className="font-semibold text-foreground mb-2">Product Details</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <h3 className="font-semibold text-foreground mb-2">product Details</h3>
+                <p className="text-sm text-neutral-400  leading-relaxed">
                   {product.description}
                 </p>
               </div>
@@ -267,10 +293,15 @@ const ProductDetailsPage = () => {
         </div>
       </main>
 
-      <TryOnModal
+      {product && <TryOnModal
         isOpen={isTryOnOpen}
         onClose={() => setIsTryOnOpen(false)}
         product={product}
+      />}
+
+      <AuthModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
       />
 
       <Footer />

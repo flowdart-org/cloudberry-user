@@ -5,17 +5,39 @@ import Header from "@/components/common/Header";
 import FilterSection from "@/components/product/FilterSection";
 import ProductCard from "@/components/product/ProductCard";
 import { Button } from "@/components/ui/button";
+import { useCategoryStore } from "@/store/useCategoryStore";
 import { useProductStore } from "@/store/useProductStore";
-import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { redirect, useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Category } from "@/types/category.types";
+import CategoryBar from "@/components/category/CategoryBar";
+
 
 const Shop = () => {
   const { products, page, limit, setPage, category, setCategory } = useProductStore();
-  const {category: pathCategory} = useParams()
+  const { categories } = useCategoryStore()
+  const { category: pathCategory } = useParams() as {category: string}
+  const [categoryData, setCategoryData] = useState<null | Category>(null)
 
   useEffect(() => {
-    if(pathCategory) setCategory(pathCategory as string)
-  }, [])
+  if (!categories.length) return; 
+
+  if (!pathCategory || pathCategory === "all") {
+    setCategory('all'); 
+    return;
+  }
+
+  const matched = categories.find(
+    c => c.name.toLowerCase() === pathCategory.toLowerCase()
+  );
+
+  if (matched) {
+    setCategoryData(matched);
+    setCategory(matched.id);
+  } else {
+    redirect("/shop/all");
+  }
+}, [categories, pathCategory]);
 
   const startIdx = (page - 1) * limit;
   const endIdx = startIdx + limit;
@@ -24,24 +46,24 @@ const Shop = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header categories={true}/>
+      <Header categories={true} />
 
       <main className="flex-1">
         <div className="px-4 md:px-8 py-8 md:py-12">
           <div className="flex flex-col lg:flex-row gap-3 lg:gap-8">
             <FilterSection />
-
             <div className="flex-1">
+              <CategoryBar showCategories isShop />
               <div className="flex items-center justify-between mb-8">
-                <h1 className="text-2xl font-bold tracking-tight uppercase">{category}</h1>
-                <p className="text-sm text-muted-foreground">
+                <h1 className="text-2xl font-bold tracking-tight uppercase">{categoryData ? categoryData.name : pathCategory}</h1>
+                <p className="text-sm text-neutral-400 ">
                   {products.length} products
                 </p>
               </div>
 
               {products.length === 0 ? (
                 <div className="text-center py-20">
-                  <p className="text-muted-foreground">No products found with selected filters</p>
+                  <p className="text-neutral-400 ">No products found with selected filters</p>
                   <Button
                     variant="outline"
                     className="mt-4"
@@ -54,7 +76,7 @@ const Shop = () => {
                 <>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-2 mb-5">
                     {paginatedProducts.map((product) => (
-                      <ProductCard key={product.id} product={product} />
+                      <ProductCard key={product.id} is3D={false} product={product} />
                     ))}
                   </div>
 

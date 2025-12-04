@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { User, Package, MapPin, RefreshCw } from "lucide-react";
+import { User, Package, RefreshCw, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Header from "@/components/common/Header";
 
@@ -46,7 +46,7 @@ export default function AccountLayout({
           <h1 className="text-3xl md:text-4xl font-light tracking-tight mb-2">
             My Account
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-neutral-400 ">
             Manage your profile, orders, and preferences
           </p>
         </div>
@@ -62,7 +62,7 @@ export default function AccountLayout({
                     "w-full flex items-center gap-3 px-4 py-3 text-sm rounded-md transition-all duration-200",
                     activeTab === tab.id
                       ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                      : "text-neutral-400  hover:text-foreground hover:bg-accent"
                   )}
                 >
                   <tab.icon className="h-5 w-5" />

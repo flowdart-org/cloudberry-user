@@ -6,12 +6,13 @@ All URIs are relative to *http://api.dev.cloudberrytryon.com*
 |------------- | ------------- | -------------|
 |[**cartControllerAddToCart**](#cartcontrolleraddtocart) | **POST** /api/cart/add | |
 |[**cartControllerCheckout**](#cartcontrollercheckout) | **POST** /api/cart/checkout | |
+|[**cartControllerCheckoutLink**](#cartcontrollercheckoutlink) | **POST** /api/cart/checkout/link | |
 |[**cartControllerGetUserCart**](#cartcontrollergetusercart) | **GET** /api/cart | |
 |[**cartControllerRemoveItem**](#cartcontrollerremoveitem) | **DELETE** /api/cart/{itemId} | |
 |[**cartControllerUpdateQuantity**](#cartcontrollerupdatequantity) | **PATCH** /api/cart/{itemId} | |
 
 # **cartControllerAddToCart**
-> cartControllerAddToCart(createCartDto)
+> CartControllerAddToCart200Response cartControllerAddToCart(createCartDto)
 
 
 ### Example
@@ -42,7 +43,7 @@ const { status, data } = await apiInstance.cartControllerAddToCart(
 
 ### Return type
 
-void (empty response body)
+**CartControllerAddToCart200Response**
 
 ### Authorization
 
@@ -51,13 +52,13 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**201** |  |  -  |
+|**200** |  |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -104,8 +105,51 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **cartControllerCheckoutLink**
+> CartControllerCheckoutLink200Response cartControllerCheckoutLink()
+
+
+### Example
+
+```typescript
+import {
+    CartApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new CartApi(configuration);
+
+const { status, data } = await apiInstance.cartControllerCheckoutLink();
+```
+
+### Parameters
+This endpoint does not have any parameters.
+
+
+### Return type
+
+**CartControllerCheckoutLink200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** |  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **cartControllerGetUserCart**
-> CartControllerGetUserCart200Response cartControllerGetUserCart()
+> CartControllerAddToCart200Response cartControllerGetUserCart()
 
 
 ### Example
@@ -128,7 +172,7 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**CartControllerGetUserCart200Response**
+**CartControllerAddToCart200Response**
 
 ### Authorization
 
@@ -148,7 +192,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **cartControllerRemoveItem**
-> cartControllerRemoveItem()
+> CartControllerAddToCart200Response cartControllerRemoveItem()
 
 
 ### Example
@@ -178,7 +222,7 @@ const { status, data } = await apiInstance.cartControllerRemoveItem(
 
 ### Return type
 
-void (empty response body)
+**CartControllerAddToCart200Response**
 
 ### Authorization
 
@@ -187,7 +231,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details

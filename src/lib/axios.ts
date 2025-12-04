@@ -1,17 +1,18 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import {
   AuthApi,
   CartApi,
   CategoryApi,
   Configuration,
+  LandingPageApi,
   MediaApi,
+  OrderApi,
   PaymentApi,
   ProductApi,
   TryOnApi,
   UserApi,
 } from "@/api/client";
-import { APP_CONFIG } from "./app.config";
-import { ApiResponse } from "@/api/types";
+import { ApiResponse, PaginatedResponse } from "@/api/types";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -93,6 +94,7 @@ api.interceptors.response.use(
           });
         }
       } catch (refreshError) {
+        console.log(refreshError)
         await useAuthStore.getState().logout();
       }
     }
@@ -100,22 +102,24 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function request<T>(
-  callback: any,
+  callback: (...args: any[]) => Promise<{ data: ApiResponse<T> | PaginatedResponse<T> }>,
   ...props: any[]
-): Promise<ApiResponse<T>> {
+): Promise<ApiResponse<T> | PaginatedResponse<T>>  {
   try {
     const response = await callback(...props);
     return response.data;
   } catch (err: any) {
     return {
-      message: err?.response?.data?.message || err.message,
       success: false,
-    } as ApiResponse<T>;
+      message: err?.response?.data?.message || err.message || "Unknown error",
+      error: err?.response?.data || err,
+      data: undefined
+    };
   }
 }
+
 
 export const authApi = new AuthApi(config);
 export const categoryApi = new CategoryApi(config, baseURL, api);
@@ -125,3 +129,5 @@ export const tryOnApi = new TryOnApi(config, baseURL, api);
 export const mediaApi = new MediaApi(config, baseURL, api);
 export const cartApi = new CartApi(config, baseURL, api);
 export const paymentApi = new PaymentApi(config, baseURL, api);
+export const landingPageApi = new LandingPageApi(config, baseURL, api);
+export const orderApi = new OrderApi(config, baseURL, api);

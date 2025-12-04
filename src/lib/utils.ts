@@ -13,8 +13,7 @@ export function validateContact(value: string): {
   const trimmed = value.trim();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const phoneRegex = /^\+?\d{10,15}$/;
-
+  // const phoneRegex = /^\+?\d{10,15}$/;
   if (emailRegex.test(trimmed)) {
     return { type: "email", isValid: true, identifier: trimmed.toLowerCase() };
   }
@@ -26,4 +25,27 @@ export function validateContact(value: string): {
   }
 
   return { type: null, isValid: false, identifier: null };
+}
+
+export function formatDate(
+  input?: string | number | Date,
+  opts?: { includeTime?: boolean; locale?: string }
+): string {
+  if (!input) return "";
+  const date = typeof input === "string" || typeof input === "number" ? new Date(input) : input;
+  if (isNaN(date.getTime())) return "";
+
+  const locale = opts?.locale ?? "en-US";
+
+  if (opts?.includeTime) {
+    return date.toLocaleString(locale, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  }
+
+  return date.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" });
 }

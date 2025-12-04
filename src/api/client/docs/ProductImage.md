@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**image** | [**ImageInput**](ImageInput.md) | Product image details (base64 or GCS URI) | [default to undefined]
+**image** | [**ImageInput**](ImageInput.md) | ProductDTO image details (base64 or GCS URI) | [default to undefined]
 
 ## Example
 

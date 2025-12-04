@@ -6,7 +6,7 @@ import { api } from "@/lib/axios";
 interface TryOnModalProps {
   isOpen: boolean;
   setOpen: (value: boolean) => void;
-  image: string | StaticImageData; // hardcoded product image
+  image: string | StaticImageData; // hardcoded ProductDTO image
 }
 
 const TryOnModal: React.FC<TryOnModalProps> = ({ isOpen, setOpen, image }) => {
@@ -136,7 +136,7 @@ const TryOnModal: React.FC<TryOnModalProps> = ({ isOpen, setOpen, image }) => {
 
         {/* Hardcoded Image */}
         <div className="mt-4">
-          <p className="text-gray-700 text-sm mb-2">Product Image:</p>
+          <p className="text-gray-700 text-sm mb-2">ProductDTO Image:</p>
           <img
             src={hardcodedImage}
             alt="Hardcoded"

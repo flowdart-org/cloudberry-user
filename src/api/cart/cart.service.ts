@@ -1,31 +1,27 @@
-import { cartApi } from "@/lib/axios";
+import { cartApi, request } from "@/lib/axios";
 import { ApiResponse } from "../types";
-import { CreateCartDto, UpdateCartDto } from "../client";
+import { CheckoutCartResponseDto, CreateCartDto, UpdateCartDto } from "../client";
+import { AddToCartResponseDto, CartResponseDto } from "./cart.dto";
 
 export const CART_SERVICES = {
-   getUserCart: async () => {
-      const response = await cartApi.cartControllerGetUserCart();
-      return response.data;
+   getUserCart: async (): Promise<ApiResponse<CartResponseDto>> => {
+     return await request(cartApi.cartControllerGetUserCart.bind(cartApi)) as ApiResponse<CartResponseDto>;
     },
 
-    addToCart: async (item: CreateCartDto): Promise<ApiResponse<void>> => {
-      const response: any = await cartApi.cartControllerAddToCart(item);
-      return response.data;
+    addToCart: async (item: CreateCartDto): Promise<AddToCartResponseDto> => {
+      return await request(cartApi.cartControllerAddToCart.bind(cartApi), item) as ApiResponse<AddToCartResponseDto>
     },
 
-    removeItem: async (itemId: string): Promise<ApiResponse> => {
-      const response: any = await cartApi.cartControllerRemoveItem(itemId);
-      return response.data;
+    removeItem: async (itemId: string): Promise<void> => {
+      await cartApi.cartControllerRemoveItem(itemId)
     },
 
-    checkout: async (): Promise<ApiResponse> => {
-      const response: any = await cartApi.cartControllerCheckout();
-      return response.data;
+    checkout: async (): Promise<ApiResponse<CheckoutCartResponseDto>> => {
+      return await request(cartApi.cartControllerCheckout.bind(cartApi)) as ApiResponse<CheckoutCartResponseDto>;
     },
 
 
-    updateQuantity: async (itemId: string, item: UpdateCartDto): Promise<ApiResponse> => {
-      const response: any = await cartApi.cartControllerUpdateQuantity(itemId, item);
-      return response.data;
+    updateQuantity: async (itemId: string, item: UpdateCartDto): Promise<void> => {
+      await cartApi.cartControllerUpdateQuantity(itemId, item);
     },
 };

@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { VisuallyHidden } from "./visually-hidden";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -41,6 +41,12 @@ const DialogContent = React.forwardRef<
       )}
       {...props}
     >
+      <VisuallyHidden asChild>
+        <DialogPrimitive.Title>Dialog</DialogPrimitive.Title>
+      </VisuallyHidden>
+      <VisuallyHidden asChild>
+        <DialogPrimitive.Description>Dialog content</DialogPrimitive.Description>
+      </VisuallyHidden>
       {children}
     </DialogPrimitive.Content>
   </DialogPortal>
@@ -73,7 +79,7 @@ const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+  <DialogPrimitive.Description ref={ref} className={cn("text-sm text-neutral-400 ", className)} {...props} />
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 

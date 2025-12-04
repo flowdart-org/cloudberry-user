@@ -1,1 +1,1 @@
-export const PRODUCT = {}
+export const ProductDTO = {}

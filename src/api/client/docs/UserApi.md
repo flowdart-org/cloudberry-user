@@ -4,14 +4,67 @@ All URIs are relative to *http://api.dev.cloudberrytryon.com*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**userControllerFindAll**](#usercontrollerfindall) | **GET** /api/user | |
+|[**userControllerCreateAddress**](#usercontrollercreateaddress) | **POST** /api/user/address | |
+|[**userControllerFind**](#usercontrollerfind) | **GET** /api/user | |
 |[**userControllerFindOne**](#usercontrollerfindone) | **GET** /api/user/{id} | |
 |[**userControllerMe**](#usercontrollerme) | **GET** /api/user/me | |
 |[**userControllerUpdate**](#usercontrollerupdate) | **PATCH** /api/user | |
+|[**userControllerUpdateAddress**](#usercontrollerupdateaddress) | **PATCH** /api/user/address/{id} | |
 |[**userControllerUpdateStatus**](#usercontrollerupdatestatus) | **PATCH** /api/user/{id}/status | |
 
-# **userControllerFindAll**
-> UserControllerFindAll200Response userControllerFindAll()
+# **userControllerCreateAddress**
+> UserControllerCreateAddress200Response userControllerCreateAddress(createAddressDto)
+
+
+### Example
+
+```typescript
+import {
+    UserApi,
+    Configuration,
+    CreateAddressDto
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new UserApi(configuration);
+
+let createAddressDto: CreateAddressDto; //
+
+const { status, data } = await apiInstance.userControllerCreateAddress(
+    createAddressDto
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **createAddressDto** | **CreateAddressDto**|  | |
+
+
+### Return type
+
+**UserControllerCreateAddress200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** |  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **userControllerFind**
+> UserControllerFind200Response userControllerFind()
 
 
 ### Example
@@ -25,16 +78,32 @@ import {
 const configuration = new Configuration();
 const apiInstance = new UserApi(configuration);
 
-const { status, data } = await apiInstance.userControllerFindAll();
+let page: number; // (optional) (default to undefined)
+let limit: number; // (optional) (default to undefined)
+let search: string; // (optional) (default to undefined)
+let status: 'active' | 'suspended'; // (optional) (default to undefined)
+
+const { status, data } = await apiInstance.userControllerFind(
+    page,
+    limit,
+    search,
+    status
+);
 ```
 
 ### Parameters
-This endpoint does not have any parameters.
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **page** | [**number**] |  | (optional) defaults to undefined|
+| **limit** | [**number**] |  | (optional) defaults to undefined|
+| **search** | [**string**] |  | (optional) defaults to undefined|
+| **status** | [**&#39;active&#39; | &#39;suspended&#39;**]**Array<&#39;active&#39; &#124; &#39;suspended&#39;>** |  | (optional) defaults to undefined|
 
 
 ### Return type
 
-**UserControllerFindAll200Response**
+**UserControllerFind200Response**
 
 ### Authorization
 
@@ -174,6 +243,60 @@ const { status, data } = await apiInstance.userControllerUpdate(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **updateUserDto** | **UpdateUserDto**|  | |
+
+
+### Return type
+
+**UserControllerMe200Response**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** |  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **userControllerUpdateAddress**
+> UserControllerMe200Response userControllerUpdateAddress(updateAddressDto)
+
+
+### Example
+
+```typescript
+import {
+    UserApi,
+    Configuration,
+    UpdateAddressDto
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new UserApi(configuration);
+
+let id: string; // (default to undefined)
+let updateAddressDto: UpdateAddressDto; //
+
+const { status, data } = await apiInstance.userControllerUpdateAddress(
+    id,
+    updateAddressDto
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **updateAddressDto** | **UpdateAddressDto**|  | |
+| **id** | [**string**] |  | defaults to undefined|
 
 
 ### Return type

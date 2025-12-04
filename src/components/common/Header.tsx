@@ -30,7 +30,7 @@ const Header = ({categories = false}: {categories?: boolean}) => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [categories, setShowCategories]);
 
 
   return (
@@ -44,7 +44,7 @@ const Header = ({categories = false}: {categories?: boolean}) => {
 
       {/* Header */}
       <header
-        className={`sticky top-0 z-50 w-full transition-all duration-500 
+        className={`sticky top-0 z-50 w-full transition-all duration-500
         ${showCategories ? "translate-y-[-100%] opacity-0" : "translate-y-0 opacity-100"}`}
       >
         <div className="flex h-16 items-center justify-between px-4 md:px-8 bg-white">

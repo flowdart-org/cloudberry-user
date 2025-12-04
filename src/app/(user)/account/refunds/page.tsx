@@ -27,7 +27,7 @@ const refunds = [
     date: "Nov 28, 2023",
     status: "Completed",
     amount: "$199.00",
-    reason: "Product defect",
+    reason: "ProductDTO defect",
   },
 ];
 
@@ -49,7 +49,7 @@ export default function RefundsTab() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-light tracking-tight mb-2">Refund Requests</h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-neutral-400 ">
           Track your refund and return requests
         </p>
       </div>
@@ -70,10 +70,10 @@ export default function RefundsTab() {
                         {refund.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-neutral-400 ">
                       Order: {refund.orderId}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-neutral-400 ">
                       {refund.date} • {refund.reason}
                     </p>
                     <p className="text-lg font-medium">{refund.amount}</p>
@@ -89,9 +89,9 @@ export default function RefundsTab() {
         </div>
       ) : (
         <Card className="p-12 border-border text-center">
-          <RefreshCw className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+          <RefreshCw className="h-12 w-12 mx-auto mb-4 text-neutral-400 " />
           <h3 className="text-lg font-medium mb-2">No refund requests</h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-neutral-400 ">
             You haven&apos;t submitted any refund requests yet
           </p>
         </Card>

@@ -10,7 +10,7 @@ All URIs are relative to *http://api.dev.cloudberrytryon.com*
 |[**mediaControllerGetUserTryOnUploadUrl**](#mediacontrollergetusertryonuploadurl) | **GET** /api/media/upload/user/try-on | |
 
 # **mediaControllerGetCategoryUploadUrl**
-> mediaControllerGetCategoryUploadUrl()
+> MediaControllerGetCategoryUploadUrl200Response mediaControllerGetCategoryUploadUrl()
 
 
 ### Example
@@ -25,11 +25,9 @@ const configuration = new Configuration();
 const apiInstance = new MediaApi(configuration);
 
 let categoryId: string; // (default to undefined)
-let mimeType: string; // (default to undefined)
 
 const { status, data } = await apiInstance.mediaControllerGetCategoryUploadUrl(
-    categoryId,
-    mimeType
+    categoryId
 );
 ```
 
@@ -38,12 +36,11 @@ const { status, data } = await apiInstance.mediaControllerGetCategoryUploadUrl(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **categoryId** | [**string**] |  | defaults to undefined|
-| **mimeType** | [**string**] |  | defaults to undefined|
 
 
 ### Return type
 
-void (empty response body)
+**MediaControllerGetCategoryUploadUrl200Response**
 
 ### Authorization
 
@@ -52,7 +49,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -63,7 +60,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **mediaControllerGetProductThumbnailUploadUrl**
-> mediaControllerGetProductThumbnailUploadUrl()
+> MediaControllerGetCategoryUploadUrl200Response mediaControllerGetProductThumbnailUploadUrl()
 
 
 ### Example
@@ -78,11 +75,9 @@ const configuration = new Configuration();
 const apiInstance = new MediaApi(configuration);
 
 let productId: string; // (default to undefined)
-let mimeType: string; // (default to undefined)
 
 const { status, data } = await apiInstance.mediaControllerGetProductThumbnailUploadUrl(
-    productId,
-    mimeType
+    productId
 );
 ```
 
@@ -91,12 +86,11 @@ const { status, data } = await apiInstance.mediaControllerGetProductThumbnailUpl
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **productId** | [**string**] |  | defaults to undefined|
-| **mimeType** | [**string**] |  | defaults to undefined|
 
 
 ### Return type
 
-void (empty response body)
+**MediaControllerGetCategoryUploadUrl200Response**
 
 ### Authorization
 
@@ -105,7 +99,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -116,7 +110,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **mediaControllerGetProductUploadUrl**
-> mediaControllerGetProductUploadUrl()
+> MediaControllerGetCategoryUploadUrl200Response mediaControllerGetProductUploadUrl()
 
 
 ### Example
@@ -132,12 +126,10 @@ const apiInstance = new MediaApi(configuration);
 
 let productId: string; // (default to undefined)
 let order: number; // (default to undefined)
-let mimeType: string; // (default to undefined)
 
 const { status, data } = await apiInstance.mediaControllerGetProductUploadUrl(
     productId,
-    order,
-    mimeType
+    order
 );
 ```
 
@@ -147,12 +139,11 @@ const { status, data } = await apiInstance.mediaControllerGetProductUploadUrl(
 |------------- | ------------- | ------------- | -------------|
 | **productId** | [**string**] |  | defaults to undefined|
 | **order** | [**number**] |  | defaults to undefined|
-| **mimeType** | [**string**] |  | defaults to undefined|
 
 
 ### Return type
 
-void (empty response body)
+**MediaControllerGetCategoryUploadUrl200Response**
 
 ### Authorization
 
@@ -161,7 +152,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
@@ -172,7 +163,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **mediaControllerGetUserTryOnUploadUrl**
-> mediaControllerGetUserTryOnUploadUrl()
+> MediaControllerGetCategoryUploadUrl200Response mediaControllerGetUserTryOnUploadUrl()
 
 
 ### Example
@@ -186,23 +177,16 @@ import {
 const configuration = new Configuration();
 const apiInstance = new MediaApi(configuration);
 
-let mimeType: string; // (default to undefined)
-
-const { status, data } = await apiInstance.mediaControllerGetUserTryOnUploadUrl(
-    mimeType
-);
+const { status, data } = await apiInstance.mediaControllerGetUserTryOnUploadUrl();
 ```
 
 ### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **mimeType** | [**string**] |  | defaults to undefined|
+This endpoint does not have any parameters.
 
 
 ### Return type
 
-void (empty response body)
+**MediaControllerGetCategoryUploadUrl200Response**
 
 ### Authorization
 
@@ -211,7 +195,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details
