@@ -30,6 +30,7 @@ export default function UserLayout({
   // Redirect only when status is known & user is NOT authenticated
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
+      console.log('worked')
       router.push("/");
     }
   }, [isAuthenticated, isLoading, router]);

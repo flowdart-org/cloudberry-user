@@ -7,7 +7,6 @@ import { Truck, X } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import Link from "next/link";
 import { loadRazorpay } from "@/lib/loadRazorpay";
-import { api } from "@/lib/axios";
 import { ENV } from "@/lib/env";
 import { useAddressStore } from "@/store/useAddressStore";
 import { useState, useEffect } from "react";
@@ -29,12 +28,8 @@ const Cart = () => {
   
     useEffect(() => {
       fetchAddresses();
-    }, []);
+    }, [fetchAddresses]);
   
-
-  useEffect(() => {
-    fetchAddresses(); // Fetch once when user enters the cart
-  }, []);
 
   const handleQuantityChange = (cartItemId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -66,7 +61,7 @@ const Cart = () => {
         prefill: { name: "Ajmal", contact: "9876543210" },
         theme: { color: "#111827" },
 
-        handler: async (res: RazorpaySuccessResponse) => {
+        handler: async (_res: RazorpaySuccessResponse) => {
           window.location.href = "/order-success";
         },
       };

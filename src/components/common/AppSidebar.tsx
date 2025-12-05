@@ -43,13 +43,14 @@ export function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
     <>
       {/* Sidebar Sheet */}
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="left" className="w-64 p-0">
-          <SheetHeader className="border-b p-4 flex flex-row items-center justify-between w-full bg-black">
-            <SheetTitle className="font-pirulen mb-0 text-white mx-auto">Cloudberry</SheetTitle>
+        <SheetContent side="left" className="w-64 p-0 bg-white text-black rounded-none border-r border-white/5">
+        {/* <SheetContent side="left" className="w-64 p-0 bg-black text-white rounded-none border-r border-white/5"> */}
+          <SheetHeader className="p-4 flex items-center justify-center w-full border-b border-white/5">
+            <SheetTitle className="font-pirulen mb-0 text-lg">Cloudberry</SheetTitle>
           </SheetHeader>
 
           <div className="">
-            <nav className="space-y-">
+            <nav className="divide-y divide-white/5">
               {items.map((item) => {
                 const isActive = pathname === item.url;
                 return (
@@ -58,35 +59,35 @@ export function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
                     href={item.url}
                     onClick={() => onOpenChange(false)}
                     className={cn(
-                      "flex items-center justify-between  px-4 py-3 text-sm font-medium transition-colors border-b border-t border-border/50 group hover:border-black",
-                      isActive
-                        ? "bg-accent text-accent-foreground"
-                        : "text-foreground hover:bg-muted"
+                      "flex items-center justify-between px-4 py-3 text-sm font-medium transition-colors group hover:bg-white/5",
+                      isActive ? "bg-white/5 " : ""
                     )}
                   >
                     <div className="flex items-center justify-center gap-3">
-                      <item.icon className="h-5 w-5" />
-                      <span className="text-md md:text-lg lg:text-xl">{item.title}</span>
+                      <item.icon className="h-5 w-5 " />
+                      <span className="text-md md:text-md lg:text-md font-medium tracking-tight">{item.title}</span>
                     </div>
-                    <ChevronRight className="text-border group-hover:text-black" />
+                    <ChevronRight className="text-black/60 group-hover:text-black" />
                   </Link>
                 );
               })}
 
               {/* Logout Button */}
-              {isAuthenticated && <div
-                onClick={() => setShowLogoutModal(true)}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors  text-foreground hover:bg-muted cursor-pointer border-b border-t border-border/50 hover:border-black group justify-between"
-                )}
-              >
-                <div className="flex items-center justify-center gap-3">
-                  <LogOut className="h-5 w-5" />
-                  <span className="text-md md:text-lg lg:text-xl">Logout</span>
-                </div>
-                <ChevronRight className="text-border group-hover:text-black" />
+              {isAuthenticated && (
+                <div
+                  onClick={() => setShowLogoutModal(true)}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors text-white hover:bg-white/5 cursor-pointer group justify-between"
+                  )}
+                >
+                  <div className="flex items-center justify-center gap-3">
+                    <LogOut className="h-5 w-5 text-white" />
+                    <span className="text-md md:text-md lg:text-md font-medium">Logout</span>
+                  </div>
+                  <ChevronRight className="text-white/60 group-hover:text-white" />
 
-              </div>}
+                </div>
+              )}
             </nav>
           </div>
         </SheetContent>
@@ -95,13 +96,13 @@ export function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
       {/* Logout Confirmation Modal */}
       <Dialog open={showLogoutModal} onOpenChange={setShowLogoutModal}>
         {/* Overlay */}
-        <DialogOverlay className="fixed inset-0 bg-black/30 z-[900]" />
+        <DialogOverlay className="fixed inset-0 bg-black/40 z-[900]" />
 
-        <DialogContent className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[1000] max-w-sm  p-6 rounded-md bg-white shadow-lg">
+        <DialogContent className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[1000] max-w-sm p-6 rounded-none bg-white text-black shadow-lg border border-black/5">
           <DialogTitle className="text-lg font-semibold mb-2">
             Confirm Logout
           </DialogTitle>
-          <DialogDescription className="text-sm text-gray-700 mb-6">
+          <DialogDescription className="text-sm text-neutral-700 mb-6">
             Are you sure you want to logout? You will need to login again to
             access your account.
           </DialogDescription>

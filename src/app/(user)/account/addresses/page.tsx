@@ -16,7 +16,7 @@ export default function AddressesTab() {
 
   useEffect(() => {
     fetchAddresses();
-  }, []);
+  }, [fetchAddresses]);
 
   const onSave = (data: CreateAddressDto | UpdateAddressDto) => {
     if(addresses[0] && addresses[0].id) {

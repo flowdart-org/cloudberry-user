@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
 import { downloadInvoicePDF } from "@/lib/invoice-generator";
 import { useToast } from "@/hooks/useToast";
-import { ArrowLeft, Download, HelpCircle, Package, Truck, MapPin, CreditCard, Clock } from "lucide-react";
+import { ArrowLeft, Download, Package, Truck, MapPin, CreditCard, Clock } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -28,7 +28,7 @@ export default function OrderDetails() {
             }
         }
         getOrderDetails()
-    }, [])
+    }, [orderId])
 
     const handleDownloadInvoice = async () => {
         try {

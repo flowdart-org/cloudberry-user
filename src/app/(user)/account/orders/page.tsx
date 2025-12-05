@@ -2,36 +2,12 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Package, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { OrderResponseDto } from "@/api/client";
 import { ORDER_SERVICES } from "@/api/order/order.service";
 import { formatDate } from "@/lib/utils";
-
-// const orders = [
-//   {
-//     id: "ORD-2024-001",
-//     date: "Jan 15, 2024",
-//     status: "Delivered",
-//     total: "$299.99",
-//     items: 3,
-//   },
-//   {
-//     id: "ORD-2024-002",
-//     date: "Jan 10, 2024",
-//     status: "In Transit",
-//     total: "$149.50",
-//     items: 1,
-//   },
-//   {
-//     id: "ORD-2023-089",
-//     date: "Dec 28, 2023",
-//     status: "Delivered",
-//     total: "$89.99",
-//     items: 2,
-//   },
-// ];
 
 export default function OrdersTab()  {
   const [orders, setOrders] = useState<OrderResponseDto[]>([]);

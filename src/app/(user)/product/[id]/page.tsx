@@ -15,6 +15,7 @@ import { ProductDTO } from "@/types/product.types";
 import TryOnModal from "@/components/product/TryOnModal";
 import { useAuthStore } from "@/store/useAuthStore";
 import AuthModal from "@/components/auth/AuthModal";
+import YouMightAlsoLike from "@/components/product/YouMightAlsoLike";
 
 
 const ProductDetailsPage = () => {
@@ -35,6 +36,7 @@ const ProductDetailsPage = () => {
     async function fetchProductDetails() {
     try {
       const response = await PRODUCT_SERVICES.getProduct(id as string)
+      console.log(response.data, 'rpoducdta dasafdai data')
       setProduct(response.data ?? null)
       setSelectedVariantId(response.data?.variants[0].id ?? '')
     } catch (error) {
@@ -96,6 +98,8 @@ const ProductDetailsPage = () => {
     }
     setIsTryOnOpen(true)
   }
+
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -280,16 +284,12 @@ const ProductDetailsPage = () => {
           <div>Loading</div> }
 
           {/* You Might Also Like */}
-          <section className="py-8 border-t border-border">
+           {product && <section className="py-8 border-t border-border">
             <h2 className="text-2xl font-bold text-center mb-8 text-foreground">
               You might also like
             </h2>
-            {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {relatedProducts.map((relatedProduct) => (
-                <ProductCard key={relatedProduct.id} product={relatedProduct} />
-              ))}
-            </div> */}
-          </section>
+          <YouMightAlsoLike categoryId={product?.category?.id as string} productId={product?.id as string} />
+          </section>}
         </div>
       </main>
 

@@ -1,7 +1,6 @@
 import { ProductDTO } from "@/types/product.types";
 import { ApiResponse } from "../types";
 import { productApi, request } from "@/lib/axios";
-import { FilterState } from "@/store/useProductStore";
 
  
 export const PRODUCT_SERVICES = {

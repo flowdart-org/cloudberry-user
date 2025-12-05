@@ -8,14 +8,14 @@ export interface ProductDTO {
   variants: VariantsDto[];
   discountPrice: number;
   discountPercent: number;
-  categoryId: number;
+  categoryId: string;
   status: ProductStatus;
   tryOn: boolean;
   tags?: string[];
   price: number;
   thumbnail?: string;
   images: Array<string>;
-  category: object;
+  category: {id: string};
   createdAt: string;
   updatedAt: string;
 }

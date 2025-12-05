@@ -42,13 +42,11 @@ const Header = ({categories = false}: {categories?: boolean}) => {
         onClose={() => setLoginModalOpen(false)}
       />
 
-      {/* Header */}
       <header
         className={`sticky top-0 z-50 w-full transition-all duration-500
         ${showCategories ? "translate-y-[-100%] opacity-0" : "translate-y-0 opacity-100"}`}
       >
         <div className="flex h-16 items-center justify-between px-4 md:px-8 bg-white">
-          {/* Left: menu + logo */}
           <Button
             variant="ghost"
             size="icon"
