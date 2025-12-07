@@ -1,22 +1,27 @@
-import { ProductDTO } from "./product.types";
 
 
 export interface CartItem {
+  id: string;
+  quantity: number;
+  product: {
     id: string;
-    variantId: string;
-    quantity: number;
-    product: ProductDTO;
-    variant: {
+    name: string;
+    price: number;
+    thumbnail?: string;
+    category: {
       id: string;
-      size: string;
-      stock: number;
-    }
+      name: string;
+    };
+  };
+  variant: {
+    id: string;
+    size: string;
+    stock: number;
+  };
 }
 
-
-
 export interface CartProductDto {
-     id?: string;
+  id?: string;
   name?: string;
   description?: string;
   price?: number;
@@ -24,9 +29,7 @@ export interface CartProductDto {
   category?: CategoryCartItem;
 }
 
-
 export interface CategoryCartItem {
-  id?: string
+  id?: string;
   name?: string;
-} 
-
+}

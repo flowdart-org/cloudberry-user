@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { CART_SERVICES } from "@/api/cart/cart.service";
-import {  CartItem } from "@/types/cart.types";
-import { AddToCartResponseDto } from "@/api/cart/cart.dto";
+import {  CartItem } from "@/types/cart.types"; 
 
 interface StoreState {
   cart: CartItem[];
+  cartLoading: boolean;
 
   getInitialCart: () => Promise<void>;
   addToCart: (item: CartItem) => Promise<void>;
@@ -14,15 +14,19 @@ interface StoreState {
 
 export const useCartStore = create<StoreState>()((set, get) => ({
   cart: [],
+  cartLoading: false,
 
   getInitialCart: async () => {
     try {
+      set({ cartLoading: true })
       const response = await CART_SERVICES.getUserCart();
       if (response?.data?.items) {
         set({ cart: response.data.items });
       }
     } catch {
       console.warn("Failed syncing cart with server — using local state.");
+    } finally {
+      set({cartLoading: false})
     }
   },
 
@@ -30,7 +34,7 @@ export const useCartStore = create<StoreState>()((set, get) => ({
   const prev = get().cart;
 
   // Check if item already exists in cart
-  const existing = prev.find(i => i.variantId === item.variantId);
+  const existing = prev.find(i => i.variant.id === item.variant.id);
 
   // --------------------------------
   // CASE 1: Item already exists → update quantity
@@ -42,7 +46,7 @@ export const useCartStore = create<StoreState>()((set, get) => ({
     // Optimistic UI update
     set({
       cart: prev.map(i =>
-        i.variantId === item.variantId
+        i.variant.id === item.variant.id
           ? { ...i, quantity: newQuantity }
           : i
       ),
@@ -53,6 +57,7 @@ export const useCartStore = create<StoreState>()((set, get) => ({
 
     } catch (error) {
       // rollback if server fails
+      console.error(error)
       set({ cart: prev });
     }
 
@@ -65,14 +70,14 @@ export const useCartStore = create<StoreState>()((set, get) => ({
   set({ cart: [...prev, { ...item, id: item.id }] });
 
   try {
-    const response: AddToCartResponseDto = await CART_SERVICES.addToCart({
-      variantId: item.variantId,
+    const response = await CART_SERVICES.addToCart({
+      variantId: item.variant.id,
       quantity: item.quantity ?? 1,
     });
 
     set({
       cart: get().cart.map(i =>
-        i.variantId === response.variantId
+        i.variant.id === response.data?.variant.id
           ? { ...i, ...response }
           : i
       ),

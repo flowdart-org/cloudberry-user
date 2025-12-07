@@ -42,13 +42,20 @@ export function AddressModal({ address, open, onClose, onSave }: Props) {
 
 
   const validate = () => {
-  if (!form.houseNo.trim()) return "House/Flat number is required";
-  if (!form.street.trim()) return "Street is required";
-  if (!form.city.trim()) return "City is required";
-  if (!form.state.trim()) return "State is required";
-  if (!form.country.trim()) return "Country is required";
+  const houseNo = (form.houseNo ?? "").trim();
+  const street = (form.street ?? "").trim();
+  const city = (form.city ?? "").trim();
+  const state = (form.state ?? "").trim();
+  const country = (form.country ?? "").trim();
+  const pincode = (form.pincode ?? "").trim();
 
-  if (!/^\d{6}$/.test(form.pincode)) 
+  if (!houseNo) return "House/Flat number is required";
+  if (!street) return "Street is required";
+  if (!city) return "City is required";
+  if (!state) return "State is required";
+  if (!country) return "Country is required";
+
+  if (!/^\d{6}$/.test(pincode)) 
     return "Pincode must be a 6-digit number";
 
   return null;

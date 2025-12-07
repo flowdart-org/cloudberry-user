@@ -3,7 +3,7 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { Button } from "@/components/ui/button";
-import { Truck, X } from "lucide-react";
+import { Loader, Truck, X } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import Link from "next/link";
 import { loadRazorpay } from "@/lib/loadRazorpay";
@@ -16,7 +16,7 @@ import { RazorpaySuccessResponse } from "@/types/razorpay";
 import { CreateAddressDto, UpdateAddressDto } from "@/api/address/address.dto";
 
 const Cart = () => {
-  const { cart, removeFromCart, updateCartItemQuantity } = useCartStore();
+  const { cart, removeFromCart, updateCartItemQuantity, cartLoading } = useCartStore();
   const totalPrice = useCartStore((state) =>
     state.cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
   );
@@ -61,7 +61,8 @@ const Cart = () => {
         prefill: { name: "Ajmal", contact: "9876543210" },
         theme: { color: "#111827" },
 
-        handler: async (_res: RazorpaySuccessResponse) => {
+        // handler: async (_res: RazorpaySuccessResponse) => {
+        handler: async () => {
           window.location.href = "/order-success";
         },
       };
@@ -72,6 +73,18 @@ const Cart = () => {
       console.error(error);
     }
   };
+
+  if(cartLoading) {
+     return (<div className="min-h-screen flex flex-col">
+        <Header categories={false} />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <Loader className="animate-spin" />
+          </div>
+        </main>
+        <Footer />
+      </div>)
+  }
 
   if (cart.length === 0) {
     return (

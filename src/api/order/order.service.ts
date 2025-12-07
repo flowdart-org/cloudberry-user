@@ -1,6 +1,6 @@
 import { orderApi, request } from "@/lib/axios";
 import { ApiResponse, PaginatedResponse } from "../types";
-import { OrderResponseDto } from "../client";
+import { OrderResponseDto } from "./order.dto";
 
 
 export const ORDER_SERVICES = {

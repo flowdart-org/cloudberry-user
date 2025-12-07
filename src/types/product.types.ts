@@ -15,7 +15,7 @@ export interface ProductDTO {
   price: number;
   thumbnail?: string;
   images: Array<string>;
-  category: {id: string};
+  category: {id: string, name: string};
   createdAt: string;
   updatedAt: string;
 }

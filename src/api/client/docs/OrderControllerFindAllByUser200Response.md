@@ -1,4 +1,4 @@
-# CartControllerAddToCart200Response
+# OrderControllerFindAllByUser200Response
 
 
 ## Properties
@@ -7,14 +7,14 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **boolean** |  | [default to undefined]
 **message** | **string** |  | [default to undefined]
-**data** | [**CartItemResponseDto**](CartItemResponseDto.md) |  | [optional] [default to undefined]
+**data** | [**Array&lt;OrderResponseDto&gt;**](OrderResponseDto.md) |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { CartControllerAddToCart200Response } from './api';
+import { OrderControllerFindAllByUser200Response } from './api';
 
-const instance: CartControllerAddToCart200Response = {
+const instance: OrderControllerFindAllByUser200Response = {
     success,
     message,
     data,

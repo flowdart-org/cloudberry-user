@@ -34,7 +34,7 @@ const TryOnModal = ({ isOpen, onClose, product }: TryOnModalProps) => {
 
   const handleGenerate = async () => {
     if (!user.tryOnImage) return toast.error("Upload your photo first");
-    if (user.tryOnLimit <= 0) return toast.error("Try-on limit reached");
+    if (user?.tryOnLimit <= 0) return toast.error("Try-on limit reached");
 
     setIsGenerating(true);
 

@@ -149,7 +149,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **cartControllerGetUserCart**
-> CartControllerAddToCart200Response cartControllerGetUserCart()
+> CartControllerGetUserCart200Response cartControllerGetUserCart()
 
 
 ### Example
@@ -172,7 +172,7 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**CartControllerAddToCart200Response**
+**CartControllerGetUserCart200Response**
 
 ### Authorization
 
@@ -192,7 +192,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **cartControllerRemoveItem**
-> CartControllerAddToCart200Response cartControllerRemoveItem()
+> object cartControllerRemoveItem()
 
 
 ### Example
@@ -222,7 +222,7 @@ const { status, data } = await apiInstance.cartControllerRemoveItem(
 
 ### Return type
 
-**CartControllerAddToCart200Response**
+**object**
 
 ### Authorization
 
@@ -242,7 +242,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **cartControllerUpdateQuantity**
-> cartControllerUpdateQuantity(updateCartDto)
+> CartControllerAddToCart200Response cartControllerUpdateQuantity(updateCartDto)
 
 
 ### Example
@@ -276,7 +276,7 @@ const { status, data } = await apiInstance.cartControllerUpdateQuantity(
 
 ### Return type
 
-void (empty response body)
+**CartControllerAddToCart200Response**
 
 ### Authorization
 
@@ -285,7 +285,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 
 ### HTTP response details

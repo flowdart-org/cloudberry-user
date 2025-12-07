@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
 import { ProductDTO } from '@/types/product.types'
 import { PRODUCT_SERVICES } from '@/api/product/product.service'
-import { useCategoryStore } from '@/store/useCategoryStore'
 
 const YouMightAlsoLike = ({categoryId, productId}: {categoryId: string, productId: string}) => {
     console.log(categoryId, productId, 'idssss')

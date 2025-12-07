@@ -1,12 +1,11 @@
 "use client"
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { CATEGORY_SERVICES } from "@/api/category/category.service";
 import { Category } from "@/types/category.types";
 import Link from "next/link";
 

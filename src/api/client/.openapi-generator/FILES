@@ -17,6 +17,10 @@ docs/CartApi.md
 docs/CartControllerAddToCart200Response.md
 docs/CartControllerCheckout200Response.md
 docs/CartControllerCheckoutLink200Response.md
+docs/CartControllerGetUserCart200Response.md
+docs/CartItemResponseDto.md
+docs/CartItemResponseDtoProduct.md
+docs/CartItemResponseDtoVariant.md
 docs/CartResponseDto.md
 docs/CartResponseDtoItemsInner.md
 docs/CartResponseDtoItemsInnerProduct.md
@@ -42,7 +46,7 @@ docs/LoginVerifyOTPDto.md
 docs/MediaApi.md
 docs/MediaControllerGetCategoryUploadUrl200Response.md
 docs/OrderApi.md
-docs/OrderControllerFindAll200Response.md
+docs/OrderControllerFindAllByUser200Response.md
 docs/OrderControllerFindOne200Response.md
 docs/OrderItemDto.md
 docs/OrderResponseDto.md

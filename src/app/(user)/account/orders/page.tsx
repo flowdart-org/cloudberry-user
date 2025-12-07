@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { OrderResponseDto } from "@/api/client";
 import { ORDER_SERVICES } from "@/api/order/order.service";
 import { formatDate } from "@/lib/utils";
+import { OrderResponseDto } from "@/api/order/order.dto";
 
 export default function OrdersTab()  {
   const [orders, setOrders] = useState<OrderResponseDto[]>([]);

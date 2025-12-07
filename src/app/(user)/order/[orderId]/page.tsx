@@ -1,5 +1,4 @@
 "use client"
-import { OrderResponseDto } from "@/api/client";
 import { ORDER_SERVICES } from "@/api/order/order.service";
 import Footer from "@/components/common/Footer";
 import Header from "@/components/common/Header";
@@ -13,6 +12,7 @@ import { ArrowLeft, Download, Package, Truck, MapPin, CreditCard, Clock } from "
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { OrderResponseDto } from "@/api/order/order.dto";
 
 export default function OrderDetails() {
     const { orderId } = useParams();
@@ -40,7 +40,8 @@ export default function OrderDetails() {
                     description: "Invoice prepared for download. Use your browser's print dialog to save as PDF.",
                 });
             }
-        } catch (error) {
+        } catch (err) {
+            console.error(err)
             toast({
                 title: "Error",
                 description: "Failed to generate invoice",

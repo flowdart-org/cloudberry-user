@@ -75,10 +75,9 @@ const ProductDetailsPage = () => {
     }
 
     addToCart({
-      id: product.id,
-      product: product,
-      quantity: quantity,
-      variantId: selectedVariantId,
+      id: '',
+      product,
+      quantity,
       variant: { id: variant.id, size: variant.size, stock: variant.stock },
     });
 

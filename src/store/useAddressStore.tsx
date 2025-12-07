@@ -37,7 +37,7 @@ export const useAddressStore = create<AddressState>((set, get) => ({
         set({
           user: res.data,
           addresses,
-          defaultAddress: addresses.find((a: any) => a.isDefault) || addresses[0] || null,
+          defaultAddress: addresses.find((a) => a.isPrimary) || addresses[0] || null,
         });
       }
     } catch (error) {

@@ -14,7 +14,7 @@ import CategoryBar from "@/components/category/CategoryBar";
 
 
 const Shop = () => {
-  const { products, page, limit, setPage, category, setCategory } = useProductStore();
+  const { products, page, limit, setPage, setCategory } = useProductStore();
   const { categories } = useCategoryStore()
   const { category: pathCategory } = useParams() as {category: string}
   const [categoryData, setCategoryData] = useState<null | Category>(null)
@@ -37,7 +37,7 @@ const Shop = () => {
   } else {
     redirect("/shop/all");
   }
-}, [categories, pathCategory]);
+}, [categories, pathCategory, setCategory, setCategoryData]);
 
   const startIdx = (page - 1) * limit;
   const endIdx = startIdx + limit;

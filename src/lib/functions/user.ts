@@ -8,6 +8,6 @@ export const me = async (): Promise<ApiResponse<User>> => {
     const response = await USER_SERVICES.me();
     return response;
   } catch (error) {
-    return ErrorResponse(error)
+    return ErrorResponse(error) as ApiResponse<User>
   }
 };

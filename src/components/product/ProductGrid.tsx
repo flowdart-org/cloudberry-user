@@ -1,8 +1,6 @@
 'use client'
 
-import { useEffect } from "react";
 import ProductCard from "./ProductCard";
-import { useProductStore } from "@/store/useProductStore";
 import { ProductDTO } from "@/types/product.types";
 
 

@@ -10,7 +10,7 @@ interface StoreState {
 }
 
 export const useCategoryStore = create<StoreState>()(
-    (set, get) => ({
+    (set) => ({
       categories: [],
       loading: false,
       getInitialCategories: async () => {

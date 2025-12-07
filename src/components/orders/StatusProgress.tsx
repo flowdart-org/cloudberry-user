@@ -5,15 +5,16 @@ interface StatusProgressProps {
 }
 
 const StatusProgress = ({ status }: StatusProgressProps) => {
-  const steps = ["Ordered", "Processing", "Shipped", "Delivered", "Canceled"];
+  const steps = ["Ordered", "Processing", "Paid", "Shipped", "Delivered", "Canceled"];
   
   const getStepIndex = (currentStatus: string) => {
     const statusMap: Record<string, number> = {
       "pending": 0,
-      "paid": 1,
-      "shipped": 2,
-      "delivered": 3,
-      "canceled": 4,
+      "processing": 1,
+      "paid": 2,
+      "shipped": 3,
+      "delivered": 4,
+      "canceled": 5,
     };
     return statusMap[currentStatus] ?? 0;
   };
@@ -32,7 +33,7 @@ const StatusProgress = ({ status }: StatusProgressProps) => {
                   : "bg-muted text-neutral-400 "
               }`}
             >
-              {index < currentStep ? (
+              {index <= currentStep ? (
                 <Check className="h-5 w-5" />
               ) : (
                 <span className="text-sm font-medium">{index + 1}</span>

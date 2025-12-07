@@ -1,5 +1,5 @@
 
-import { OrderResponseDto } from "@/api/client";
+import { OrderResponseDto } from "@/api/order/order.dto";
 import { formatDate } from "./utils";
 
 export function generateInvoiceHTML(order: OrderResponseDto): string {
@@ -302,7 +302,7 @@ export function generateInvoiceHTML(order: OrderResponseDto): string {
               ${order.items.map(item => `
                 <tr>
                   <td>
-                    <div class="item-name">${item?.name || 'Product'}</div>
+                    <div class="item-name">${item?.product.name || 'Product'}</div>
                   </td>
                   <td>${item.variant?.size || 'N/A'}</td>
                   <td class="text-right">${item.quantity || 1}</td>

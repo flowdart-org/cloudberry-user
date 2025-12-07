@@ -14,6 +14,7 @@ export const PRODUCT_SERVICES = {
   },
 
   getFeeds: async ({ page, limit, search, minPrice, maxPrice, categories, size}: {page?: number | undefined, limit?: number, search?: string, minPrice?: number, maxPrice?: number, categories?: string[], size?: string}): Promise<ApiResponse<ProductDTO[]>> => {
-      return await request(productApi.productControllerFindFeed.bind(productApi), page, limit, search, minPrice, maxPrice, categories, size) as ApiResponse<ProductDTO[]>;
+    console.log(minPrice, categories)
+      return await request(productApi.productControllerFindFeed.bind(productApi), page, limit, search, size, minPrice, maxPrice, categories) as ApiResponse<ProductDTO[]>;
   },
 };

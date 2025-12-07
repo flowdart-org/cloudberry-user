@@ -5,14 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**productId** | **string** |  | [default to undefined]
-**variantId** | **string** |  | [default to undefined]
-**name** | **string** |  | [default to undefined]
-**sku** | **string** |  | [optional] [default to undefined]
-**price** | **number** |  | [default to undefined]
+**product** | [**VariantDto**](VariantDto.md) |  | [default to undefined]
+**variant** | [**VariantDto**](VariantDto.md) | Variant of the product | [default to undefined]
 **quantity** | **number** |  | [default to undefined]
 **subtotal** | **number** |  | [default to undefined]
-**metadata** | **{ [key: string]: any; }** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -20,14 +16,10 @@ Name | Type | Description | Notes
 import { OrderItemDto } from './api';
 
 const instance: OrderItemDto = {
-    productId,
-    variantId,
-    name,
-    sku,
-    price,
+    product,
+    variant,
     quantity,
     subtotal,
-    metadata,
 };
 ```
 

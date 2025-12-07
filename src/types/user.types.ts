@@ -8,7 +8,7 @@ export interface User {
     dob?: string;
     gender?: string;
     tryOnImage?: string;
-    tryOnLimit?: number;
+    tryOnLimit: number;
     tier?: "free" | "pro" | "premium";
     addresses?: Array<Address>;
     createdAt?: string;

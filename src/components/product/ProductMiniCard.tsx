@@ -1,18 +1,23 @@
-import { OrderItemDto } from "@/api/client";
+import { OrderItemDto, VariantDto } from "@/api/client";
+import { ProductDTO } from "@/types/product.types";
 
 
 interface ProductCardProps {
-  item: OrderItemDto;
+  item: {
+      product: ProductDTO;
+      variant: VariantDto;
+      quantity: number;
+  }
 }
 
 const ProductMiniCard = ({ item }: ProductCardProps) => {
   return (
     <div className="group flex gap-5 p-5 bg-card rounded-2xl shadow-soft hover:shadow-hover transition-smooth animate-fade-in">
       <div className="w-24 h-24 sm:w-28 sm:h-28 bg-muted rounded-xl overflow-hidden flex-shrink-0">
-        {item?.thumbnail ? (
+        {item?.product?.thumbnail ? (
           <img 
-            src={item.thumbnail} 
-            alt={item.name}
+            src={item?.product?.thumbnail} 
+            alt={item?.product?.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
           />
         ) : (
@@ -26,16 +31,17 @@ const ProductMiniCard = ({ item }: ProductCardProps) => {
 
       <div className="flex-1 min-w-0">
         <h3 className="font-medium text-base sm:text-lg leading-tight truncate">
-          {item.name}
+          {item?.product?.name}
         </h3>
 
         <div className="flex items-center gap-3 mt-2 text-sm text-neutral-400 ">
-          {/* {item.size && <span>Size: {item.size}</span>} */}
-          <span>Qty: {item.quantity}</span>
+          {/* {item?.product?.size && <span>Size: {item?.product?.size}</span>} */}
+          <span>Size: {item?.quantity}</span>
+          <span>Qty: {item?.variant?.size}</span>
         </div>
 
         <p className="text-lg font-semibold mt-3">
-          ₹{item.price.toFixed(2)}
+          ₹{item?.product?.price?.toFixed(2)}
         </p>
       </div>
     </div>
