@@ -29,8 +29,9 @@ jobs:
       - name: Prepare deploy folder
         run: |
           mkdir deploy
-          cp -r .next deploy/.next || true
-          cp -r public deploy/public || true
+          cp -r .next/standalone deploy/.next/standalone
+          cp -r .next/static deploy/.next/static
+          cp -r public deploy/public
           cp package.json deploy/
 
       - name: Upload artifact
