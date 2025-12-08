@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start",
+    "start": "node .next/standalone/server.js",
     "lint": "eslint --fix",
     "generate:api": "openapi-generator-cli generate -i http://api.dev.cloudberrytryon.com/api/docs-json -g typescript-axios -o src/api/client --skip-validate-spec"
   },
