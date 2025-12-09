@@ -12,7 +12,6 @@ import { useAddressStore } from "@/store/useAddressStore";
 import { useState, useEffect } from "react";
 import { AddressModal } from "@/components/address/AddressModal";
 import { CART_SERVICES } from "@/api/cart/cart.service";
-import { RazorpaySuccessResponse } from "@/types/razorpay";
 import { CreateAddressDto, UpdateAddressDto } from "@/api/address/address.dto";
 
 const Cart = () => {
@@ -63,7 +62,7 @@ const Cart = () => {
 
         // handler: async (_res: RazorpaySuccessResponse) => {
         handler: async () => {
-          window.location.href = "/order-success";
+          window.location.href = `/order/${id}`;
         },
       };
 
@@ -143,9 +142,10 @@ const Cart = () => {
                   <div className="flex-1">
                     <div className="flex justify-between gap-3">
                       <div>
-                        <h3 className="font-semibold line-clamp-2 text-foreground">
+                        <Link
+                href={`/product/${item.product.id}`} className="font-semibold line-clamp-2 text-foreground hover:underline">
                           {item.product.name}
-                        </h3>
+                        </Link>
 
                         {item.variant && (
                           <p className="text-sm text-muted-foreground mt-1">
@@ -157,7 +157,7 @@ const Cart = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8"
+                        className="h-8 w-8 z-30"
                         onClick={() => removeFromCart(item.id)}
                       >
                         <X className="h-4 w-4" />
@@ -178,7 +178,7 @@ const Cart = () => {
                           +
                         </Button>
                       </div>
-                      <p className="font-bold text-lg">₹{item.product.price * item.quantity}</p>
+                      <p className="font-bold text-lg">₹{(item.product.price * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ const Cart = () => {
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal</span>
-                    <span>₹{totalPrice}</span>
+                    <span>₹{totalPrice.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Shipping</span>
@@ -228,7 +228,7 @@ const Cart = () => {
                   </div>
                   <div className="border-t pt-3 flex justify-between font-semibold">
                     <span>Total</span>
-                    <span className="text-xl">₹{totalPrice}</span>
+                    <span className="text-xl">₹{totalPrice.toFixed(2)}</span>
                   </div>
                 </div>
 

@@ -33,7 +33,7 @@ export default function AddressesTab() {
           <p className="text-sm text-neutral-400 ">Manage your shipping addresses</p>
         </div>
         <Button className="bg-black" onClick={() => setShowAddressModal(true)}>
-          Add Address
+         { addresses.length > 1 ? 'Add Address' : 'Edit Address'}
         </Button>
 
         <AddressModal address={addresses[0]} onSave={onSave} onClose={() => setShowAddressModal(false)} open={showAddressModal}  />
@@ -80,7 +80,7 @@ export default function AddressesTab() {
                 <div className="flex gap-2 pt-2">
                   <AddressModal address={address} open={showAddressModal} onSave={onSave} onClose={() => setShowAddressModal(false)} />
 
-                  <Button
+                  {/* <Button
                     variant="outline"
                     size="sm"
                     className="flex-1"
@@ -88,7 +88,7 @@ export default function AddressesTab() {
                   >
                     <Trash2 className="mr-2 h-3.5 w-3.5" />
                     Remove
-                  </Button>
+                  </Button> */}
                 </div>
 
                 {/* {!address.isPrimary && (

@@ -115,20 +115,59 @@ export default function ProfilePage() {
   };
 
   const handleSave = async () => {
+    // Validation checks
+    const validationErrors: string[] = [];
+
+    if (!formData.name || formData.name.trim().length === 0) {
+      validationErrors.push("Name is required");
+    } else if (formData.name.trim().length < 2) {
+      validationErrors.push("Name must be at least 2 characters");
+    } else if (formData.name.trim().length > 100) {
+      validationErrors.push("Name must be less than 100 characters");
+    }
+
+    if (!formData.gender || formData.gender.length === 0) {
+      validationErrors.push("Gender is required");
+    }
+
+    if (!formData.dob || formData.dob.length === 0) {
+      validationErrors.push("Date of birth is required");
+    } else {
+      const dob = new Date(formData.dob);
+      const today = new Date();
+      const age = today.getFullYear() - dob.getFullYear();
+      if (age < 13) {
+        validationErrors.push("You must be at least 13 years old");
+      }
+      if (dob > today) {
+        validationErrors.push("Date of birth cannot be in the future");
+      }
+    }
+
+    // Show all validation errors at once
+    if (validationErrors.length > 0) {
+      toast({
+        title: "Validation Error",
+        description: validationErrors.join(", "),
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const updateData = {
-        name: formData.name,
+        name: formData.name.trim(),
         dob: new Date(formData.dob),
         gender: formData.gender,
       };
 
       const response = await USER_SERVICES.updateProfile(updateData);
 
-      if(!response.success || !response?.data) {
-        throw new Error(response.error || "Failed to update profile")
+      if (!response.success || !response?.data) {
+        throw new Error(response.error || "Failed to update profile");
       }
-      
+
       updateUser(response?.data);
 
       toast({
@@ -138,9 +177,15 @@ export default function ProfilePage() {
 
       setIsEditing(false);
     } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message?.[0] ||
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update profile";
+
       toast({
         title: "Error",
-        description: error.response?.data?.message[0] || "Failed to update profile",
+        description: typeof errorMessage === "string" ? errorMessage : "Failed to update profile",
         variant: "destructive",
       });
     } finally {

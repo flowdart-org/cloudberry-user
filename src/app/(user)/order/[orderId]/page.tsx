@@ -59,7 +59,7 @@ export default function OrderDetails() {
             <Header />
 
             <main className="flex-1 w-full">
-                <div className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+                <div className="container w-screen mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
                     {/* Back Button */}
                     <Link href="/account/orders">
                         <button className="group flex items-center gap-2 text-sm text-neutral-400 hover:text-foreground transition-colors mb-8">
@@ -108,10 +108,20 @@ export default function OrderDetails() {
                                         <span className="text-sm text-neutral-400">Estimated Delivery:</span>
                                         <span className="text-sm font-medium text-foreground">Dec 5, 2024</span>
                                     </div>
+                                    <div className="flex gap-2">
                                     <Button className="w-full" size="default">
                                         <Truck className="mr-2 h-4 w-4" />
                                         Track Package
                                     </Button>
+                                    <Button className="w-full" size="default">
+                                        <Truck className="mr-2 h-4 w-4" />
+                                        Track Package
+                                    </Button>
+                                    <Button className="w-full" size="default">
+                                        <Truck className="mr-2 h-4 w-4" />
+                                        Track Package
+                                    </Button>
+                                    </div>
                                 </div>
                             </div>
 

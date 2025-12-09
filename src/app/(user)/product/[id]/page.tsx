@@ -28,7 +28,7 @@ const ProductDetailsPage = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
 
-  const [selectedImage, setSelectedImage] = useState<null | number>(null);
+  const [selectedImage, setSelectedImage] = useState<number>(-1);
   const [selectedVariantId, setSelectedVariantId] = useState("");
   const [quantity, setQuantity] = useState(1);
 
@@ -122,10 +122,10 @@ const ProductDetailsPage = () => {
               <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
                 <button
                     key={'thumbnail'}
-                    onClick={() => setSelectedImage(null)}
+                    onClick={() => setSelectedImage(-1)}
                     className={cn(
                       "relative w-20 h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all",
-                      selectedImage === null
+                      selectedImage === -1
                         ? "border-primary"
                         : "border-transparent hover:border-border"
                     )}
@@ -160,15 +160,15 @@ const ProductDetailsPage = () => {
               {/* Main Image */}
               <div className="relative flex-1 bg-muted rounded-lg overflow-hidden aspect-[3/4]">
                 <img
-                  src={selectedImage === null ? product?.thumbnail : product.images[selectedImage]}
+                  src={selectedImage === -1 ? product?.thumbnail : product.images[selectedImage]}
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
-                <Button
+                {product.images.length > 0 && <> <Button
                   variant="ghost"
                   size="icon"
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                  onClick={() => setSelectedImage((prev) => (prev || -1 > 0 ? prev || - 1 : product.images.length - 1))}
+                  onClick={() => setSelectedImage((prev) => (prev <= -1 ? product.images.length - 1 :  prev-1))}
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
@@ -176,14 +176,13 @@ const ProductDetailsPage = () => {
                   variant="ghost"
                   size="icon"
                   className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                  onClick={() => setSelectedImage((prev) => ((prev ?? 0) < product.images.length - 1 ? (prev ?? 0) + 1 : 0))}
+                  onClick={() => setSelectedImage((prev) => prev  < product.images.length - 1 ? prev + 1 : -1)}
                 >
                   <ChevronRight className="h-5 w-5" />
-                </Button>
+                </Button> </>}
               </div>
             </div>
 
-            {/* product Info */}
             <div className="space-y-6">
               <div>
                 <h1 className="text-2xl md:text-3xl font-light text-foreground mb-2">
@@ -283,12 +282,7 @@ const ProductDetailsPage = () => {
           <div>Loading</div> }
 
           {/* You Might Also Like */}
-           {product && <section className="py-8 border-t border-border">
-            <h2 className="text-2xl font-bold text-center mb-8 text-foreground">
-              You might also like
-            </h2>
-          <YouMightAlsoLike categoryId={product?.category?.id as string} productId={product?.id as string} />
-          </section>}
+           {product &&  <YouMightAlsoLike categoryId={product?.category?.id as string} productId={product?.id as string} />}
         </div>
       </main>
 

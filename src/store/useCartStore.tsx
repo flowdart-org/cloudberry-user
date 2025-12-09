@@ -74,11 +74,11 @@ export const useCartStore = create<StoreState>()((set, get) => ({
       variantId: item.variant.id,
       quantity: item.quantity ?? 1,
     });
-
+    console.log(response, 'rtyujn')
     set({
       cart: get().cart.map(i =>
-        i.variant.id === response.data?.variant.id
-          ? { ...i, ...response }
+        i.variant.id === response.data?.variant?.id
+          ? { ...i, ...response.data }
           : i
       ),
     });

@@ -11,19 +11,24 @@ const YouMightAlsoLike = ({categoryId, productId}: {categoryId: string, productI
     useEffect(() => {
         const fetchSimilarProducts = async () => {
             const response = await PRODUCT_SERVICES.getFeeds({page: 1, limit: 5, categories: [categoryId]})
-        console.log(response.data, 'datea response')
             const filteredProducts = response.data?.filter(item => item.id !== productId)
-            console.log(productId, 'prod')
             setProducts(filteredProducts || [])
         }
         fetchSimilarProducts()
     }, [])
-  return (
-     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 md:gap-2 mx-auto">
+
+    if(products.length > 0) return (
+    <section className="py-8 border-t border-border">
+            <h2 className="text-2xl font-bold text-center mb-8 text-foreground">
+              You might also like
+            </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 md:gap-2 mx-auto">
           {products?.slice(0, 10).map((product) => (
             <ProductCard key={product.id} product={product} is3D={true}/>
           ))}
         </div>
+          </section>
+     
   )
 }
 
