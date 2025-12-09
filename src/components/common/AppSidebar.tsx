@@ -25,8 +25,8 @@ import {
 const items = [
   { title: "Home", url: "/", icon: Home },
   { title: "Shop", url: "/shop", icon: Store },
-  { title: "Cart", url: "/cart", icon: ShoppingCart },
-  { title: "Profile", url: "/account/profile", icon: User },
+  // { title: "Cart", url: "/cart", icon: ShoppingCart },
+  // { title: "Profile", url: "/account/profile", icon: User },
 ];
 
 interface AppSidebarProps {
@@ -44,7 +44,7 @@ export function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
       {/* Sidebar Sheet */}
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="left" className="w-64 p-0 bg-white text-black rounded-none border-r border-white/5">
-        {/* <SheetContent side="left" className="w-64 p-0 bg-black text-white rounded-none border-r border-white/5"> */}
+          {/* <SheetContent side="left" className="w-64 p-0 bg-black text-white rounded-none border-r border-white/5"> */}
           <SheetHeader className="p-4 flex items-center justify-center w-full border-b border-white/5">
             <SheetTitle className="font-pirulen mb-0 text-lg">Cloudberry</SheetTitle>
           </SheetHeader>
@@ -74,19 +74,48 @@ export function AppSidebar({ open, onOpenChange }: AppSidebarProps) {
 
               {/* Logout Button */}
               {isAuthenticated && (
-                <div
-                  onClick={() => setShowLogoutModal(true)}
-                  className={cn(
-                    "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors text-white hover:bg-white/5 cursor-pointer group justify-between"
-                  )}
-                >
-                  <div className="flex items-center justify-center gap-3">
-                    <LogOut className="h-5 w-5 text-white" />
-                    <span className="text-md md:text-md lg:text-md font-medium">Logout</span>
-                  </div>
-                  <ChevronRight className="text-white/60 group-hover:text-white" />
+                <>
+                <Link
+                    key={'Cart'}
+                    href={'/cart'}
+                    onClick={() => onOpenChange(false)}
+                    className={cn(
+                      "flex items-center justify-between px-4 py-3 text-sm font-medium transition-colors group hover:bg-white/5")}
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <ShoppingCart className="h-5 w-5 " />
+                      <span className="text-md md:text-md lg:text-md font-medium tracking-tight">Cart</span>
+                    </div>
+                    <ChevronRight className="text-black/60 group-hover:text-black" />
+                  </Link>
 
-                </div>
+                  <Link
+                    key={'profile'}
+                    href={'/account/profile'}
+                    onClick={() => onOpenChange(false)}
+                    className={cn(
+                      "flex items-center justify-between px-4 py-3 text-sm font-medium transition-colors group hover:bg-white/5")}
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <User className="h-5 w-5 " />
+                      <span className="text-md md:text-md lg:text-md font-medium tracking-tight">Profile</span>
+                    </div>
+                    <ChevronRight className="text-black/60 group-hover:text-black" />
+                  </Link>
+
+                  <div
+                    onClick={() => setShowLogoutModal(true)}
+                    className={cn(
+                      "flex items-center justify-between px-4 py-3 text-sm font-medium transition-colors group hover:bg-white/5"
+                    )}
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <LogOut className="h-5 w-5" />
+                      <span className="text-md md:text-md lg:text-md font-medium tracking-tight">Logout</span>
+                    </div>
+                    <ChevronRight className="text-black/60 group-hover:text-black" />
+                  </div>
+                </>
               )}
             </nav>
           </div>

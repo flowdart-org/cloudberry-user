@@ -19,7 +19,7 @@ export default function ProfilePage() {
   const [otpCode, setOtpCode] = useState("");
   const [tempEmail, setTempEmail] = useState("");
   const [tempPhone, setTempPhone] = useState("");
-  const { user, updateUser } = useAuthStore();
+  const { user, fetchUser } = useAuthStore();
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -168,7 +168,7 @@ export default function ProfilePage() {
         throw new Error(response.error || "Failed to update profile");
       }
 
-      updateUser(response?.data);
+      fetchUser()
 
       toast({
         title: "Success",
@@ -383,7 +383,7 @@ export default function ProfilePage() {
           )}
 
           <div className="space-y-4">
-            <div>
+            {formData.email && <div>
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-base font-semibold flex items-center gap-2">
                   <Mail className="h-4 w-4" />
@@ -447,9 +447,9 @@ export default function ProfilePage() {
                   </Button>
                 </div>
               )}
-            </div>
+            </div>}
 
-            <div>
+           {formData.phone && <div>
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-base font-semibold flex items-center gap-2">
                   <Phone className="h-4 w-4" />
@@ -513,7 +513,7 @@ export default function ProfilePage() {
                   </Button>
                 </div>
               )}
-            </div>
+            </div>}
           </div>
         </CardContent>
       </Card>

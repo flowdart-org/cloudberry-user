@@ -54,7 +54,7 @@ const Shop = () => {
             <FilterSection />
             <div className="flex-1">
               <CategoryBar showCategories isShop />
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between mb-8 mt-3">
                 <h1 className="text-2xl font-bold tracking-tight uppercase">{categoryData ? categoryData.name : pathCategory}</h1>
                 <p className="text-sm text-neutral-400 ">
                   {products.length} products

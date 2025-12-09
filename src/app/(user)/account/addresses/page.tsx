@@ -33,7 +33,7 @@ export default function AddressesTab() {
           <p className="text-sm text-neutral-400 ">Manage your shipping addresses</p>
         </div>
         <Button className="bg-black" onClick={() => setShowAddressModal(true)}>
-         { addresses.length > 1 ? 'Add Address' : 'Edit Address'}
+         { addresses.length === 0 ? 'Add Address' : 'Edit Address'}
         </Button>
 
         <AddressModal address={addresses[0]} onSave={onSave} onClose={() => setShowAddressModal(false)} open={showAddressModal}  />

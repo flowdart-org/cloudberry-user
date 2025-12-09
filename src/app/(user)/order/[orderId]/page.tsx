@@ -109,18 +109,18 @@ export default function OrderDetails() {
                                         <span className="text-sm font-medium text-foreground">Dec 5, 2024</span>
                                     </div>
                                     <div className="flex gap-2">
-                                    <Button className="w-full" size="default">
+                                    {orderDetails.orderStatus === 'delivered' && <Button className="w-full" size="default">
+                                        <Truck className="mr-2 h-4 w-4" />
+                                       Return Request
+                                    </Button>}
+                                    {orderDetails.orderStatus === 'processing' &&<Button className="w-full" size="default">
+                                        <Truck className="mr-2 h-4 w-4" />
+                                        Cancel Order
+                                    </Button>}
+                                   { (orderDetails.orderStatus === 'pending' || orderDetails.orderStatus === 'processing' || orderDetails.orderStatus === 'processing') && <Button className="w-full" size="default">
                                         <Truck className="mr-2 h-4 w-4" />
                                         Track Package
-                                    </Button>
-                                    <Button className="w-full" size="default">
-                                        <Truck className="mr-2 h-4 w-4" />
-                                        Track Package
-                                    </Button>
-                                    <Button className="w-full" size="default">
-                                        <Truck className="mr-2 h-4 w-4" />
-                                        Track Package
-                                    </Button>
+                                    </Button>}
                                     </div>
                                 </div>
                             </div>

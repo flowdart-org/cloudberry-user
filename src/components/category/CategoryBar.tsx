@@ -70,7 +70,7 @@ export default function CategoryBar({ showCategories, isShop = false }: Category
     <div
       className={cn(
         pathname?.startsWith("/shop") && !isShop && "hidden",
-        "sticky top-0 z-50 w-full bg-background border-b border-border overflow-hidden transition-all duration-300",
+        "sticky top-0 z-30 w-full bg-background border-b border-border overflow-hidden transition-all duration-300",
         showCategories ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
       )}
     >

@@ -1,6 +1,7 @@
 "use client";
 
 import { LANDING_PAGE_SERVICES } from "@/api/landingPage/landingPage.service";
+import CloudberryLoader from "@/components/ui/Loader";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useCategoryStore } from "@/store/useCategoryStore";
 import { useRouter } from "next/navigation";
@@ -39,7 +40,7 @@ export default function UserLayout({
   if (isLoading || loading) {
     return (
       <div className="w-screen h-screen flex items-center justify-center bg-muted/40 text-lg font-medium">
-        Loading...
+        <CloudberryLoader />
       </div>
     );
   }

@@ -46,7 +46,7 @@ const Header = ({categories = false}: {categories?: boolean}) => {
         className={`sticky top-0 z-50 w-full transition-all duration-500
         ${showCategories ? "translate-y-[-100%] opacity-0" : "translate-y-0 opacity-100"}`}
       >
-        <div className="flex h-16 items-center justify-between px-4 md:px-8 bg-white">
+        <div className="flex h-16 items-center justify-between px-2 md:px-4 lg:px-6 bg-white">
           <Button
             variant="ghost"
             size="icon"
@@ -60,7 +60,7 @@ const Header = ({categories = false}: {categories?: boolean}) => {
             <Image
               src={APP_CONFIG.LOGO.ICON}
               alt="icon"
-              className="w-10 h-10"
+              className="md:w-10 md:h-10 w-7"
             />
             <h1 className="md:text-2xl text-sm text-foreground font-pirulen font-medium">
               {APP_CONFIG.NAME}
@@ -94,7 +94,7 @@ const Header = ({categories = false}: {categories?: boolean}) => {
             ) : (
               <Button
                 variant="outline"
-                size="sm"
+                size="xs"
                 className="font-pirulen "
                 onClick={() => setLoginModalOpen(true)}
               >

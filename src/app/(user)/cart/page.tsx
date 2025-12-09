@@ -62,7 +62,7 @@ const Cart = () => {
 
         // handler: async (_res: RazorpaySuccessResponse) => {
         handler: async () => {
-          window.location.href = `/order/${id}`;
+          window.location.href = `/account/orders`;
         },
       };
 

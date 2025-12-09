@@ -41,33 +41,79 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         setError("");
     };
 
+    const formatIdentifierForApi = (raw: string) => {
+        const trimmed = raw.trim();
+        if (!trimmed) return trimmed;
+        // If looks like email, return as-is
+        if (trimmed.includes("@")) return trimmed;
+
+        // Extract digits to detect phone numbers
+        const digits = trimmed.replace(/\D/g, "");
+        // If exactly 10 digits, treat as Indian phone and prefix +91
+        if (digits.length === 10) return `+91${digits}`;
+
+        // If already starts with +, assume full international number
+        if (trimmed.startsWith("+")) return trimmed;
+
+        // Fallback to trimmed value
+        return trimmed;
+    };
+
     const handleSendOTP = async () => {
-        setLoading(true);
-        const response = await AUTH_SERVICES.requestOtp({identifier});
-        if (response.success) {
-            setError("");
-            startResendTimer();
-            setLoading(false)
-            setShowOTP(true);
-        } else {
-            setError(response.message || "Failed to send OTP. Please try again.");
+        setError("");
+        const apiIdentifier = formatIdentifierForApi(identifier);
+        if (!apiIdentifier) {
+            setError("Please enter a valid phone or email");
+            return;
         }
-        setLoading(false)
+
+        setLoading(true);
+        try {
+            const response = await AUTH_SERVICES.requestOtp({ identifier: apiIdentifier });
+            if (response.success) {
+                setError("");
+                startResendTimer();
+                setShowOTP(true);
+            } else {
+                setError(response.message || "Failed to send OTP. Please try again.");
+            }
+        } catch (err: any) {
+            console.error(err);
+            setError(err?.message || "Failed to send OTP. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleVerifyOTP = async () => {
-        
-        setLoading(true);
-        const response = await AUTH_SERVICES.verifyOtp({identifier, otp})
-
-        if (response.success) {
-            await login()
-            setError("");
-            handleClose()
-        } else {
-            setError(response.message || "Failed to send OTP. Please try again.");
+        setError("");
+        const apiIdentifier = formatIdentifierForApi(identifier);
+        if (!apiIdentifier) {
+            setError("Please enter a valid phone or email");
+            return;
         }
-        setLoading(false)
+
+        if (!otp || otp.trim().length === 0) {
+            setError("Please enter the OTP");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await AUTH_SERVICES.verifyOtp({ identifier: apiIdentifier, otp });
+            if (response.success) {
+                await login();
+                setError("");
+                handleClose();
+            } else {
+                setError(response.message || "Failed to verify OTP. Please try again.");
+            }
+        } catch (err: any) {
+            console.error(err);
+            setError(err?.message || "Failed to verify OTP. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleClose = () => {
