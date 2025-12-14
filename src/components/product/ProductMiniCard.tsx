@@ -1,4 +1,4 @@
-import { OrderItemDto, VariantDto } from "@/api/client";
+import { VariantDto } from "@/api/client";
 import { ProductDTO } from "@/types/product.types";
 
 
