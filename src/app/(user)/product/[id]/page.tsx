@@ -21,7 +21,7 @@ import YouMightAlsoLike from "@/components/product/YouMightAlsoLike";
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const { addToCart } = useCartStore();
-  const {isAuthenticated} = useAuthStore()
+  const { isAuthenticated } = useAuthStore()
   const { toast } = useToast();
   const [product, setProduct] = useState<null | ProductDTO>(null)
   const [isTryOnOpen, setIsTryOnOpen] = useState(false);
@@ -34,19 +34,19 @@ const ProductDetailsPage = () => {
 
   useEffect(() => {
     async function fetchProductDetails() {
-    try {
-      const response = await PRODUCT_SERVICES.getProduct(id as string)
-      console.log(response.data, 'rpoducdta dasafdai data')
-      setProduct(response.data ?? null)
-      setSelectedVariantId(response.data?.variants[0].id ?? '')
-    } catch (error) {
-      console.error(error)
+      try {
+        const response = await PRODUCT_SERVICES.getProduct(id as string)
+        console.log(response.data, 'rpoducdta dasafdai data')
+        setProduct(response.data ?? null)
+        setSelectedVariantId(response.data?.variants[0].id ?? '')
+      } catch (error) {
+        console.error(error)
+      }
     }
-  }
     fetchProductDetails()
   }, [])
 
-  
+
 
   const handleAddToBag = () => {
     if (!isAuthenticated) {
@@ -62,7 +62,7 @@ const ProductDetailsPage = () => {
       return;
     }
 
-    if(!product) return null
+    if (!product) return null
 
     const variant = product.variants.find((v) => v.id === selectedVariantId);
     if (!variant) {
@@ -98,6 +98,10 @@ const ProductDetailsPage = () => {
     setIsTryOnOpen(true)
   }
 
+  if (!product) return null
+  const selectedVariant = product.variants.find(v => v.id === selectedVariantId);
+  const stock = selectedVariant?.stock ?? 0;
+
 
 
   return (
@@ -121,21 +125,21 @@ const ProductDetailsPage = () => {
               {/* Thumbnails */}
               <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible">
                 <button
-                    key={'thumbnail'}
-                    onClick={() => setSelectedImage(-1)}
-                    className={cn(
-                      "relative w-20 h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all",
-                      selectedImage === -1
-                        ? "border-primary"
-                        : "border-transparent hover:border-border"
-                    )}
-                  >
-                    <img
-                      src={product?.thumbnail}
-                      alt={`product thumbnail view`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
+                  key={'thumbnail'}
+                  onClick={() => setSelectedImage(-1)}
+                  className={cn(
+                    "relative w-20 h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all",
+                    selectedImage === -1
+                      ? "border-primary"
+                      : "border-transparent hover:border-border"
+                  )}
+                >
+                  <img
+                    src={product?.thumbnail}
+                    alt={`product thumbnail view`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
 
                 {product.images.map((img, idx) => (
                   <button
@@ -143,7 +147,7 @@ const ProductDetailsPage = () => {
                     onClick={() => setSelectedImage(idx)}
                     className={cn(
                       "relative w-20 h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all",
-                       selectedImage === idx
+                      selectedImage === idx
                         ? "border-primary"
                         : "border-transparent hover:border-border"
                     )}
@@ -168,18 +172,18 @@ const ProductDetailsPage = () => {
                   variant="ghost"
                   size="icon"
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                  onClick={() => setSelectedImage((prev) => (prev <= -1 ? product.images.length - 1 :  prev-1))}
+                  onClick={() => setSelectedImage((prev) => (prev <= -1 ? product.images.length - 1 : prev - 1))}
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
-                  onClick={() => setSelectedImage((prev) => prev  < product.images.length - 1 ? prev + 1 : -1)}
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </Button> </>}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
+                    onClick={() => setSelectedImage((prev) => prev < product.images.length - 1 ? prev + 1 : -1)}
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </Button> </>}
               </div>
             </div>
 
@@ -203,6 +207,25 @@ const ProductDetailsPage = () => {
                 </div>
 
               </div>
+
+              <p
+                className={cn(
+                  "text-sm font-medium",
+                  stock <= 0
+                    ? "text-red-400"
+                    : stock < 10
+                      ? "text-red-400"
+                      : "text-black"
+                )}
+              >
+                {selectedVariantId &&
+                  (stock <= 0
+                    ? "Out of stock"
+                    : stock < 10
+                      ? `Only ${stock} left`
+                      : `In stock (${stock})`)}
+              </p>
+
 
               {/* Size Selector */}
               <div>
@@ -236,15 +259,18 @@ const ProductDetailsPage = () => {
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
                   >
                     -
                   </Button>
+
                   <span className="w-12 text-center font-medium">{quantity}</span>
+
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => setQuantity(quantity + 1)}
+                    onClick={() => setQuantity(prev => Math.min(prev + 1, stock))}
+                    disabled={quantity >= stock}
                   >
                     +
                   </Button>
@@ -279,10 +305,10 @@ const ProductDetailsPage = () => {
               </div>
             </div>
           </div> :
-          <div>Loading</div> }
+            <div>Loading</div>}
 
           {/* You Might Also Like */}
-           {product &&  <YouMightAlsoLike categoryId={product?.category?.id as string} productId={product?.id as string} />}
+          {product && <YouMightAlsoLike categoryId={product?.category?.id as string} productId={product?.id as string} />}
         </div>
       </main>
 

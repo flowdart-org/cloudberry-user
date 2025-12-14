@@ -279,8 +279,11 @@ export function generateInvoiceHTML(order: OrderResponseDto): string {
             <div class="section-title">Shipping Address</div>
             <div class="billing-details">
               <p><strong>${order.customer?.name || 'Customer'}</strong></p>
-              <p>${order.customer?.email || 'N/A'}</p>
-              <p>${order.customer?.phone || 'N/A'}</p>
+              <p>${order.shippingAddress?.houseNo ? `${order.shippingAddress.houseNo}, ` : ''}${order.shippingAddress?.street || ''}</p>
+              <p>${order.shippingAddress?.city || ''}${order.shippingAddress?.city && order.shippingAddress?.state ? ', ' : ''}${order.shippingAddress?.state || ''}</p>
+              <p>${order.shippingAddress?.country || ''}${order.shippingAddress?.pincode ? ` - ${order.shippingAddress.pincode}` : ''}</p>
+              <p style="margin-top:8px;">Email: ${order.customer?.email || 'N/A'}</p>
+              <p>Phone: ${order.customer?.phone || 'N/A'}</p>
             </div>
           </div>
         </div>

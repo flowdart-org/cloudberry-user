@@ -22,13 +22,13 @@ const Cart = () => {
 
   // ---- Address Store Integration ----
   const [showAddressModal, setShowAddressModal] = useState(false);
-    const { addresses, fetchAddresses, saveAddress, updateAddress} =
-      useAddressStore();
-  
-    useEffect(() => {
-      fetchAddresses();
-    }, [fetchAddresses]);
-  
+  const { addresses, fetchAddresses, saveAddress, updateAddress } =
+    useAddressStore();
+
+  useEffect(() => {
+    fetchAddresses();
+  }, [fetchAddresses]);
+
 
   const handleQuantityChange = (cartItemId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -36,6 +36,12 @@ const Cart = () => {
   };
 
   const handleCheckout = async () => {
+    if (isStockInvalid) {
+      alert("Some items are out of stock or exceed available quantity.");
+      return;
+    }
+
+
     if (!addresses[0]) {
       setShowAddressModal(true);
       return;
@@ -73,16 +79,16 @@ const Cart = () => {
     }
   };
 
-  if(cartLoading) {
-     return (<div className="min-h-screen flex flex-col">
-        <Header categories={false} />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center space-y-4">
-            <Loader className="animate-spin" />
-          </div>
-        </main>
-        <Footer />
-      </div>)
+  if (cartLoading) {
+    return (<div className="min-h-screen flex flex-col">
+      <Header categories={false} />
+      <main className="flex-1 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader className="animate-spin" />
+        </div>
+      </main>
+      <Footer />
+    </div>)
   }
 
   if (cart.length === 0) {
@@ -106,12 +112,15 @@ const Cart = () => {
   }
 
   const onSave = (data: CreateAddressDto | UpdateAddressDto) => {
-      if(addresses[0] && addresses[0].id) {
-        updateAddress(addresses[0].id, data)
-      } else {
-        saveAddress(data as CreateAddressDto)
-      }
+    if (addresses[0] && addresses[0].id) {
+      updateAddress(addresses[0].id, data)
+    } else {
+      saveAddress(data as CreateAddressDto)
     }
+  }
+
+  const isStockInvalid = cart.some(item => item.quantity > item.variant.stock || item.variant.stock <= 0);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header categories={false} />
@@ -143,7 +152,7 @@ const Cart = () => {
                     <div className="flex justify-between gap-3">
                       <div>
                         <Link
-                href={`/product/${item.product.id}`} className="font-semibold line-clamp-2 text-foreground hover:underline">
+                          href={`/product/${item.product.id}`} className="font-semibold line-clamp-2 text-foreground hover:underline">
                           {item.product.name}
                         </Link>
 
@@ -163,20 +172,49 @@ const Cart = () => {
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
+                    {item.variant.stock <= 0 ? (
+                      <p className="text-sm text-red-500 font-medium mt-1">
+                        Out of stock — remove item to proceed
+                      </p>
+                    ) : item.quantity > item.variant.stock ? (
+                      <p className="text-sm text-red-500 font-medium mt-1">
+                        Only {item.variant.stock} left — reduce quantity
+                      </p>
+                    ) : (
+                      <p className={`text-xs text-muted-foreground mt-1 ${item.variant.stock === item.quantity && 'text-red-400'}`}>
+                        Stock available: {item.variant.stock}
+                      </p>
+                    )}
+
 
                     <div className="flex items-center justify-between mt-3">
                       <div className="flex gap-2 items-center">
-                        <Button variant="outline" size="icon" className="h-8 w-8"
-                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                        >
-                          -
-                        </Button>
-                        <span className="w-6 text-center font-medium">{item.quantity}</span>
-                        <Button variant="outline" size="icon" className="h-8 w-8"
-                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                        >
-                          +
-                        </Button>
+                        <div className="flex gap-2 items-center">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            disabled={item.variant.stock <= 0 || item.quantity <= 1}
+                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                          >
+                            -
+                          </Button>
+
+                          <span className="w-6 text-center font-medium">
+                            {item.quantity}
+                          </span>
+
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            disabled={item.quantity >= item.variant.stock}
+                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                          >
+                            +
+                          </Button>
+                        </div>
+
                       </div>
                       <p className="font-bold text-lg">₹{(item.product.price * item.quantity).toFixed(2)}</p>
                     </div>
@@ -232,9 +270,14 @@ const Cart = () => {
                   </div>
                 </div>
 
-                <Button onClick={handleCheckout} className="w-full h-12 text-lg">
-                  PAY ₹{totalPrice}
+                <Button
+                  onClick={handleCheckout}
+                  className="w-full h-12 text-lg"
+                  disabled={isStockInvalid}
+                >
+                  {isStockInvalid ? "Fix Stock Issues to Checkout" : `PAY ₹${totalPrice}`}
                 </Button>
+
 
                 <Link href="/shop/all">
                   <Button variant="outline" className="w-full mt-3">

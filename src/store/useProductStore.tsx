@@ -68,12 +68,14 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     const { category, filters, page } = get();
     
     let filtered: ProductDTO[] = [];
+    console.log(filters, 'its fileteres')
 
     const fetchProducts = async () => {
       const response = await PRODUCT_SERVICES.getFeeds({
         categories: category !== 'all' ? [category] : undefined,
         minPrice: filters.minPrice ? filters.minPrice : undefined,
         maxPrice: filters.maxPrice ? filters.maxPrice : undefined,
+        size: filters.sizes[0],
         page
       })
       if (response.data) {

@@ -108,6 +108,9 @@ export interface AuthControllerRequestOtp200Response {
     'message': string;
     'data'?: any;
 }
+export interface CancelOrderRequestDto {
+    'reason'?: string;
+}
 export interface CartControllerAddToCart200Response {
     'success': boolean;
     'message': string;
@@ -137,28 +140,14 @@ export interface CartItemResponseDto {
      * Quantity of the product in the cart item
      */
     'quantity': number;
-    'product': CartItemResponseDtoProduct;
-    'variant': CartItemResponseDtoVariant;
-}
-/**
- * Details of the product in the cart item
- */
-export interface CartItemResponseDtoProduct {
-    'id'?: string;
-    'name'?: string;
-    'description'?: string;
-    'price'?: number;
-    'thumbnail'?: string;
-    'category'?: CartResponseDtoItemsInnerProductCategory;
-    'images'?: Array<string>;
-}
-/**
- * Details of the product variant in the cart item
- */
-export interface CartItemResponseDtoVariant {
-    'id'?: string;
-    'size'?: string;
-    'stock'?: number;
+    /**
+     * Details of the product in the cart item
+     */
+    'product': ProductResponsePickDto;
+    /**
+     * Details of the product variant in the cart item
+     */
+    'variant': ProductVariantResponseDto;
 }
 export interface CartResponseDto {
     /**
@@ -172,36 +161,53 @@ export interface CartResponseDto {
     /**
      * List of items in the cart
      */
-    'items': Array<CartResponseDtoItemsInner>;
-}
-export interface CartResponseDtoItemsInner {
-    'id'?: string;
-    'productId'?: string;
-    'variantId'?: string;
-    'quantity'?: number;
-    'product'?: CartResponseDtoItemsInnerProduct;
-}
-export interface CartResponseDtoItemsInnerProduct {
-    'id'?: string;
-    'name'?: string;
-    'description'?: string;
-    'price'?: number;
-    'thumbnail'?: string;
-    'category'?: CartResponseDtoItemsInnerProductCategory;
-}
-export interface CartResponseDtoItemsInnerProductCategory {
-    'id'?: string;
-    'name'?: string;
+    'items': Array<CartItemResponseDto>;
 }
 export interface CategoryControllerFindAll200Response {
     'success': boolean;
     'message': string;
-    'data'?: Array<object>;
+    'data'?: Array<CategoryResponseDto>;
 }
 export interface CategoryControllerFindAllActive200Response {
     'success': boolean;
     'message': string;
-    'data'?: object;
+    'data'?: CategoryResponseDto;
+}
+export interface CategoryResponseDto {
+    /**
+     * Unique identifier for the category
+     */
+    'id': string;
+    /**
+     * Name of the category
+     */
+    'name': string;
+    /**
+     * Status of the category
+     */
+    'status': CategoryResponseDtoStatusEnum;
+    /**
+     * Thumbnail image URL for the category
+     */
+    'thumbnail': string;
+}
+
+export const CategoryResponseDtoStatusEnum = {
+    Active: 'active',
+    Inactive: 'inactive'
+} as const;
+
+export type CategoryResponseDtoStatusEnum = typeof CategoryResponseDtoStatusEnum[keyof typeof CategoryResponseDtoStatusEnum];
+
+export interface CategoryResponsePickDto {
+    /**
+     * Unique identifier for the category
+     */
+    'id': string;
+    /**
+     * Name of the category
+     */
+    'name': string;
 }
 export interface CheckoutCartLinkResponseDto {
     /**
@@ -314,6 +320,24 @@ export interface CreateTryOnDto {
      */
     'productId': string;
 }
+export interface CustomerResponseDto {
+    /**
+     * Unique identifier for the user
+     */
+    'id': string;
+    /**
+     * Full name of the user
+     */
+    'name'?: string;
+    /**
+     * Email address of the user
+     */
+    'email'?: string;
+    /**
+     * Phone number of the user
+     */
+    'phone'?: string;
+}
 export interface DashboardAnalyticsResponseDto {
     /**
      * Total revenue generated
@@ -390,13 +414,19 @@ export interface OrderControllerFindOne200Response {
     'message': string;
     'data'?: OrderResponseDto;
 }
-export interface OrderItemDto {
-    'product': VariantDto;
+export interface OrderItemResponseDto {
+    'product': ProductPickDto;
     /**
      * Variant of the product
      */
-    'variant': VariantDto;
+    'variant': ProductVariantResponseDto;
+    /**
+     * number of units of the product variant ordered
+     */
     'quantity': number;
+    /**
+     * subtotal price for the product variant (quantity x unit price)
+     */
     'subtotal': number;
 }
 export interface OrderResponseDto {
@@ -408,26 +438,21 @@ export interface OrderResponseDto {
      * Order number
      */
     'orderNumber': string;
-    'customer': OrderResponseDtoCustomer;
-    'placedAt': string | null;
-    'updatedAt': string | null;
-    'deliveredAt': string | null;
-    'cancelledAt': string | null;
+    'customer': CustomerResponseDto;
+    'shippingAddress'?: object | null;
     'subtotal': number;
     'shippingCharge': number;
     'discount': number;
     'total': number;
-    'items': Array<OrderItemDto>;
+    'items': Array<OrderItemResponseDto>;
     'paymentMethod'?: object | null;
     'paymentStatus': string;
     'orderStatus': string;
     'isDeleted': boolean;
-}
-export interface OrderResponseDtoCustomer {
-    'id'?: string;
-    'name'?: string | null;
-    'email'?: string | null;
-    'phone'?: string | null;
+    'placedAt': string | null;
+    'updatedAt': string | null;
+    'deliveredAt': string | null;
+    'cancelledAt': string | null;
 }
 export interface ProductControllerCreate200Response {
     'success': boolean;
@@ -438,6 +463,40 @@ export interface ProductControllerFind200Response {
     'success': boolean;
     'message': string;
     'data'?: Array<ProductResponseDto>;
+}
+export interface ProductPickDto {
+    /**
+     * Unique identifier for the product
+     */
+    'id': string;
+    /**
+     * Name of the product
+     */
+    'name': string;
+    /**
+     * Description of the product
+     */
+    'description': string;
+    /**
+     * Actual price of the product
+     */
+    'price': number;
+    /**
+     * Discounted price of the product
+     */
+    'discountPrice'?: number;
+    /**
+     * Discount percentage of the product
+     */
+    'discountPercent'?: number;
+    /**
+     * Product thumbnail URL
+     */
+    'thumbnail'?: string;
+    /**
+     * Category details of the product (optional)
+     */
+    'category': CategoryResponsePickDto;
 }
 export interface ProductResponseDto {
     /**
@@ -477,13 +536,9 @@ export interface ProductResponseDto {
      */
     'variants': Array<string>;
     /**
-     * Identifier for the category the product belongs to
-     */
-    'categoryId': string;
-    /**
      * Category details of the product (optional)
      */
-    'category'?: object;
+    'category': CategoryResponsePickDto;
     /**
      * Whether the product supports virtual try-on
      */
@@ -496,6 +551,54 @@ export interface ProductResponseDto {
      * Timestamp when the product was created
      */
     'createdAt': string;
+}
+export interface ProductResponsePickDto {
+    /**
+     * Unique identifier for the product
+     */
+    'id': string;
+    /**
+     * Name of the product
+     */
+    'name': string;
+    /**
+     * Actual price of the product
+     */
+    'price': number;
+    /**
+     * Discounted price of the product
+     */
+    'discountPrice'?: number;
+    /**
+     * Discount percentage of the product
+     */
+    'discountPercent'?: number;
+    /**
+     * Product thumbnail URL
+     */
+    'thumbnail'?: string;
+    /**
+     * Category details of the product (optional)
+     */
+    'category': CategoryResponsePickDto;
+}
+export interface ProductVariantResponseDto {
+    /**
+     * Unique identifier for the product variant
+     */
+    'id': string;
+    /**
+     * Size of the product variant
+     */
+    'size': string;
+    /**
+     * Stock available for this variant
+     */
+    'stock': number;
+    /**
+     * Indicates if the variant is deleted
+     */
+    'isDeleted': boolean;
 }
 export interface RecentOrderDto {
     /**
@@ -518,6 +621,9 @@ export interface RecentOrderDto {
      * Current status of the order
      */
     'status': string;
+}
+export interface ReturnOrderRequestDto {
+    'reason'?: string;
 }
 export interface SalesOverviewItemDto {
     /**
@@ -744,11 +850,11 @@ export interface UserResponseDto {
     /**
      * URL of the user try-on image
      */
-    'tryOnImage'?: object;
+    'tryOnImage': object | null;
     /**
      * URL of the user try-on image
      */
-    'tryOnLimit'?: number;
+    'tryOnLimit': number;
     /**
      * List of user addresses
      */
@@ -775,6 +881,10 @@ export interface VariantDto {
      * Available stock for the variant
      */
     'stock': number;
+    /**
+     * Indicates if the variant is deleted
+     */
+    'isDeleted'?: boolean;
 }
 
 /**
@@ -2625,6 +2735,45 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * 
+         * @param {string} id 
+         * @param {CancelOrderRequestDto} cancelOrderRequestDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        orderControllerCancelOrder: async (id: string, cancelOrderRequestDto: CancelOrderRequestDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('orderControllerCancelOrder', 'id', id)
+            // verify required parameter 'cancelOrderRequestDto' is not null or undefined
+            assertParamExists('orderControllerCancelOrder', 'cancelOrderRequestDto', cancelOrderRequestDto)
+            const localVarPath = `/api/order/{id}/cancel`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(cancelOrderRequestDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} [page] 
          * @param {number} [limit] 
          * @param {string} [search] 
@@ -2787,6 +2936,45 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @param {string} id 
+         * @param {ReturnOrderRequestDto} returnOrderRequestDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        orderControllerRequestReturn: async (id: string, returnOrderRequestDto: ReturnOrderRequestDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('orderControllerRequestReturn', 'id', id)
+            // verify required parameter 'returnOrderRequestDto' is not null or undefined
+            assertParamExists('orderControllerRequestReturn', 'returnOrderRequestDto', returnOrderRequestDto)
+            const localVarPath = `/api/order/{id}/return`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(returnOrderRequestDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id 
          * @param {UpdateOrderDto} updateOrderDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2796,7 +2984,7 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
             assertParamExists('orderControllerUpdate', 'id', id)
             // verify required parameter 'updateOrderDto' is not null or undefined
             assertParamExists('orderControllerUpdate', 'updateOrderDto', updateOrderDto)
-            const localVarPath = `/api/order/{id}`
+            const localVarPath = `/api/order/{id}/status`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2832,6 +3020,19 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
 export const OrderApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = OrderApiAxiosParamCreator(configuration)
     return {
+        /**
+         * 
+         * @param {string} id 
+         * @param {CancelOrderRequestDto} cancelOrderRequestDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async orderControllerCancelOrder(id: string, cancelOrderRequestDto: CancelOrderRequestDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderControllerFindOne200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.orderControllerCancelOrder(id, cancelOrderRequestDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrderApi.orderControllerCancelOrder']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * 
          * @param {number} [page] 
@@ -2883,6 +3084,19 @@ export const OrderApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} id 
+         * @param {ReturnOrderRequestDto} returnOrderRequestDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async orderControllerRequestReturn(id: string, returnOrderRequestDto: ReturnOrderRequestDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderControllerFindOne200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.orderControllerRequestReturn(id, returnOrderRequestDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrderApi.orderControllerRequestReturn']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} id 
          * @param {UpdateOrderDto} updateOrderDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2902,6 +3116,16 @@ export const OrderApiFp = function(configuration?: Configuration) {
 export const OrderApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = OrderApiFp(configuration)
     return {
+        /**
+         * 
+         * @param {string} id 
+         * @param {CancelOrderRequestDto} cancelOrderRequestDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        orderControllerCancelOrder(id: string, cancelOrderRequestDto: CancelOrderRequestDto, options?: RawAxiosRequestConfig): AxiosPromise<OrderControllerFindOne200Response> {
+            return localVarFp.orderControllerCancelOrder(id, cancelOrderRequestDto, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @param {number} [page] 
@@ -2944,6 +3168,16 @@ export const OrderApiFactory = function (configuration?: Configuration, basePath
         /**
          * 
          * @param {string} id 
+         * @param {ReturnOrderRequestDto} returnOrderRequestDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        orderControllerRequestReturn(id: string, returnOrderRequestDto: ReturnOrderRequestDto, options?: RawAxiosRequestConfig): AxiosPromise<OrderControllerFindOne200Response> {
+            return localVarFp.orderControllerRequestReturn(id, returnOrderRequestDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id 
          * @param {UpdateOrderDto} updateOrderDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2958,6 +3192,17 @@ export const OrderApiFactory = function (configuration?: Configuration, basePath
  * OrderApi - object-oriented interface
  */
 export class OrderApi extends BaseAPI {
+    /**
+     * 
+     * @param {string} id 
+     * @param {CancelOrderRequestDto} cancelOrderRequestDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public orderControllerCancelOrder(id: string, cancelOrderRequestDto: CancelOrderRequestDto, options?: RawAxiosRequestConfig) {
+        return OrderApiFp(this.configuration).orderControllerCancelOrder(id, cancelOrderRequestDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {number} [page] 
@@ -2998,6 +3243,17 @@ export class OrderApi extends BaseAPI {
      */
     public orderControllerFindOne(id: string, options?: RawAxiosRequestConfig) {
         return OrderApiFp(this.configuration).orderControllerFindOne(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {ReturnOrderRequestDto} returnOrderRequestDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public orderControllerRequestReturn(id: string, returnOrderRequestDto: ReturnOrderRequestDto, options?: RawAxiosRequestConfig) {
+        return OrderApiFp(this.configuration).orderControllerRequestReturn(id, returnOrderRequestDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -43,11 +43,9 @@ export const useAuthStore = create<AuthState>()(
               useCartStore.getState().getInitialCart()
             }
           } catch (error) {
+            get().logout();
             const code = (error as {response: { data: {error: {code: string}}}})?.response?.data?.error?.code;
-
-            if (code === "ForbiddenException") {
-              get().logout();
-            }
+            console.log(code)
           }
         } else {
           set({ user: null });

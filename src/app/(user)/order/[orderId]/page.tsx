@@ -12,13 +12,20 @@ import { ArrowLeft, Download, Package, Truck, MapPin, CreditCard, Clock } from "
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { OrderResponseDto } from "@/api/order/order.dto";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogTitle } from "@radix-ui/react-dialog";
 
 export default function OrderDetails() {
     const { orderId } = useParams();
     const [orderDetails, setOrderDetails] = useState<OrderResponseDto | null>(null)
     const [isDownloading, setIsDownloading] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [actionInProgress, setActionInProgress] = useState<null | "cancel" | "return">(null);
+    const [showCancelModal, setShowCancelModal] = useState(false);
+    const [confirmAction, setConfirmAction] = useState<null | "cancel" | "return">(null);
     const { toast } = useToast();
+    const router = useRouter();
 
     useEffect(() => {
         const getOrderDetails = async () => {
@@ -54,6 +61,65 @@ export default function OrderDetails() {
 
     if (!orderDetails) return null
 
+    // open the cancel confirmation modal
+    const handleCancelOrder = () => {
+        if (!orderId) {
+            toast({ title: "Error", description: "Missing order id.", variant: "destructive" });
+            return;
+        }
+        setShowCancelModal(true);
+    };
+
+    // execute the confirmed action (cancel or return)
+    const executeConfirmedAction = async () => {
+        if (!orderId || !confirmAction) {
+            toast({ title: "Error", description: "Missing order id or action.", variant: "destructive" });
+            setShowCancelModal(false);
+            setConfirmAction(null);
+            return;
+        }
+
+        try {
+            setActionInProgress(confirmAction);
+            setLoading(true);
+
+            if (confirmAction === "cancel") {
+                const response = await ORDER_SERVICES.cancelOrder(orderId as string);
+                if (response && (response as any).success) {
+                    toast({ title: "Cancelled", description: "Order cancelled successfully." });
+                    setShowCancelModal(false);
+                    router.push("/account/orders");
+                } else {
+                    throw new Error((response as any).error || "Failed to cancel order");
+                }
+            } else if (confirmAction === "return") {
+                const response = await ORDER_SERVICES.requestReturn(orderId as string);
+                if (response && (response as any).success) {
+                    toast({ title: "Return Requested", description: "We've received your return request. We'll update you shortly." });
+                    if (response.data) setOrderDetails(response.data as OrderResponseDto);
+                    setShowCancelModal(false);
+                } else {
+                    throw new Error((response as any).error || "Failed to request return");
+                }
+            }
+        } catch (err: any) {
+            console.error(err);
+            toast({ title: "Error", description: err?.message || "Action failed.", variant: "destructive" });
+        } finally {
+            setLoading(false);
+            setActionInProgress(null);
+            setConfirmAction(null);
+        }
+    };
+
+    const handleReturnRequest = async () => {
+        if (!orderId) {
+            toast({ title: "Error", description: "Missing order id.", variant: "destructive" });
+            return;
+        }
+        setConfirmAction("return");
+        setShowCancelModal(true);
+    };
     return (
         <div className="min-h-screen flex flex-col bg-background">
             <Header />
@@ -109,18 +175,18 @@ export default function OrderDetails() {
                                         <span className="text-sm font-medium text-foreground">Dec 5, 2024</span>
                                     </div>
                                     <div className="flex gap-2">
-                                    {orderDetails.orderStatus === 'delivered' && <Button className="w-full" size="default">
-                                        <Truck className="mr-2 h-4 w-4" />
-                                       Return Request
-                                    </Button>}
-                                    {orderDetails.orderStatus === 'processing' &&<Button className="w-full" size="default">
-                                        <Truck className="mr-2 h-4 w-4" />
-                                        Cancel Order
-                                    </Button>}
-                                   { (orderDetails.orderStatus === 'pending' || orderDetails.orderStatus === 'processing' || orderDetails.orderStatus === 'processing') && <Button className="w-full" size="default">
-                                        <Truck className="mr-2 h-4 w-4" />
-                                        Track Package
-                                    </Button>}
+                                    {orderDetails.orderStatus === 'delivered' && (
+                                        <Button className="w-full" size="default" onClick={handleReturnRequest} disabled={loading}>
+                                            <Truck className="mr-2 h-4 w-4" />
+                                            {loading && actionInProgress === 'return' ? 'Requesting...' : 'Return Request'}
+                                        </Button>
+                                    )}
+                                        {(orderDetails.orderStatus === 'processing' || orderDetails.orderStatus === 'pending') && (
+                                        <Button className="w-full" size="default" onClick={handleCancelOrder} disabled={loading}>
+                                            <Truck className="mr-2 h-4 w-4" />
+                                            {loading && actionInProgress === 'cancel' ? 'Cancelling...' : 'Cancel Order'}
+                                        </Button>
+                                    )}
                                     </div>
                                 </div>
                             </div>
@@ -159,6 +225,23 @@ export default function OrderDetails() {
                                     <div>
                                         <p className="text-neutral-400 text-xs uppercase tracking-wide mb-1">Email</p>
                                         <p className="text-foreground break-all">{orderDetails.customer?.email || 'N/A'}</p>
+                                    </div>
+
+                                    {/* Shipping address */}
+                                    <div>
+                                        <p className="text-neutral-400 text-xs uppercase tracking-wide mb-1">Address</p>
+                                        <div className="text-foreground">
+                                            <p className="leading-tight">
+                                                {orderDetails.shippingAddress?.houseNo ? `${orderDetails.shippingAddress.houseNo}, ` : ''}
+                                                {orderDetails.shippingAddress?.street || ''}
+                                            </p>
+                                            <p className="leading-tight">
+                                                {orderDetails.shippingAddress?.city || ''}{orderDetails.shippingAddress?.city && orderDetails.shippingAddress?.state ? ', ' : ''}{orderDetails.shippingAddress?.state || ''}
+                                            </p>
+                                            <p className="leading-tight">
+                                                {orderDetails.shippingAddress?.country || ''}{orderDetails.shippingAddress?.pincode ? ` - ${orderDetails.shippingAddress.pincode}` : ''}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -242,7 +325,7 @@ export default function OrderDetails() {
                             </div>
 
                             {/* ACTIONS CARD */}
-                            <div className="p-6 sm:p-8 bg-card border border-border rounded-xl animate-fade-in space-y-3" style={{ animationDelay: "0.3s" }}>
+
                                 <Button
                                     variant="outline"
                                     className="w-full"
@@ -253,7 +336,7 @@ export default function OrderDetails() {
                                     <Download className="mr-2 h-4 w-4" />
                                     {isDownloading ? 'Downloading...' : 'Download Invoice'}
                                 </Button>
-                            </div>
+
 
                             {/* ORDER INFO CARD */}
                             <div className="p-6 sm:p-8 bg-muted border border-border rounded-xl text-sm space-y-3 animate-fade-in" style={{ animationDelay: "0.4s" }}>
@@ -272,6 +355,40 @@ export default function OrderDetails() {
             </main>
 
             <Footer />
+
+            {/* Cancel confirmation modal */}
+            <Dialog
+                open={showCancelModal}
+                onOpenChange={(open) => {
+                    setShowCancelModal(open);
+                    if (!open) setConfirmAction(null);
+                }}
+            >
+                <DialogOverlay className="fixed inset-0 bg-black/40 z-[900]" />
+                <DialogContent className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[1000] max-w-sm p-6 rounded-md bg-white text-black shadow-lg">
+                    <DialogTitle className="text-lg font-semibold mb-2">{confirmAction === 'cancel' ? 'Cancel Order' : 'Request Return'}</DialogTitle>
+                    <DialogDescription className="text-sm text-neutral-700 mb-4">
+                        {confirmAction === 'cancel'
+                            ? 'Are you sure you want to cancel this order? This action cannot be undone.'
+                            : 'Request a return for this order? We will process the request and notify you.'}
+                    </DialogDescription>
+
+                    <div className="flex justify-end gap-2">
+                        <DialogClose asChild>
+                            <Button variant="outline" disabled={loading}>No, keep order</Button>
+                        </DialogClose>
+                        <Button onClick={executeConfirmedAction} disabled={loading}>
+                            {loading && actionInProgress === 'cancel'
+                                ? 'Cancelling...'
+                                : loading && actionInProgress === 'return'
+                                ? 'Requesting...'
+                                : confirmAction === 'cancel'
+                                ? 'Yes, Cancel Order'
+                                : 'Yes, Request Return'}
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

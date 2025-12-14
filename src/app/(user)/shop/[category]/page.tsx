@@ -27,8 +27,9 @@ const Shop = () => {
     return;
   }
 
+  // Treat the route param as a category id (not the name)
   const matched = categories.find(
-    c => c.name.toLowerCase() === pathCategory.toLowerCase()
+    (c) => String(c.id) === pathCategory
   );
 
   if (matched) {

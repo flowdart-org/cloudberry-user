@@ -17,33 +17,33 @@ export default function UserLayout({
   const { isLoading, fetchUser, isAuthenticated } = useAuthStore();
   const { getInitialCategories, loading } = useCategoryStore();
 
+  // Fetch logged-in user once
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
   // Fetch categories once
   useEffect(() => {
     LANDING_PAGE_SERVICES.getLandingPage()
     getInitialCategories();
   }, [getInitialCategories]);
 
-  // Fetch logged-in user once
-  useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
 
   // Redirect only when status is known & user is NOT authenticated
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      console.log('worked')
       router.push("/");
     }
   }, [isAuthenticated, isLoading, router]);
 
   // Prevent UI flicker before auth check completes
-  if (isLoading || loading) {
-    return (
-      <div className="w-screen h-screen flex items-center justify-center bg-muted/40 text-lg font-medium">
-        <CloudberryLoader />
-      </div>
-    );
-  }
+  // if (isLoading || loading) {
+  //   return (
+  //     <div className="w-screen h-screen flex items-center justify-center bg-muted/40 text-lg font-medium">
+  //       <CloudberryLoader />
+  //     </div>
+  //   );
+  // }
 
   return <>{children}</>;
 }

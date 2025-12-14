@@ -21,6 +21,14 @@ export interface OrderItemDto {
       deliveredAt: string | null;
       cancelledAt: string | null;
       subtotal: number;
+      shippingAddress: {
+            city: string,
+            state: string,
+            street: string,
+            country: string,
+            houseNo: string,
+            pincode: number
+        }
       shippingCharge: number;
       discount: number;
       total: number;

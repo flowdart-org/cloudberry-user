@@ -1,10 +1,13 @@
 "use client"
+
+import Link from "next/link";
+
 const Footer = () => {
   const companyLinks = [
-    "About Us",
-    "Privacy Policy",
-    "Terms & Conditions",
-    "Contact Us"
+    {link: "About Us", href: 'about-use'},
+    {link: "Privacy Policy", href: 'privacy-policy'},
+    {link: "Terms & Conditions", href: 'terms-conditions'},
+    {link: "Contact Us", href: 'contact-us'}
   ];
 
   return (
@@ -24,14 +27,14 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-foreground mb-4 ">Company</h4>
             <ul className="space-y-2">
-              {companyLinks.map((link) => (
-                <li key={link}>
-                  <a
-                    href="#"
+              {companyLinks.map((tab) => (
+                <li key={tab.link}>
+                  <Link
+                    href={tab.href}
                     className="text-sm text-muted hover:text-foreground transition-colors"
                   >
-                    {link}
-                  </a>
+                    {tab.link}
+                  </Link>
                 </li>
               ))}
             </ul>

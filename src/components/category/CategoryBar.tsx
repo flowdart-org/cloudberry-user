@@ -11,8 +11,8 @@ interface CategoryBarProps {
   isShop?: boolean;
 }
 
-const normalize = (text: string) =>
-  text.trim().toLowerCase().replace(/\s+/g, "-");
+// const normalize = (text: string) =>
+  // text.trim().toLowerCase().replace(/\s+/g, "-");
 
 export default function CategoryBar({ showCategories, isShop = false }: CategoryBarProps) {
   const { categories } = useCategoryStore();
@@ -28,7 +28,7 @@ export default function CategoryBar({ showCategories, isShop = false }: Category
     if (!pathname) return;
 
     const slug = pathname.split("/").pop() || "all";
-    const exists = categories.some((c) => normalize(c.name) === slug);
+    const exists = categories.some((c) => c.id === slug);
 
     setActive(exists ? slug : "all");
 
@@ -56,11 +56,10 @@ export default function CategoryBar({ showCategories, isShop = false }: Category
   }, [active, readyToScroll]);
 
   /** 🚀 Change route & UI smoothly */
-  const handleCategorySelect = (name: string) => {
-    const slug = normalize(name);
-    setActive(slug); // immediate visual feedback
+  const handleCategorySelect = (id: string) => {
+    setActive(id); // immediate visual feedback
 
-    router.push(slug === "all" ? "/shop/all" : `/shop/${slug}`);
+    router.push(id === "all" ? "/shop/all" : `/shop/${id}`);
 
     // prevent scrolling until route settles again
     setReadyToScroll(false);
@@ -96,14 +95,13 @@ export default function CategoryBar({ showCategories, isShop = false }: Category
         {categories
           .filter((c) => c.status === "active")
           .map((category) => {
-            const slug = normalize(category.name);
             return (
               <Button
                 key={category.id}
                 size="sm"
-                data-category={slug}
-                variant={active === slug ? "default" : "outline"}
-                onClick={() => handleCategorySelect(category.name)}
+                data-category={category.id}
+                variant={active === category.id ? "default" : "outline"}
+                onClick={() => handleCategorySelect(category.id)}
                 className="whitespace-nowrap flex-shrink-0"
               >
                 {category.name}
