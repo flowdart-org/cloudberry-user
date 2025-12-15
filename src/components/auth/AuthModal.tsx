@@ -185,6 +185,11 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                     </button>
                 )}
 
+                <p className="text-xs text-neutral-500 mt-3 text-center max-w-[300px]">
+                    By logging in you agree to our{' '}
+                    <a href="/privacy-policy" className="text-primary underline">Privacy Policy</a>.
+                </p>
+
                 <button
                     onClick={handleClose}
                     disabled={loading}

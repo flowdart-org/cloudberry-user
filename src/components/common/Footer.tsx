@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Footer = () => {
   const companyLinks = [
-    {link: "About Us", href: 'about-use'},
+    {link: "About Us", href: 'about-us'},
     {link: "Privacy Policy", href: 'privacy-policy'},
     {link: "Terms & Conditions", href: 'terms-conditions'},
     {link: "Contact Us", href: 'contact-us'}

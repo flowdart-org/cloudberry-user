@@ -112,7 +112,7 @@ const TryOnImageUpload = ({ showLabel = true, className = "" }: TryOnImageUpload
 
   return (
     <div className={className}>
-      {showLabel && <h3 className="text-sm font-semibold mb-3">YOUR TRY-ON IMAGE</h3>}
+      {showLabel && <h3 className="text-sm font-semibold mb-3">YOUR bnmTRY-ON IMAGE</h3>}
 
       {/* PREVIEW AREA */}
       {user?.tryOnImage ? (
@@ -152,6 +152,11 @@ const TryOnImageUpload = ({ showLabel = true, className = "" }: TryOnImageUpload
         className="hidden"
         onChange={handleFileSelect}
       />
+
+      <p className="text-xs text-neutral-500 mt-3">
+        By uploading an image you agree to our{' '}
+        <a href="/privacy-policy" className="text-primary underline">Privacy Policy</a>.
+      </p>
 
       {/* Crop Modal */}
       <Dialog open={isCropDialogOpen} onOpenChange={(open) => !isUploading && setIsCropDialogOpen(open)}>

@@ -17,7 +17,7 @@ import { CreateAddressDto, UpdateAddressDto } from "@/api/address/address.dto";
 const Cart = () => {
   const { cart, removeFromCart, updateCartItemQuantity, cartLoading } = useCartStore();
   const totalPrice = useCartStore((state) =>
-    state.cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+    state.cart.reduce((sum, item) => sum + item.product.discountPrice * item.quantity, 0)
   );
 
   // ---- Address Store Integration ----
@@ -216,7 +216,7 @@ const Cart = () => {
                         </div>
 
                       </div>
-                      <p className="font-bold text-lg">₹{(item.product.price * item.quantity).toFixed(2)}</p>
+                      <p className="font-bold text-lg">₹{(item.product.discountPrice * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>
                 </div>

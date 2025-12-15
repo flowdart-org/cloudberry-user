@@ -8,6 +8,7 @@ export interface CartItem {
     name: string;
     price: number;
     thumbnail?: string;
+    discountPrice: number
     category: {
       id: string;
       name: string;
