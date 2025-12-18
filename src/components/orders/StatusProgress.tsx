@@ -5,7 +5,11 @@ interface StatusProgressProps {
 }
 
 const StatusProgress = ({ status }: StatusProgressProps) => {
-  const steps = status === "canceled"
+  const isReturnFlow = ["return_requested", "return_approved", "returned"].includes(status.toLowerCase());
+
+  const steps = isReturnFlow
+    ? ["Return Requested", "Return Approved", "Returned"]
+    : status === "canceled"
     ? ["Ordered", "Canceled"]
     : ["Ordered", "Processing", "Shipping", "Delivered"];
 
@@ -16,6 +20,10 @@ const StatusProgress = ({ status }: StatusProgressProps) => {
       shipping: 2,
       delivered: 3,
       canceled: 1,
+      // return flow mapping
+      return_requested: 0,
+      return_approved: 1,
+      returned: 2,
     };
     return statusMap[currentStatus] ?? 0;
   };
@@ -43,7 +51,7 @@ const StatusProgress = ({ status }: StatusProgressProps) => {
           return (
             <div key={step} className="flex flex-col items-center flex-1">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-smooth ${circleClass}`}>
-                {index < currentStep ? (
+                {index <= currentStep ? (
                   <Check className="h-5 w-5" />
                 ) : (
                   <span className="text-sm font-medium">{index + 1}</span>
