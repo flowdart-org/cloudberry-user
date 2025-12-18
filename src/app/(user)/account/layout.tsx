@@ -10,7 +10,7 @@ const tabs = [
   { id: "profile", label: "Profile", icon: User },
   { id: "orders", label: "Orders", icon: Package },
   { id: "addresses", label: "Addresses", icon: MapPin },
-  { id: "refunds", label: "Refund Requests", icon: RefreshCw },
+  // { id: "refunds", label: "Refund Requests", icon: RefreshCw },
 ];
 
 export default function AccountLayout({

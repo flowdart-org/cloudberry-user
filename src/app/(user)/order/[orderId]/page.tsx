@@ -61,18 +61,27 @@ export default function OrderDetails() {
 
     if (!orderDetails) return null
 
+    // Open confirmation modal helper (ensures action is set and modal opens)
+    const openConfirm = (action: "cancel" | "return") => {
+        setConfirmAction(action);
+        setShowCancelModal(true);
+    };
+
     // open the cancel confirmation modal
     const handleCancelOrder = () => {
         if (!orderId) {
             toast({ title: "Error", description: "Missing order id.", variant: "destructive" });
             return;
         }
-        setShowCancelModal(true);
+        openConfirm("cancel");
     };
 
     // execute the confirmed action (cancel or return)
-    const executeConfirmedAction = async () => {
-        if (!orderId || !confirmAction) {
+    // accepts an optional `actionParam` so callers can directly pass the action
+    const executeConfirmedAction = async (actionParam?: "cancel" | "return") => {
+        const actionToRun = actionParam ?? confirmAction;
+
+        if (!orderId || !actionToRun) {
             toast({ title: "Error", description: "Missing order id or action.", variant: "destructive" });
             setShowCancelModal(false);
             setConfirmAction(null);
@@ -80,10 +89,10 @@ export default function OrderDetails() {
         }
 
         try {
-            setActionInProgress(confirmAction);
+            setActionInProgress(actionToRun);
             setLoading(true);
 
-            if (confirmAction === "cancel") {
+            if (actionToRun === "cancel") {
                 const response = await ORDER_SERVICES.cancelOrder(orderId as string);
                 if (response && (response as any).success) {
                     toast({ title: "Cancelled", description: "Order cancelled successfully." });
@@ -92,7 +101,7 @@ export default function OrderDetails() {
                 } else {
                     throw new Error((response as any).error || "Failed to cancel order");
                 }
-            } else if (confirmAction === "return") {
+            } else if (actionToRun === "return") {
                 const response = await ORDER_SERVICES.requestReturn(orderId as string);
                 if (response && (response as any).success) {
                     toast({ title: "Return Requested", description: "We've received your return request. We'll update you shortly." });
@@ -117,8 +126,7 @@ export default function OrderDetails() {
             toast({ title: "Error", description: "Missing order id.", variant: "destructive" });
             return;
         }
-        setConfirmAction("return");
-        setShowCancelModal(true);
+        openConfirm("return");
     };
     return (
         <div className="min-h-screen flex flex-col bg-background">
@@ -377,7 +385,7 @@ export default function OrderDetails() {
                         <DialogClose asChild>
                             <Button variant="outline" disabled={loading}>No, keep order</Button>
                         </DialogClose>
-                        <Button onClick={executeConfirmedAction} disabled={loading}>
+                        <Button onClick={() => void executeConfirmedAction()} disabled={loading}>
                             {loading && actionInProgress === 'cancel'
                                 ? 'Cancelling...'
                                 : loading && actionInProgress === 'return'
