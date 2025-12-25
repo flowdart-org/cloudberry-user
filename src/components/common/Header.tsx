@@ -95,7 +95,7 @@ const Header = ({categories = false}: {categories?: boolean}) => {
               <Button
                 variant="outline"
                 size="xs"
-                className="font-pirulen "
+                className="uppercase font-semibold "
                 onClick={() => setLoginModalOpen(true)}
               >
                 Login

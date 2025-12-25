@@ -189,19 +189,19 @@ const ProductDetailsPage = () => {
 
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl md:text-3xl font-light text-foreground mb-2">
+                <h1 className="text-2xl md:text-3xl text-foreground mb-2 uppercase">
                   {product.name}
                 </h1>
                 <div className="flex items-baseline gap-3">
-                  <div className="flex text-2xl md:text-3xl font-light font-pirulen text-neutral-300">
+                  {product.discountPercent > 0 &&<div className="flex text-2xl md:text-1xl font-light text-neutral-300">
                     <p>₹</p>
                     <p className=" line-through">
                       {product.price.toFixed(2)}
                     </p>
-                  </div>
+                  </div>}
 
                   {/* Discounted Price */}
-                  <p className="text-3xl md:text-4xl font-pirulen font- text-accent">
+                  <p className="text-3xl md:text-2xl text-accent font-medium">
                     ₹{product.discountPrice.toFixed(2)}
                   </p>
                 </div>
@@ -238,7 +238,7 @@ const ProductDetailsPage = () => {
                       key={variant.id}
                       onClick={() => setSelectedVariantId(variant.id)}
                       className={cn(
-                        "w-12 h-12 border-2 text-sm font-medium transition-all",
+                        "w-12 h-12 border-2 text-lg font-medium transition-all",
                         selectedVariantId === variant.id
                           ? "border-foreground bg-foreground text-background"
                           : "border-border hover:border-foreground"
@@ -281,7 +281,7 @@ const ProductDetailsPage = () => {
               <div className="flex gap-3 pt-4 ">
                 <Button
                   variant={product?.tryOn ? 'default' : 'disabled'}
-                  className="flex-1 h-12 font-semibold font-pirulen"
+                  className="flex-1 h-12 text-lg font-semibold"
                   disabled={!product?.tryOn}
                   onClick={handleTryOnModal}
                 >
@@ -289,7 +289,7 @@ const ProductDetailsPage = () => {
                 </Button>
                 <Button
                   variant="default"
-                  className="flex-1 h-12 font-semibold font-pirulen"
+                  className="flex-1 h-12 text-lg font-semibold"
                   onClick={handleAddToBag}
                 >
                   ADD TO BAG

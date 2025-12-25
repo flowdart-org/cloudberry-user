@@ -112,7 +112,7 @@ const TryOnImageUpload = ({ showLabel = true, className = "" }: TryOnImageUpload
 
   return (
     <div className={className}>
-      {showLabel && <h3 className="text-sm font-semibold mb-3">YOUR bnmTRY-ON IMAGE</h3>}
+      {showLabel && <h3 className="text-sm font-semibold mb-3">YOUR TRY-ON IMAGE</h3>}
 
       {/* PREVIEW AREA */}
       {user?.tryOnImage ? (
@@ -138,10 +138,11 @@ const TryOnImageUpload = ({ showLabel = true, className = "" }: TryOnImageUpload
       ) : (
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="aspect-[3/4] bg-muted border-2 border-dashed rounded-lg flex flex-col justify-center items-center hover:border-primary/60 transition"
+          className="aspect-[3/4] bg-muted border-2 border-dashed rounded-lg flex flex-col justify-center items-center hover:border-primary/60 transition w-full"
         >
           <Upload className="text-neutral-400  w-10 h-10 mb-2" />
-          Upload Your Try-On Image
+          <p className="">Upload Your Try-On Image</p>
+          
         </button>
       )}
 

@@ -15,7 +15,7 @@ const CategoryGrid = ({categories}: {categories: Category[]}) => {
   const swiperRef = useRef<any>(null);
   return (
     <section className="py-1 bg-background w-full">
-      <div className="w-full relative px-0">
+      <div className="w-full relative px-1">
         <Swiper
           className="!px-0 w-full"
           modules={[Navigation, Autoplay]}
@@ -60,12 +60,15 @@ const CategoryGrid = ({categories}: {categories: Category[]}) => {
                   )} */}
 
                   {/* Category name */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                  {/* <div className="absolute bottom-0 left-0 right-0 p-4">
                     <h3 className="text-white font-bold text-sm md:text-base text-center tracking-wide transition-all duration-300 group-hover:underline underline-offset-4">
                       {category.name}
                     </h3>
-                  </div>
+                  </div> */}
                 </div>
+                    <h3 className="text-black mx-auto my-auto text-center pt-3 font-semibold uppercase text-2xl">
+                      {category.name}
+                    </h3>
               </Link>
             </SwiperSlide>
           ))}
