@@ -10,4 +10,8 @@ export const MEDIA_SERVICES = {
     return await api.put(url, image, { headers: { 'x-ms-blob-type': "BlockBlob"}})
   },
 
+  removeTryOnImage: async (): Promise<void> => {
+    await mediaApi.mediaControllerRemoveUserTryOnImages();
+  }
+
 };
