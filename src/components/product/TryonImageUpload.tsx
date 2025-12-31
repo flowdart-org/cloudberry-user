@@ -135,17 +135,20 @@ const TryOnImageUpload = ({ showLabel = true, className = "" }: TryOnImageUpload
             className="object-cover aspect-[3/4] w-full bg-gray-400"
           />
           <button
-            className="absolute top-2 right-2 bg-black/60 text-white p-2 rounded opacity-0 group-hover:opacity-100 transition"
+            className="absolute z-20 top-2 right-2 bg-black/60 text-white p-2 rounded  transition"
             onClick={handleRemove}
           >
             <X size={16} />
           </button>
           <button
-            onClick={() => fileInputRef.current?.click()}
-            className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex justify-center items-center transition"
+           onClick={() => fileInputRef.current?.click()}
+            className="absolute inset-0 flex justify-center items-center transition"
           >
-            <Upload className="text-white w-6 h-6" />
+            <div className="flex gap-2 bg-black/50 p-10 opacity-0 group-hover:opacity-100" >
+
+            <Upload className="text-white  w-6 h-6" />
             <span className="ml-2 text-white font-medium">Replace</span>
+            </div>
           </button>
         </div>
       ) : (
