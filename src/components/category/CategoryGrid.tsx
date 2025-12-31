@@ -66,7 +66,7 @@ const CategoryGrid = ({categories}: {categories: Category[]}) => {
                     </h3>
                   </div> */}
                 </div>
-                    <h3 className="text-black mx-auto my-auto text-center pt-3 font-semibold uppercase text-2xl">
+                    <h3 className="text-black mx-auto my-auto text-center pt-3 md:font-semibold uppercase text-lg md:text-2xl">
                       {category.name}
                     </h3>
               </Link>
